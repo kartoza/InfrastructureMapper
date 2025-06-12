@@ -9,16 +9,25 @@ This document provides an overview of the database schema for **Infrastructure M
 - [📊 Infrastructure Mapper Schema Documentation](#-infrastructure-mapper-schema-documentation)
   - [📂 Table of Contents](#-table-of-contents)
   - [🏗️ Infrastructure](#️-infrastructure)
+    - [Explanation](#explanation)
   - [⚡ Electricity](#-electricity)
+    - [Explanation](#explanation-1)
   - [💧 Water](#-water)
+    - [Explanation](#explanation-2)
   - [🌱 Vegetation](#-vegetation)
+    - [Explanation](#explanation-3)
   - [🏠 Buildings and Fences](#-buildings-and-fences)
+    - [Explanation](#explanation-4)
   - [📡 Monitoring Stations](#-monitoring-stations)
+    - [Explanation](#explanation-5)
   - [📍 Poles](#-poles)
+    - [Explanation](#explanation-6)
 
 ---
 
 ## 🏗️ Infrastructure
+
+This section describes the core infrastructure elements, including types, items, and management logs.
 
 ```mermaid
 erDiagram
@@ -65,9 +74,18 @@ erDiagram
     infrastructure_log_action ||--o{ infrastructure_management_log : "logs actions"
 ```
 
+### Explanation
+
+- **`infrastructure_type`**: Defines the type of infrastructure (e.g., roads, bridges).
+- **`infrastructure_item`**: Represents individual infrastructure items with geometry and metadata.
+- **`infrastructure_log_action`**: Tracks actions performed on infrastructure (e.g., maintenance, inspections).
+- **`infrastructure_management_log`**: Logs management activities for infrastructure items.
+
 ---
 
 ## ⚡ Electricity
+
+This section covers the schema for managing electricity infrastructure, including lines, types, and conditions.
 
 ```mermaid
 erDiagram
@@ -105,9 +123,18 @@ erDiagram
     electricity_line_condition_type ||--o{ electricity_line_conditions : "defines conditions"
 ```
 
+### Explanation
+
+- **`electricity_line_type`**: Defines types of electricity lines (e.g., high voltage, low voltage).
+- **`electricity_line`**: Represents individual electricity lines with geometry and metadata.
+- **`electricity_line_condition_type`**: Defines possible conditions for electricity lines (e.g., damaged, operational).
+- **`electricity_line_conditions`**: Tracks the condition of electricity lines over time.
+
 ---
 
 ## 💧 Water
+
+This section describes the schema for managing water infrastructure, including sources, polygons, and points.
 
 ```mermaid
 erDiagram
@@ -152,9 +179,19 @@ erDiagram
     water_point_type ||--o{ water_point : "categorizes"
 ```
 
+### Explanation
+
+- **`water_source`**: Represents sources of water (e.g., rivers, reservoirs).
+- **`water_polygon_type`**: Categorizes water polygons (e.g., lakes, ponds).
+- **`water_polygon`**: Represents water bodies with geometry and metadata.
+- **`water_point_type`**: Categorizes water points (e.g., wells, taps).
+- **`water_point`**: Represents specific water points with geometry and metadata.
+
 ---
 
 ## 🌱 Vegetation
+
+This section focuses on vegetation, including plant types, pruning, harvesting, and usage.
 
 ```mermaid
 erDiagram
@@ -177,22 +214,50 @@ erDiagram
         TIMESTAMP last_update
         TEXT last_update_by
         UUID vegetation_point_uuid FK
+        TEXT month
     }
     harvest_activity {
         UUID uuid PK
         TIMESTAMP last_update
         TEXT last_update_by
         UUID vegetation_point_uuid FK
+        TEXT month
+    }
+    plant_usage {
+        UUID uuid PK
+        TIMESTAMP last_update
+        TEXT last_update_by
+        UUID vegetation_point_uuid FK
+        TEXT usage_type
+        TEXT notes
+    }
+    month {
+        UUID uuid PK
+        TEXT name
     }
 
     plant_type ||--o{ vegetation_point : "has many"
     vegetation_point ||--o{ pruning_activity : "pruned by"
     vegetation_point ||--o{ harvest_activity : "harvested by"
+    vegetation_point ||--o{ plant_usage : "used for"
+    pruning_activity ||--|| month : "occurs in"
+    harvest_activity ||--|| month : "occurs in"
 ```
+
+### Explanation
+
+- **`plant_type`**: Defines the type of plant, including its scientific name.
+- **`vegetation_point`**: Represents a specific plant's location and type.
+- **`pruning_activity`**: Tracks pruning activities, including the month they occurred.
+- **`harvest_activity`**: Tracks harvesting activities, including the month they occurred.
+- **`plant_usage`**: Records how a plant is used (e.g., medicinal, ornamental, food) and any additional notes.
+- **`month`**: Represents the month in which pruning or harvesting activities occur.
 
 ---
 
 ## 🏠 Buildings and Fences
+
+This section outlines the schema for buildings and fences, including types and geometries.
 
 ```mermaid
 erDiagram
@@ -232,9 +297,19 @@ erDiagram
     fence ||--o{ gate : "has gates"
 ```
 
+### Explanation
+
+- **`building_type`**: Defines types of buildings (e.g., residential, commercial).
+- **`building`**: Represents individual buildings with geometry and metadata.
+- **`fence_type`**: Defines types of fences (e.g., wooden, metal).
+- **`fence`**: Represents individual fences with geometry and metadata.
+- **`gate`**: Represents gates attached to buildings or fences.
+
 ---
 
 ## 📡 Monitoring Stations
+
+This section describes the schema for monitoring stations and the readings they capture.
 
 ```mermaid
 erDiagram
@@ -254,9 +329,16 @@ erDiagram
     monitoring_station ||--o{ readings : "records"
 ```
 
+### Explanation
+
+- **`monitoring_station`**: Represents monitoring stations with geometry and metadata.
+- **`readings`**: Tracks readings recorded by monitoring stations.
+
 ---
 
 ## 📍 Poles
+
+This section covers the schema for poles, including their materials and functions.
 
 ```mermaid
 erDiagram
@@ -285,6 +367,8 @@ erDiagram
     pole_function ||--o{ pole : "used by"
 ```
 
----
+### Explanation
 
-Feel free to expand or modify these diagrams as needed. Let me know if you need further assistance! 😊
+- **`pole_material`**: Defines materials used for poles (e.g., wood, steel).
+- **`pole_function`**: Defines functions of poles (e.g., electricity, communication).
+- **`pole`**: Represents individual poles with geometry and metadata.
