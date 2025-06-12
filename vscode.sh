@@ -10,45 +10,27 @@ VSCODE_DIR=".vscode"
 LOG_FILE="vscode.log"
 
 REQUIRED_EXTENSIONS=(
-    naumovs.color-highlight@2.8.0
-    GitHub.copilot@1.277.0
-    ms-python.vscode-pylance@2025.4.1
-    KevinRose.vsc-python-indent@1.21.0
-    lextudio.restructuredtext@190.4.10
-    ms-python.python@2025.6.1
-    GitHub.vscode-pull-request-github@0.108.0
-    lextudio.restructuredtext-pack@1.0.3
-    tht13.rst-vscode@3.0.1
-    shd101wyy.markdown-preview-enhanced@0.8.18
-    lextudio.iis@1.0.15
-    donjayamanne.python-extension-pack@1.7.0
-    timonwong.shellcheck@0.37.7
-    batisteo.vscode-django@1.15.0
-    ms-python.black-formatter@2025.2.0
-    hbenl.vscode-test-explorer@2.22.1
-    foxundermoon.shell-format@7.2.5
-    aikebang.mkdocs-syntax-highlight@0.2.1
-    leonhard-s.python-sphinx-highlight@0.3.0
-    trond-snekvik.simple-rst@1.5.4
-    littlefoxteam.vscode-python-test-adapter@0.8.2
-    ms-python.debugpy@2025.8.0
-    GitHub.copilot@1.331.0
-    github.vscode-github-actions@0.27.1
-    donjayamanne.python-environment-manager@1.2.7
-    mkhl.direnv@0.17.0
-    useblocks.sphinx-needs-vscode@0.3.2
-    searKing.preview-vscode@2.3.12
-    njpwerner.autodocstring@0.6.1
-    ms-vscode.test-adapter-converter@0.2.1
-    DavidAnson.vscode-markdownlint@0.60.0
-    waderyan.gitblame@11.1.3
-    GitHub.copilot-chat@0.26.7
-    VisualStudioExptTeam.intellicode-api-usage-examples@0.2.9
-    wholroyd.jinja@0.0.8
-    jamesqquick.python-class-generator@0.0.3
-    yzhang.markdown-all-in-one@3.6.3
-    VisualStudioExptTeam.vscodeintellicode@1.3.2
-)
+#timonwong.shellcheck@0.37.7
+naumovs.color-highlight@2.8.0
+inferrinizzard.prettier-sql-vscode@1.6.0
+GitHub.copilot@1.331.0
+GitHub.vscode-pull-request-github@0.108.0
+hbenl.vscode-test-explorer@2.22.1
+VisualStudioExptTeam.vscodeintellicode@1.3.2
+DavidAnson.vscode-markdownlint@0.60.0
+shd101wyy.markdown-preview-enhanced@0.8.18
+waderyan.gitblame@11.1.3
+foxundermoon.shell-format@7.2.5
+ms-vscode.test-adapter-converter@0.2.1
+VisualStudioExptTeam.intellicode-api-usage-examples@0.2.9
+ms-ossdata.vscode-pgsql@1.4.2
+GitHub.copilot-chat@0.26.7
+mkhl.direnv@0.17.0
+searKing.preview-vscode@2.3.12
+trond-snekvik.simple-rst@1.5.4
+github.vscode-github-actions@0.27.1
+yzhang.markdown-all-in-one@3.6.3
+	)
 
 # ----------------------------------------------
 # Functions
@@ -125,10 +107,6 @@ done
 # ----------------------------------------------
 # Script starts here
 # ----------------------------------------------
-
-# Truncate the log file at the start
-echo "🗨️ Truncating $LOG_FILE..."
-true >"$LOG_FILE"
 
 # Locate QGIS binary
 QGIS_BIN=$(which qgis)
