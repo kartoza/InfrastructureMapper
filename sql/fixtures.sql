@@ -63,9 +63,6 @@ INSERT INTO water_point_type (last_update_by, name) VALUES ('Polly', 'Water Tank
 INSERT INTO water_line_type (last_update_by, name, sort_order) VALUES ('Polly', 'River', 1);
 INSERT INTO water_line_type (last_update_by, name, sort_order) VALUES ('Polly', 'Stream', 2);
 
--- readings
-INSERT INTO readings(last_update_by, name) VALUES ('Mondli', 'Moisture Testers');
-
 -- fence
 -- fence type
 INSERT INTO fence_type (last_update_by, name, sort_order) VALUES ('Jeff', 'Barbed wire', 1);
@@ -90,15 +87,15 @@ INSERT INTO condition (last_update_by, name) VALUES ('Jeff', 'Fixed');
 INSERT INTO condition (last_update_by, name) VALUES ('Jeff', 'Broken');
 
 -- pole_material 
-INSERT INTO pole_material (last_update_by, name) VALUES ('Charles', 'Metal');
-INSERT INTO pole_material (last_update_by, name) VALUES ('Charles', 'Wooden');
-INSERT INTO pole_material (last_update_by, name) VALUES ('Charles', 'Concrete');
+INSERT INTO pole_material (last_update_by, id, name) VALUES ('Charles', 1, 'Metal');
+INSERT INTO pole_material (last_update_by, id, name) VALUES ('Charles', 2, 'Wooden');
+INSERT INTO pole_material (last_update_by, id, name) VALUES ('Charles', 3, 'Concrete');
 
 -- pole_function
-INSERT INTO pole_function (id, last_update_by, "function") VALUES (1, 'Charles', 'Telecommunications');
-INSERT INTO pole_function (id, last_update_by, "function") VALUES (2, 'Charles', 'Electric');
-INSERT INTO pole_function (id, last_update_by, "function") VALUES (3, 'Charles', 'Flag');
-INSERT INTO pole_function (id, last_update_by, "function") VALUES (4, 'Charles', 'Street lighting');
+INSERT INTO pole_function (id, last_update_by, pole_function_name) VALUES (1, 'Charles', 'Telecommunications');
+INSERT INTO pole_function (id, last_update_by, pole_function_name) VALUES (2, 'Charles', 'Electric');
+INSERT INTO pole_function (id, last_update_by, pole_function_name) VALUES (3, 'Charles', 'Flag');
+INSERT INTO pole_function (id, last_update_by, pole_function_name) VALUES (4, 'Charles', 'Street lighting');
 
 -- pole 
 INSERT INTO pole (last_update, last_update_by, installation_date, geometry, height, pole_material_id, pole_function_id) VALUES ('2023-10-11','Charles', '2023-10-11',ST_GeomFromText('POINT(0 0)', 4326),20,1,1);
