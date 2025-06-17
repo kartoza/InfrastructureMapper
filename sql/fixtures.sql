@@ -104,6 +104,35 @@ INSERT INTO pole (last_update, last_update_by, installation_date, geometry, heig
 INSERT INTO pole (last_update, last_update_by, installation_date, geometry, height, pole_material_id, pole_function_id) VALUES ('2023-10-11','Charles', '2023-10-11',ST_GeomFromText('POINT(0 0)', 4326),80,1,2);
 INSERT INTO pole (last_update, last_update_by, installation_date, geometry, height, pole_material_id, pole_function_id) VALUES ('2023-10-11','Charles', '2023-10-11',ST_GeomFromText('POINT(0 0)', 4326),20,1,2);
 
+
+
+-- culinary facilities
+-- culinary_category
+INSERT INTO culinary_category (last_update_by, name, notes) VALUES ('Hefni', 'Traditional', 'Traditional culinary options.');
+INSERT INTO culinary_category (last_update_by, name, notes) VALUES ('Hefni', 'Fast Food', 'Quick and convenient food.');
+INSERT INTO culinary_category (last_update_by, name, notes) VALUES ('Hefni', 'Street Food', 'Food stalls and street vendors.');
+INSERT INTO culinary_category (last_update_by, name, notes) VALUES ('Hefni', 'Cafe/Bakery', 'Cafes and bakeries.');
+INSERT INTO culinary_category (last_update_by, name, notes) VALUES ('Hefni', 'Seafood', 'Specializing in seafood dishes.');
+INSERT INTO culinary_category (last_update_by, name, notes) VALUES ('Hefni', 'Desserts/Sweets', 'Desserts and sweet treats.');
+INSERT INTO culinary_category (last_update_by, name, notes) VALUES ('Hefni', 'Buffet', 'All-you-can-eat buffet style.');
+INSERT INTO culinary_category (last_update_by, name, notes) VALUES ('Hefni', 'International Cuisine', 'Cuisine from around the world.');
+
+-- facility_type
+INSERT INTO facility_type (last_update_by, name, description) VALUES ('Hefni', 'Parking Area', 'Designated parking space.');
+INSERT INTO facility_type (last_update_by, name, description) VALUES ('Hefni', 'Wi-Fi', 'Free wireless internet.');
+INSERT INTO facility_type (last_update_by, name, description) VALUES ('Hefni', 'Outdoor Seating', 'Seating available outdoors.');
+INSERT INTO facility_type (last_update_by, name, description) VALUES ('Hefni', 'Indoor Seating', 'Seating available indoors.');
+INSERT INTO facility_type (last_update_by, name, description) VALUES ('Hefni', 'Restroom', 'Available restroom facilities.');
+INSERT INTO facility_type (last_update_by, name, description) VALUES ('Hefni', 'Air Conditioning', 'Air-conditioned area.');
+INSERT INTO facility_type (last_update_by, name, description) VALUES ('Hefni', 'Smoking Area', 'Designated smoking zone.');
+INSERT INTO facility_type (last_update_by, name, description) VALUES ('Hefni', 'Kids Playground', 'Play area for children.');
+INSERT INTO facility_type (last_update_by, name, description) VALUES ('Hefni', 'Nursing Room', 'Private room for nursing mothers.');
+INSERT INTO facility_type (last_update_by, name, description) VALUES ('Hefni', 'Event Space', 'Space for hosting events.');
+INSERT INTO facility_type (last_update_by, name, description) VALUES ('Hefni', 'Charging Station', 'Facilities to charge devices.');
+INSERT INTO facility_type (last_update_by, name, description) VALUES ('Hefni', 'Prayer Room', 'Designated prayer area.');
+
+
+
 -- roads
 -- segment type
 INSERT INTO segment_type(last_update_by, type_name, description) values ('Lindie', 'National', 'Highways connecting major cities');
@@ -136,3 +165,4 @@ INSERT INTO segment_condition(last_update_by, condition_name, description) value
 INSERT INTO segment_condition(last_update_by, condition_name, description) values ('Lindie', 'Closed', 'Temporarily or permanently blocked');
 INSERT INTO segment_condition(last_update_by, condition_name, description) values ('Lindie', 'Flooded', 'Water obstructs access (seasonal or emergency)');
 INSERT INTO segment_condition(last_update_by, condition_name, description) values ('Lindie', 'Under Repair', 'Currently under maintenance or construction');
+
