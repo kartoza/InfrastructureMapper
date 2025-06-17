@@ -9,8 +9,9 @@ Welcome to **Infrastructure Mapper**! This repository contains guidelines and co
 - [🌐 Infrastructure Mapper](#-infrastructure-mapper)
   - [📖 Table of Contents](#-table-of-contents)
   - [🚀 Project Overview](#-project-overview)
-  - [� Folder Structure](#-folder-structure)
+  - [📂 Folder Structure](#-folder-structure)
   - [📜 License](#-license)
+  - [⚒️ Using](#️-using)
   - [✨ Contributing](#-contributing)
   - [📧 Contact](#-contact)
   - [Contributors](#contributors)
@@ -21,18 +22,17 @@ Welcome to **Infrastructure Mapper**! This repository contains guidelines and co
 
 This project consists of:
 
-1. a SQL Schema for PostgreSQL,
+1. a [SQL Schema](sql/schema.README.md) for PostgreSQL,
 2. a set of fixtures to load that schema with default values (particularly for lookup tables)
 3. a set of QGIS forms and layer styles for visualising the data
-   🎉
 
 ## 📂 Folder Structure
 
 ```plaintext
 InfrastructureMapper/
-├── data/               # Raw and processed data files
-├── docs/               # Documentation and ERD diagrams
-├── src/                # Source code for the project
+├── qml/               # QGIS layer style and form definitions
+├── diagrams/               # Documentation and ERD diagrams
+├── sql/                # Chema and fixtures to load into postgres
 ├── tests/              # Unit tests and test cases
 └── README.md           # Project overview and conventions
 ```
@@ -44,6 +44,10 @@ InfrastructureMapper/
 This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
 
 ---
+
+## ⚒️ Using
+
+Simply take the sql files in the sql folder and load them into postgres.
 
 ## ✨ Contributing
 
@@ -59,7 +63,7 @@ Have questions or feedback? Feel free to reach out!
 
 ## Contributors
 
-- [Tim Sutton](@timlinux) - project lead
+- [Tim Sutton](https://github.com/timlinux) - project lead
 -  
 
 ---

@@ -9,19 +9,14 @@ This document provides an overview of the database schema for **Infrastructure M
 - [📊 Infrastructure Mapper Schema Documentation](#-infrastructure-mapper-schema-documentation)
   - [📂 Table of Contents](#-table-of-contents)
   - [🏗️ Infrastructure](#️-infrastructure)
-    - [Explanation](#explanation)
   - [⚡ Electricity](#-electricity)
-    - [Explanation](#explanation-1)
   - [💧 Water](#-water)
-    - [Explanation](#explanation-2)
   - [🌱 Vegetation](#-vegetation)
-    - [Explanation](#explanation-3)
   - [🏠 Buildings and Fences](#-buildings-and-fences)
-    - [Explanation](#explanation-4)
   - [📡 Monitoring Stations](#-monitoring-stations)
-    - [Explanation](#explanation-5)
   - [📍 Poles](#-poles)
-    - [Explanation](#explanation-6)
+  - [🚪 Gates](#-gates)
+  - [🌍 Land Use Areas](#-land-use-areas)
 
 ---
 
@@ -74,7 +69,7 @@ erDiagram
     infrastructure_log_action ||--o{ infrastructure_management_log : "logs actions"
 ```
 
-### Explanation
+***Explanation***
 
 - **`infrastructure_type`**: Defines the type of infrastructure (e.g., roads, bridges).
 - **`infrastructure_item`**: Represents individual infrastructure items with geometry and metadata.
@@ -123,7 +118,7 @@ erDiagram
     electricity_line_condition_type ||--o{ electricity_line_conditions : "defines conditions"
 ```
 
-### Explanation
+***Explanation***
 
 - **`electricity_line_type`**: Defines types of electricity lines (e.g., high voltage, low voltage).
 - **`electricity_line`**: Represents individual electricity lines with geometry and metadata.
@@ -179,7 +174,7 @@ erDiagram
     water_point_type ||--o{ water_point : "categorizes"
 ```
 
-### Explanation
+***Explanation***
 
 - **`water_source`**: Represents sources of water (e.g., rivers, reservoirs).
 - **`water_polygon_type`**: Categorizes water polygons (e.g., lakes, ponds).
@@ -244,7 +239,7 @@ erDiagram
     harvest_activity ||--|| month : "occurs in"
 ```
 
-### Explanation
+***Explanation***
 
 - **`plant_type`**: Defines the type of plant, including its scientific name.
 - **`vegetation_point`**: Represents a specific plant's location and type.
@@ -257,7 +252,7 @@ erDiagram
 
 ## 🏠 Buildings and Fences
 
-This section outlines the schema for buildings and fences, including types and geometries.
+This section describes buildings, fences, and their associated materials and conditions.
 
 ```mermaid
 erDiagram
@@ -297,7 +292,7 @@ erDiagram
     fence ||--o{ gate : "has gates"
 ```
 
-### Explanation
+***Explanation***
 
 - **`building_type`**: Defines types of buildings (e.g., residential, commercial).
 - **`building`**: Represents individual buildings with geometry and metadata.
@@ -309,7 +304,7 @@ erDiagram
 
 ## 📡 Monitoring Stations
 
-This section describes the schema for monitoring stations and the readings they capture.
+This section describes monitoring stations and their associated readings.
 
 ```mermaid
 erDiagram
@@ -329,7 +324,7 @@ erDiagram
     monitoring_station ||--o{ readings : "records"
 ```
 
-### Explanation
+***Explanation***
 
 - **`monitoring_station`**: Represents monitoring stations with geometry and metadata.
 - **`readings`**: Tracks readings recorded by monitoring stations.
@@ -338,7 +333,7 @@ erDiagram
 
 ## 📍 Poles
 
-This section covers the schema for poles, including their materials and functions.
+This section describes poles, their materials, functions, and conditions.
 
 ```mermaid
 erDiagram
@@ -367,8 +362,94 @@ erDiagram
     pole_function ||--o{ pole : "used by"
 ```
 
-### Explanation
+***Explanation***
 
 - **`pole_material`**: Defines materials used for poles (e.g., wood, steel).
 - **`pole_function`**: Defines functions of poles (e.g., electricity, communication).
 - **`pole`**: Represents individual poles with geometry and metadata.
+
+---
+
+## 🚪 Gates
+
+This section describes gates, their types, functions, materials, and conditions.
+
+```mermaid
+erDiagram
+    gate_type {
+        UUID uuid PK
+        TIMESTAMP last_update
+        TEXT last_update_by
+        TEXT name
+    }
+    gate_function {
+        UUID uuid PK
+        TIMESTAMP last_update
+        TEXT last_update_by
+        TEXT name
+    }
+    gate_material {
+        UUID uuid PK
+        TIMESTAMP last_update
+        TEXT last_update_by
+        TEXT name
+    }
+    gate {
+        UUID uuid PK
+        TIMESTAMP last_update
+        TEXT last_update_by
+        GEOMETRY geometry
+        UUID gate_type_uuid FK
+        UUID gate_function_uuid FK
+    }
+
+    gate_type ||--o{ gate : "has type"
+    gate_function ||--o{ gate : "has function"
+    gate_material ||--o{ gate : "made of"
+```
+
+***Explanation***
+
+- **`gate_type`**: Defines types of gates (e.g., wooden, metal).
+- **`gate_function`**: Defines functions of gates (e.g., entry, exit).
+- **`gate_material`**: Defines materials used for gates (e.g., wood, steel).
+- **`gate`**: Represents individual gates with geometry and metadata.
+
+---
+
+## 🌍 Land Use Areas
+
+This section describes land use areas, their types, ownership, and conditions.
+
+```mermaid
+erDiagram
+    landuse_area_type {
+        UUID uuid PK
+        TIMESTAMP last_update
+        TEXT last_update_by
+        TEXT name
+    }
+    landuse_area_owner {
+        UUID uuid PK
+        TIMESTAMP last_update
+        TEXT last_update_by
+        TEXT name
+    }
+    landuse_area {
+        UUID uuid PK
+        TIMESTAMP last_update
+        TEXT last_update_by
+        GEOMETRY geometry
+        UUID landuse_area_type_uuid FK
+        UUID landuse_area_owner_uuid FK
+    }
+
+    landuse_area_type ||--o{ landuse_area : "categorizes"
+    landuse_area_owner ||--o{ landuse_area : "owned by"
+```
+
+***Explanation***
+
+- **`landuse_area_type`**: Defines types of land use areas (e.g., residential, agricultural).
+- **`landuse_area_owner`**: Represents owners of land use areas.
+- **`landuse_area`**: Represents individual land use areas with geometry and metadata.
