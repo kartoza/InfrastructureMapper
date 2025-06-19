@@ -2160,7 +2160,7 @@ CREATE TABLE IF NOT EXISTS intersection(
 	uuid UUID UNIQUE NOT NULL DEFAULT gen_random_uuid(),
     last_update TIMESTAMP DEFAULT now() NOT NULL,
    	last_update_by TEXT NOT NULL,
-	geom GEOMETRY(POINT, 32734) NOT NULL
+	geom GEOMETRY(POINT, 32734)
 );
 COMMENT ON TABLE intersection is 'Points between road segments.';
 
@@ -2181,7 +2181,6 @@ CREATE TABLE IF NOT EXISTS road(
     last_update TIMESTAMP DEFAULT now() NOT NULL,
    	last_update_by TEXT NOT NULL,
 	name TEXT,
-	geom GEOMETRY(LINESTRING, 4326) NOT NULL
 );
 COMMENT ON TABLE road is 'Logical road entities, composed of road segments.';
 
@@ -2195,8 +2194,6 @@ COMMENT ON COLUMN road.last_update_by is 'The name of the user responsible for t
 
 COMMENT ON COLUMN road.name is 'Road name information.';
 
-COMMENT ON COLUMN road.geom is 'Approximate full geometry of the road. EPSG: 4326';
-
 -- ROAD SEGMENTS
 CREATE TABLE IF NOT EXISTS road_segment(
     id SERIAL NOT NULL PRIMARY KEY,
@@ -2208,14 +2205,14 @@ CREATE TABLE IF NOT EXISTS road_segment(
 	length_m FLOAT CHECK (length_m > 0),
 	speed_limit_kmh INT CHECK (speed_limit_kmh > 0),
 	one_way BOOLEAN,
-	geom GEOMETRY(LINESTRING, 32734) NOT NULL,
-	road_uuid UUID NOT NULL REFERENCES road(uuid),
+	geom GEOMETRY(LINESTRING, 32734),
+	road_uuid UUID REFERENCES road(uuid),
 	type_uuid UUID NOT NULL REFERENCES segment_type(uuid),
 	status_uuid UUID NOT NULL REFERENCES segment_status(uuid),
 	surface_uuid UUID NOT NULL REFERENCES segment_surface(uuid),
 	condition_uuid UUID NOT NULL REFERENCES segment_condition(uuid),
-	start_node UUID NOT NULL REFERENCES intersection(uuid),
-	end_node UUID NOT NULL REFERENCES intersection(uuid)
+	start_node UUID REFERENCES intersection(uuid),
+	end_node UUID REFERENCES intersection(uuid)
 );
 COMMENT ON TABLE road_segment is 'Represents physical segments of a road between two nodes.';
 
