@@ -17,6 +17,7 @@ This document provides an overview of the database schema for **Infrastructure M
   - [📍 Poles](#-poles)
   - [🚪 Gates](#-gates)
   - [🌍 Land Use Areas](#-land-use-areas)
+  - [🛣️ Roads](#️-roads)
 
 ---
 
@@ -453,3 +454,104 @@ erDiagram
 - **`landuse_area_type`**: Defines types of land use areas (e.g., residential, agricultural).
 - **`landuse_area_owner`**: Represents owners of land use areas.
 - **`landuse_area`**: Represents individual land use areas with geometry and metadata.
+
+---
+
+## 🛣️ Roads
+
+This section describes roads, their segments, connecting points, type, construction/usage status, surface material, and conditions.
+
+```mermaid
+erDiagram
+    segment_type {
+        SERIAL id PK
+        UUID uuid UNIQUE
+        TIMESTAMP last_update
+        TEXT last_update_by
+        VARCHAR type_name UNIQUE
+        TEXT description
+    }
+    
+    segment_status {
+        SERIAL id PK
+        UUID uuid UNIQUE
+        TIMESTAMP last_update
+        TEXT last_update_by
+        VARCHAR status_name UNIQUE
+        TEXT description
+    }
+
+    segment_surface {
+        SERIAL id PK
+        UUID uuid UNIQUE
+        TIMESTAMP last_update
+        TEXT last_update_by
+        VARCHAR surface_name UNIQUE
+        TEXT description
+    }
+
+    segment_condition {
+        SERIAL id PK
+        UUID uuid UNIQUE
+        TIMESTAMP last_update
+        TEXT last_update_by
+        VARCHAR condition_name UNIQUE
+        TEXT description
+    }
+
+    intersection {
+        SERIAL id PK
+        UUID uuid UNIQUE
+        TIMESTAMP last_update
+        TEXT last_update_by
+        GEOMETRY geom
+    }
+
+    road {
+        SERIAL id PK
+        UUID uuid UNIQUE
+        TIMESTAMP last_update
+        TEXT last_update_by
+        TEXT name
+    }
+
+    road_segment {
+        SERIAL id PK
+        UUID uuid UNIQUE
+        TIMESTAMP last_update
+        TEXT last_update_by
+        INT segment_number UNIQUE
+        INT lanes
+        FLOAT length_m
+        INT speed_limit_kmh
+        BOOLEAN one_way
+        GEOMETRY geom
+        UUID road_uuid FK
+        UUID type_uuid FK
+        UUID status_uuid FK
+        UUID surface_uuid FK
+        UUID condition_uuid FK
+        UUID start_node FK
+        UUID end_node FK
+    }
+
+    segment_type ||--o{ road_segment : "defines type"
+    segment_status ||--o{ road_segment : "defines status"
+    segment_surface ||--o{ road_segment : "defines surface"
+    segment_condition ||--o{ road_segment : "defines condition"
+    intersection ||--o{ road_segment : "as start node"
+    intersection ||--o{ road_segment : "as end node"
+    road ||--o{ road_segment : "has segments"
+```
+
+***Explanation***
+
+- **`segment_type`**: Defines the classification of road segments (e.g., National, Main Road, Gravel Road).
+- **`segment_status`**: Describes the current status of road segments (e.g., In Use, Planned, Under Construction).
+- **`segment_surface`**: Specifies the surface material of road segments (e.g., Asphalt, Gravel, Dirt).
+- **`segment_condition`**: Records the current condition of road segments (e.g., Good, Poor, Flooded, Under Repair).
+- **`intersection`**: Represents physical nodes (points) where road segments begin, end, or connect.
+- **`road`**: Represents logical roads, typically composed of one or more connected road segments.
+- **`road_segment`**: Represents physical sections of a road, linking two intersections and holding detailed metadata including type, status, surface, and condition.
+
+---
