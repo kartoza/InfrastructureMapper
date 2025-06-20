@@ -10,27 +10,28 @@ VSCODE_DIR=".vscode"
 LOG_FILE="vscode.log"
 
 REQUIRED_EXTENSIONS=(
-#timonwong.shellcheck@0.37.7
-naumovs.color-highlight@2.8.0
-inferrinizzard.prettier-sql-vscode@1.6.0
-GitHub.copilot@1.331.0
-GitHub.vscode-pull-request-github@0.108.0
-hbenl.vscode-test-explorer@2.22.1
-VisualStudioExptTeam.vscodeintellicode@1.3.2
-DavidAnson.vscode-markdownlint@0.60.0
-shd101wyy.markdown-preview-enhanced@0.8.18
-waderyan.gitblame@11.1.3
-foxundermoon.shell-format@7.2.5
-ms-vscode.test-adapter-converter@0.2.1
-VisualStudioExptTeam.intellicode-api-usage-examples@0.2.9
-ms-ossdata.vscode-pgsql@1.4.2
-GitHub.copilot-chat@0.26.7
-mkhl.direnv@0.17.0
-searKing.preview-vscode@2.3.12
-trond-snekvik.simple-rst@1.5.4
-github.vscode-github-actions@0.27.1
-yzhang.markdown-all-in-one@3.6.3
-	)
+    #timonwong.shellcheck@0.37.7
+    foxundermoon.shell-format@7.2.5
+    yzhang.markdown-all-in-one@3.6.3
+    github.vscode-github-actions@0.27.1
+    ms-ossdata.vscode-pgsql@1.4.2
+    GitHub.copilot-chat@0.27.3
+    VisualStudioExptTeam.intellicode-api-usage-examples@0.2.9
+    DavidAnson.vscode-markdownlint@0.60.0
+    GitHub.vscode-pull-request-github@0.108.0
+    waderyan.gitblame@11.1.3
+    ms-vscode.test-adapter-converter@0.2.1
+    mkhl.direnv@0.17.0
+    naumovs.color-highlight@2.8.0
+    shd101wyy.markdown-preview-enhanced@0.8.18
+    GitHub.copilot@1.331.0
+    trond-snekvik.simple-rst@1.5.4
+    hbenl.vscode-test-explorer@2.22.1
+    VisualStudioExptTeam.vscodeintellicode@1.3.2
+    dorzey.vscode-sqlfluff@3.3.1
+    GitHub.vscode-pull-request-github@0.110.0
+    searKing.preview-vscode@2.3.12
+)
 
 # ----------------------------------------------
 # Functions
@@ -282,6 +283,22 @@ if ! jq -e '."[python]".envFile' "$SETTINGS_FILE" >/dev/null; then
     echo "  🔧 Python Env file set up"
 else
     echo "  ✅ Python Env File already configured"
+fi
+
+echo "🗨️ Ensuring SQL formatter is set..."
+if ! jq -e '."[sql]".editor.defaultFormatter' "$SETTINGS_FILE" >/dev/null; then
+    jq '."[sql]" += {"editor.defaultFormatter": "dorzey.vscode-sqlfluff", "editor.formatOnSave": true}' "$SETTINGS_FILE" >"$SETTINGS_FILE.tmp" && mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
+    echo "  🔧 SQL formatter set to dorzey.vscode-sqlfluff, formatOnSave enabled"
+else
+    echo "  ✅ SQL formatter already configured"
+fi
+
+echo "🗨️ Ensuring SQLFluff dialect is set to postgres..."
+if ! jq -e '.["sqlfluff.dialect"]' "$SETTINGS_FILE" >/dev/null; then
+    jq '. + {"sqlfluff.dialect": "postgres"}' "$SETTINGS_FILE" >"$SETTINGS_FILE.tmp" && mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
+    echo "  🔧 SQLFluff dialect set to postgres"
+else
+    echo "  ✅ SQLFluff dialect already configured"
 fi
 
 # TODO

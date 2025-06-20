@@ -58,6 +58,7 @@
           pkgs.vim
           pkgs.virtualenv
           pkgs.vscode
+          pkgs.sqlfluff
           (pkgs.python3.withPackages (ps: [
               ps.python
               ps.pip
@@ -83,8 +84,9 @@
               ps.toml
               ps.typer
               ps.snakeviz # For visualising cprofiler outputs
+              # Add these for SQL linting/formatting:
+              ps.sqlfmt
           ]))
-
         ];
         shellHook = ''
           unset SOURCE_DATE_EPOCH
@@ -112,10 +114,6 @@
           echo ""
           echo "  nix run .#qgis"
           echo "  nix run .#qgis-ltr"
-          echo ""
-          echo "Or start QGIS manually with all needed dependencies:"
-          echo ""
-          echo "./start_qgis.sh"
           echo ""
           echo "📒 Note:"
           echo "-----------------------"

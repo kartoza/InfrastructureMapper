@@ -8,6 +8,30 @@ repos:
         additional_dependencies: []
         args: [sql]
 
+  - repo: https://github.com/sqlfluff/sqlfluff
+    rev: 3.0.7
+    hooks:
+      - id: sqlfluff-lint
+        name: sqlfluff-lint
+        entry: sqlfluff lint
+        language: python
+        types: [sql]
+      - id: sqlfluff-fix
+        name: sqlfluff-fix
+        entry: sqlfluff fix --force
+        language: python
+        types: [sql]
+
+  # Optionally, use sqlfmt for formatting
+  - repo: https://github.com/tconbeer/sqlfmt
+    rev: v0.26.0
+    hooks:
+      - id: sqlfmt
+        name: sqlfmt
+        entry: sqlfmt
+        language: python
+        types: [sql]
+
   - repo: local
     hooks:
       - id: remove-core-file
