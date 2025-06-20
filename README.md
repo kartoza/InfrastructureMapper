@@ -12,6 +12,7 @@ Welcome to **Infrastructure Mapper**! This repository contains guidelines and co
   - [📂 Folder Structure](#-folder-structure)
   - [📜 License](#-license)
   - [⚒️ Using](#️-using)
+  - [🧊 Using the Nix Flake](#-using-the-nix-flake)
   - [✨ Contributing](#-contributing)
   - [📧 Contact](#-contact)
   - [Contributors](#contributors)
@@ -48,6 +49,43 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 ## ⚒️ Using
 
 Simply take the sql files in the sql folder and load them into postgres.
+
+## 🧊 Using the Nix Flake
+
+You can use the provided `flake.nix` to get a fully reproducible development environment and to run QGIS with the correct profile.
+
+1. **Install [Nix](https://nixos.org/download.html)** (if you haven’t already).
+2. **Enter the development shell:**
+
+```bash
+nix develop
+```
+
+This gives you all the tools and dependencies you need for working on this project.
+
+1. **Run QGIS with the project profile:**
+
+```bash
+  nix run .#qgis
+```
+
+Or, for the long-term release version:
+
+```bash
+nix run .#qgis-ltr
+```
+
+1. **VSCode users:**  
+
+You can launch a ready-to-use VSCode environment:
+
+```bash
+./vscode.sh
+```
+
+---
+
+This makes it easy to get started and ensures everyone is using the same environment!
 
 ## ✨ Contributing
 

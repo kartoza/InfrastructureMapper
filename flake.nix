@@ -1,40 +1,148 @@
 {
-  description = "Run QGIS with extra Python packages";
+  description = "NixOS developer environment for QGIS plugins.";
 
   inputs.geospatial.url = "github:imincik/geospatial-nix.repo";
   inputs.nixpkgs.follows = "geospatial/nixpkgs";
 
-  outputs = { self, geospatial, nixpkgs }: {
-    packages.x86_64-linux.default =
-      let
-        pkgs = import nixpkgs {
-          system = "x86_64-linux";
-        };
-        qgisWithExtras = geospatial.packages.x86_64-linux.qgis.override {
-          extraPythonPackages = ps: [
-            ps.pyqtwebengine
-            ps.jsonschema
-            ps.debugpy
-            ps.future
-            ps.psutil
-          ];
-        };
-      in qgisWithExtras;
-    packages.x86_64-linux.qgis-ltr =
-      let
-        pkgs = import nixpkgs {
-          system = "x86_64-linux";
-        };
-        qgisWithExtras = geospatial.packages.x86_64-linux.qgis-ltr.override {
-          extraPythonPackages = ps: [
-            ps.pyqtwebengine
-            ps.jsonschema
-            ps.debugpy
-            ps.future
-            ps.psutil
-          ];
-        };
-      in qgisWithExtras;
-  };
-}
+  outputs = { self, geospatial, nixpkgs }:
+    let
+      system = "x86_64-linux";
+      profileName = "InfrastructureMapper";
+      pkgs = import nixpkgs {
+        inherit system;
+        config = { allowUnfree = true; };
+      };
+      extraPythonPackages = ps: [
+        ps.pyqtwebengine
+        ps.jsonschema
+        ps.debugpy
+        ps.future
+        ps.psutil
+      ];
+      qgisWithExtras = geospatial.packages.${system}.qgis.override {
+        inherit extraPythonPackages;
+      };
+      qgisLtrWithExtras = geospatial.packages.${system}.qgis-ltr.override {
+        inherit extraPythonPackages;
+      };
+    in {
+      packages.${system} = {
+        default = qgisWithExtras;
+        qgis-ltr = qgisLtrWithExtras;
+      };
 
+      devShells.${system}.default = pkgs.mkShell {
+        packages = [
+          pkgs.chafa
+          pkgs.ffmpeg
+          pkgs.gdb
+          pkgs.git
+          pkgs.glow # terminal markdown viewer
+          pkgs.gource # Software version control visualization
+          pkgs.gum
+          pkgs.gum # UX for TUIs
+          pkgs.jq
+          pkgs.libsForQt5.kcachegrind
+          pkgs.nixfmt-rfc-style
+          pkgs.pre-commit
+          pkgs.pyprof2calltree # needed to covert cprofile call trees into a format kcachegrind can read
+          pkgs.python3
+          pkgs.qgis
+          pkgs.qt5.full # so we get designer
+          pkgs.qt5.qtbase
+          pkgs.qt5.qtlocation
+          pkgs.qt5.qtquickcontrols2
+          pkgs.qt5.qtsvg
+          pkgs.qt5.qttools
+          pkgs.skate # Distributed key/value store
+          pkgs.vim
+          pkgs.virtualenv
+          pkgs.vscode
+          (pkgs.python3.withPackages (ps: [
+              ps.python
+              ps.pip
+              ps.setuptools
+              ps.wheel
+              ps.pytest
+              ps.pytest-qt
+              ps.black
+              ps.click # needed by black
+              ps.jsonschema
+              ps.pandas
+              ps.odfpy
+              ps.psutil
+              ps.httpx
+              ps.toml
+              ps.typer
+              ps.paver
+              # For autocompletion in vscode
+              ps.pyqt5-stubs
+              ps.debugpy
+              ps.numpy
+              ps.gdal
+              ps.toml
+              ps.typer
+              ps.snakeviz # For visualising cprofiler outputs
+          ]))
+
+        ];
+        shellHook = ''
+          unset SOURCE_DATE_EPOCH
+
+          # Create a virtual environment in .venv if it doesn't exist
+          if [ ! -d ".venv" ]; then
+            python -m venv .venv
+          fi
+
+          # Activate the virtual environment
+          source .venv/bin/activate
+
+          # Upgrade pip and install packages from requirements.txt if it exists
+          pip install --upgrade pip > /dev/null
+          if [ -f requirements.txt ]; then
+            echo "Installing Python requirements from requirements.txt..."
+            pip install -r requirements.txt
+          else
+            echo "No requirements.txt found, skipping pip install."
+          fi
+
+          echo "-----------------------"
+          echo "🌈 Your Dev Environment is prepared."
+          echo "To run QGIS with your profile, use one of these commands:"
+          echo ""
+          echo "  nix run .#qgis"
+          echo "  nix run .#qgis-ltr"
+          echo ""
+          echo "Or start QGIS manually with all needed dependencies:"
+          echo ""
+          echo "./start_qgis.sh"
+          echo ""
+          echo "📒 Note:"
+          echo "-----------------------"
+          echo "We provide a ready-to-use"
+          echo "VSCode environment which you"
+          echo "can start like this:"
+          echo ""
+          echo "./vscode.sh"
+          echo "-----------------------"
+
+          pre-commit clean > /dev/null
+          pre-commit install --install-hooks > /dev/null
+          pre-commit run --all-files || true
+        '';
+      };
+
+      apps.${system} = {
+        qgis = {
+          type = "app";
+          program = "${qgisWithExtras}/bin/qgis";
+          args = [ "--profile" "${profileName}" ];
+        };
+        qgis-ltr = {
+          type = "app";
+          program = "${qgisLtrWithExtras}/bin/qgis";
+          args = [ "--profile" "${profileName}" ];
+        };
+      };
+    };
+}
