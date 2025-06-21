@@ -1,0 +1,76 @@
+name: SQL Lint and Load
+
+on:
+  push:
+    paths:
+      - 'sql/**.sql'
+      - '.sqlfluff'
+      - '.github/workflows/sql-lint-and-load.yml'
+      - 'load_schema.sh'
+  pull_request:
+    paths:
+      - 'sql/**.sql'
+      - '.sqlfluff'
+      - '.github/workflows/sql-lint-and-load.yml'
+      - 'load_schema.sh'
+
+jobs:
+  sqlfluff-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install sqlfluff
+        run: pip install sqlfluff
+
+      - name: Lint SQL files with sqlfluff
+        run: sqlfluff lint sql --config .sqlfluff
+
+  postgis-load:
+    runs-on: ubuntu-latest
+    needs: sqlfluff-lint
+    services:
+      postgres:
+        image: postgis/postgis:16-3.4
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: gis
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Wait for Postgres to be ready
+        run: |
+          for i in {1..30}; do
+            pg_isready -h localhost -U postgres && break
+            sleep 2
+          done
+
+      - name: Install PostgreSQL client
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+
+      - name: Run load_schema.sh
+        env:
+          PGHOST: localhost
+          PGUSER: postgres
+          PGPASSWORD: postgres
+          PGDATABASE: gis
+          PGPORT: 5432
+        run: |
+          chmod +x ./load_schema.sh
+          ./load_schema.sh
