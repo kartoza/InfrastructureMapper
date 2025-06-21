@@ -81,7 +81,7 @@ Please adhere to our [Code of Conduct](CODE_OF_CONDUCT.md) to ensure a welcoming
 
 - Use the following format for commit messages:
 
-  ```
+  ```bash
   [Type] Short description of the change
   ```
 
