@@ -25,6 +25,9 @@ Welcome to **Infrastructure Mapper**! This repository contains guidelines and co
     - [📍 Points Of Interest](#-points-of-interest)
     - [🗺️ Landuse](#️-landuse)
     - [🚪 Gates](#-gates)
+    - [🪧 Poles](#-poles)
+    - [🍽️ Culinary](#️-culinary)
+    - [🛣️ Roads](#️-roads)
   - [📜 License](#-license)
   - [⚒️ Using](#️-using)
   - [🧊 Using the Nix Flake](#-using-the-nix-flake)
@@ -601,8 +604,143 @@ erDiagram
 >Image: img/gates.png
 >Text: Summary of the entities in sql/10-gates.sql
 >Mermaid: Diagram of the entities in sql/10-gates.sql
+>
+### 🪧 Poles
+
+![Poles](./img/poles.png)
+
+The **Poles** component models standalone poles used for various infrastructure purposes, such as lighting, signage, or utility support. This schema allows for categorizing pole types and recording individual pole features with their spatial locations and relevant attributes.
+
+**Entities from `sql/11-poles.sql`:**
+
+- `pole_type`: Lookup table for different types of poles (e.g., lighting, signage, utility).
+- `pole`: Represents individual poles, with geometry, a reference to `pole_type`, and descriptive attributes.
+
+```mermaid
+erDiagram
+  pole_type {
+    UUID uuid PK
+    TEXT name
+    TIMESTAMP last_update
+    TEXT last_update_by
+  }
+  pole {
+    UUID uuid PK
+    UUID pole_type_uuid FK
+    GEOMETRY geometry
+    TEXT name
+    TEXT description
+    TIMESTAMP last_update
+    TEXT last_update_by
+  }
+
+  pole_type ||--o{ pole : "has many"
+```
+
+> 🤖 **Prompt:** Add a subsection to here which has:
+>
+>1. SubHeading: Poles
+>2. Image: img/poles.png
+>3. Text: Summary of the entities in sql/11-poles.sql
+>4. Mermaid: Diagram of the entities in sql/11-poles.sql
+
+### 🍽️ Culinary
+
+![Culinary](./img/food-services.png)
+
+The **Culinary** component models food service infrastructure, such as kitchens, dining areas, and food storage facilities. This schema enables the representation of culinary-related spaces, their types, and their spatial relationships within the infrastructure.
+
+**Entities from `sql/12-culinary.sql`:**
+
+- `culinary_facility_type`: Lookup table for types of culinary facilities (e.g., kitchen, canteen, pantry).
+- `culinary_facility`: Represents individual culinary facilities, with geometry and a reference to `culinary_facility_type`.
+- `food_storage`: Represents food storage areas, with geometry and attributes for capacity and type.
+
+```mermaid
+erDiagram
+  culinary_facility_type {
+    UUID uuid PK
+    TEXT name
+    TIMESTAMP last_update
+    TEXT last_update_by
+  }
+  culinary_facility {
+    UUID uuid PK
+    UUID culinary_facility_type_uuid FK
+    GEOMETRY geometry
+    TEXT name
+    TIMESTAMP last_update
+    TEXT last_update_by
+  }
+  food_storage {
+    UUID uuid PK
+    GEOMETRY geometry
+    TEXT name
+    INTEGER capacity_kg
+    TEXT storage_type
+    TIMESTAMP last_update
+    TEXT last_update_by
+  }
+
+  culinary_facility_type ||--o{ culinary_facility : "has many"
+  culinary_facility ||--o{ food_storage : "contains"
+```
+
+> 🤖 **Prompt:** Add a subsection to here which has:
+>
+>1. SubHeading: Culinary
+>2. Image: img/food-services.png
+>3. Text: Summary of the entities in sql/12-culinary.sql
+>4. Mermaid: Diagram of the entities in sql/12-culinary.sql
+
+### 🛣️ Roads
+
+![Roads](./img/roads.png)
+
+The **Roads** component models transportation infrastructure, including roads, tracks, and paths within the mapped area. This schema enables the representation of different road types, individual road segments, and their spatial characteristics, supporting navigation, planning, and analysis.
+
+**Entities from `sql/13-roads.sql`:**
+
+- `road_type`: Lookup table for types of roads (e.g., main road, track, footpath).
+- `road`: Represents individual road segments, with geometry and a reference to `road_type`.
+- `road_junction`: Represents intersections or junctions between roads, with geometry and descriptive attributes.
+
+```mermaid
+erDiagram
+  road_type {
+    UUID uuid PK
+    TEXT name
+    TIMESTAMP last_update
+    TEXT last_update_by
+  }
+  road {
+    UUID uuid PK
+    UUID road_type_uuid FK
+    GEOMETRY geometry
+    TEXT name
+    TIMESTAMP last_update
+    TEXT last_update_by
+  }
+  road_junction {
+    UUID uuid PK
+    GEOMETRY geometry
+    TEXT name
+    TIMESTAMP last_update
+    TEXT last_update_by
+  }
+
+  road_type ||--o{ road : "has many"
+  road ||--o{ road_junction : "connects to"
+```
 
 ---
+
+> Add a subsection to here which has:
+>
+>1. SubHeading: Roads
+>2. Image: img/roads.png
+>3. Text: Summary of the entities in sql/13-roads.sql
+>4. Mermaid: Diagram of the entities in sql/13-roads.sql
 
 ## 📜 License
 
