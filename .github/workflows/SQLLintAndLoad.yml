@@ -13,7 +13,7 @@ on:
       - '.sqlfluff'
       - '.github/workflows/sql-lint-and-load.yml'
       - 'load_schema.sh'
-
+  workflow_dispatch:
 jobs:
   sqlfluff-lint:
     runs-on: ubuntu-latest
