@@ -25,10 +25,12 @@
       qgisLtrWithExtras = geospatial.packages.${system}.qgis-ltr.override {
         inherit extraPythonPackages;
       };
+      postgresWithPostGIS = pkgs.postgresql.withPackages (ps: [ ps.postgis ]);
     in {
       packages.${system} = {
         default = qgisWithExtras;
         qgis-ltr = qgisLtrWithExtras;
+        postgres = postgresWithPostGIS;
       };
 
       devShells.${system}.default = pkgs.mkShell {
@@ -59,39 +61,57 @@
           pkgs.virtualenv
           pkgs.vscode
           pkgs.sqlfluff
+          postgresWithPostGIS
           (pkgs.python3.withPackages (ps: [
-              ps.python
-              ps.pip
-              ps.setuptools
-              ps.wheel
-              ps.pytest
-              ps.pytest-qt
-              ps.black
-              ps.click # needed by black
-              ps.jsonschema
-              ps.pandas
-              ps.odfpy
-              ps.psutil
-              ps.httpx
-              ps.toml
-              ps.typer
-              ps.paver
-              # For autocompletion in vscode
-              ps.pyqt5-stubs
-              ps.debugpy
-              ps.numpy
-              ps.gdal
-              ps.toml
-              ps.typer
-              ps.snakeviz # For visualising cprofiler outputs
-              # Add these for SQL linting/formatting:
-              ps.sqlfmt
+            ps.python
+            ps.pip
+            ps.setuptools
+            ps.wheel
+            ps.pytest
+            ps.pytest-qt
+            ps.black
+            ps.click # needed by black
+            ps.jsonschema
+            ps.pandas
+            ps.odfpy
+            ps.psutil
+            ps.httpx
+            ps.toml
+            ps.typer
+            ps.paver
+            # For autocompletion in vscode
+            ps.pyqt5-stubs
+            ps.debugpy
+            ps.numpy
+            ps.gdal
+            ps.toml
+            ps.typer
+            ps.snakeviz # For visualising cprofiler outputs
+            # Add these for SQL linting/formatting:
+            ps.sqlfmt
           ]))
         ];
         shellHook = ''
-          unset SOURCE_DATE_EPOCH
+          export PATH=${postgresWithPostGIS}/bin:$PATH
+          export PGDATA="$PWD/pgdata"
+          export PGHOST="$PGDATA"
+          export PGPORT=5432
 
-          # Create a virtual environment in .venv if it doesn't exist
+          if [ ! -d "$PGDATA/base" ]; then
+            echo "🛠️ Initializing PostgreSQL cluster in $PGDATA"
+            initdb -D "$PGDATA" --locale=C
+          fi
+
+          echo "🚀 Starting PostgreSQL..."
+          pg_ctl -D "$PGDATA" -o "-k $PGDATA -p $PGPORT" -w start > /dev/null
+
+          if ! test -f "$PGDATA/.postgis_setup_done"; then
+            createdb gis
+            psql -d gis -c "CREATE EXTENSION IF NOT EXISTS postgis;" > /dev/null
+            touch "$PGDATA/.postgis_setup_done"
+            echo "📦 PostGIS extension created in 'gis' database."
+          fi
+
           if [ ! -d ".venv" ]; then
             python -m venv .venv
           fi
@@ -123,6 +143,12 @@
           echo ""
           echo "./vscode.sh"
           echo "-----------------------"
+          echo "Postgres should be running with its"
+          echo "data stored in ./pgdata"
+          echo "You need to stop it manually with this command"
+          echo "${postgresWithPostGIS}/bin/pg_ctl -D ./pgdata stop -m fast"
+          echo ""
+          echo "Or use ./stop_pg.sh to stop it"
 
           pre-commit clean > /dev/null
           pre-commit install --install-hooks > /dev/null
