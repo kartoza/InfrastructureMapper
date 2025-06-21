@@ -10,11 +10,8 @@ Welcome to **Infrastructure Mapper**! This repository contains guidelines and co
   - [📖 Table of Contents](#-table-of-contents)
   - [🚀 Project Overview](#-project-overview)
   - [📂 Folder Structure](#-folder-structure)
-    - [🗺️ Landuse](#️-landuse)
-    - [🚪 Gates](#-gates)
   - [🤖 Using 'AI' (Large Language Models)](#-using-ai-large-language-models)
   - [🌿 Design Aesthetic](#-design-aesthetic)
-- [7C9C75 #A9825A #E0D2B2 #A4DDED #2B7A78 #C1E1C1 #9FA8A3 #F5F5F2](#7c9c75-a9825a-e0d2b2-a4dded-2b7a78-c1e1c1-9fa8a3-f5f5f2)
   - [Components](#components)
     - [⚡ Electricity](#-electricity)
     - [🏗️ Infrastructure](#️-infrastructure)
@@ -24,6 +21,8 @@ Welcome to **Infrastructure Mapper**! This repository contains guidelines and co
     - [🏠 Buildings](#-buildings)
     - [🚧 Fencing](#-fencing)
     - [📍 Points Of Interest](#-points-of-interest)
+    - [🗺️ Landuse](#️-landuse)
+    - [🚪 Gates](#-gates)
   - [📜 License](#-license)
   - [⚒️ Using](#️-using)
   - [🧊 Using the Nix Flake](#-using-the-nix-flake)
@@ -52,83 +51,6 @@ InfrastructureMapper/
 ├── tests/             # Unit tests and test cases
 └── README.md          # Project overview and conventions
 ```
-
-### 🗺️ Landuse
-
-![Landuse](./img/landuse.png)
-
-The **Landuse** component models how land parcels are utilized or designated, such as agricultural, residential, commercial, or conservation areas. This schema enables the representation of landuse types and individual landuse polygons, supporting spatial analysis and planning.
-
-**Entities from `sql/9-landuse.sql`:**
-
-- `landuse_type`: Lookup table for different landuse categories (e.g., agricultural, residential, industrial).
-- `landuse`: Represents individual landuse areas, with geometry and a reference to `landuse_type`.
-
-```mermaid
-erDiagram
-  landuse_type {
-    UUID uuid PK
-    TEXT name
-    TIMESTAMP last_update
-    TEXT last_update_by
-  }
-  landuse {
-    UUID uuid PK
-    UUID landuse_type_uuid FK
-    GEOMETRY geometry
-    TEXT name
-    TIMESTAMP last_update
-    TEXT last_update_by
-  }
-
-  landuse_type ||--o{ landuse : "has many"
-```
-
-> 🤖 **Prompt:** Add a subsection to ## Components which provides
->
->1. SubHeading: Landuse
->2. Image: img/landuse.png
->3. Text: Summary of the entities in sql/9-landuse.sql
->4. Mermaid: Diagram of the entities in sql/9-landuse.sql
-
-### 🚪 Gates
-
-![Gates](./img/gates.png)
-
-The **Gates** component models access points within the infrastructure, such as entry or exit gates for properties, facilities, or enclosures. This schema supports different gate types, their spatial locations, and attributes like access control or association with fences or buildings.
-
-**Entities from `sql/10-gates.sql`:**
-
-- `gate_type`: Lookup table for types of gates (e.g., pedestrian, vehicle, automated).
-- `gate`: Represents individual gates, with geometry, a reference to `gate_type`, and attributes such as name and access type.
-
-```mermaid
-erDiagram
-  gate_type {
-    UUID uuid PK
-    TEXT name
-    TIMESTAMP last_update
-    TEXT last_update_by
-  }
-  gate {
-    UUID uuid PK
-    UUID gate_type_uuid FK
-    GEOMETRY geometry
-    TEXT name
-    TEXT access_type
-    TIMESTAMP last_update
-    TEXT last_update_by
-  }
-
-  gate_type ||--o{ gate : "has many"
-```
-
-> 🤖 **Prompt:** Add a subsection to ## Components which provides
->
->SubHeading: Gates
->Image: img/gates.png
->Text: Summary of the entities in sql/10-gates.sql
->Mermaid: Diagram of the entities in sql/10-gates.sql
 
 ---
 
@@ -174,7 +96,7 @@ Our colour swatch looks like this:
 
 > 🤖 **Prompt:** Generate me a beautiful circular swatch with these colours. Invent nice unique, human names for each colour:
 >
-# 7C9C75 #A9825A #E0D2B2 #A4DDED #2B7A78 #C1E1C1 #9FA8A3 #F5F5F2
+> #7C9C75 #A9825A #E0D2B2 #A4DDED #2B7A78 #C1E1C1 #9FA8A3 #F5F5F2
 
 These colors are soft but grounded, avoiding oversaturation while maintaining a naturalistic feel that suits isometric vector work.
 
@@ -598,6 +520,83 @@ erDiagram
 >3. Text: Summary of the entities in sql/8-poi.sql
 >4. Mermaid: Diagram of the entities in sql/8-poi.sql
 >
+
+### 🗺️ Landuse
+
+![Landuse](./img/landuse.png)
+
+The **Landuse** component models how land parcels are utilized or designated, such as agricultural, residential, commercial, or conservation areas. This schema enables the representation of landuse types and individual landuse polygons, supporting spatial analysis and planning.
+
+**Entities from `sql/9-landuse.sql`:**
+
+- `landuse_type`: Lookup table for different landuse categories (e.g., agricultural, residential, industrial).
+- `landuse`: Represents individual landuse areas, with geometry and a reference to `landuse_type`.
+
+```mermaid
+erDiagram
+  landuse_type {
+    UUID uuid PK
+    TEXT name
+    TIMESTAMP last_update
+    TEXT last_update_by
+  }
+  landuse {
+    UUID uuid PK
+    UUID landuse_type_uuid FK
+    GEOMETRY geometry
+    TEXT name
+    TIMESTAMP last_update
+    TEXT last_update_by
+  }
+
+  landuse_type ||--o{ landuse : "has many"
+```
+
+> 🤖 **Prompt:** Add a subsection to ## Components which provides
+>
+>1. SubHeading: Landuse
+>2. Image: img/landuse.png
+>3. Text: Summary of the entities in sql/9-landuse.sql
+>4. Mermaid: Diagram of the entities in sql/9-landuse.sql
+
+### 🚪 Gates
+
+![Gates](./img/gates.png)
+
+The **Gates** component models access points within the infrastructure, such as entry or exit gates for properties, facilities, or enclosures. This schema supports different gate types, their spatial locations, and attributes like access control or association with fences or buildings.
+
+**Entities from `sql/10-gates.sql`:**
+
+- `gate_type`: Lookup table for types of gates (e.g., pedestrian, vehicle, automated).
+- `gate`: Represents individual gates, with geometry, a reference to `gate_type`, and attributes such as name and access type.
+
+```mermaid
+erDiagram
+  gate_type {
+    UUID uuid PK
+    TEXT name
+    TIMESTAMP last_update
+    TEXT last_update_by
+  }
+  gate {
+    UUID uuid PK
+    UUID gate_type_uuid FK
+    GEOMETRY geometry
+    TEXT name
+    TEXT access_type
+    TIMESTAMP last_update
+    TEXT last_update_by
+  }
+
+  gate_type ||--o{ gate : "has many"
+```
+
+> 🤖 **Prompt:** Add a subsection to ## Components which provides
+>
+>SubHeading: Gates
+>Image: img/gates.png
+>Text: Summary of the entities in sql/10-gates.sql
+>Mermaid: Diagram of the entities in sql/10-gates.sql
 
 ---
 
