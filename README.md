@@ -1,5 +1,7 @@
 # 🌐 Infrastructure Mapper
 
+![Logo](./img/logo-horizontal.png)
+
 Welcome to **Infrastructure Mapper**! This repository contains guidelines and conventions for a spatial database intended to be used managing infrastructure-related data.
 
 ---
@@ -33,6 +35,8 @@ Welcome to **Infrastructure Mapper**! This repository contains guidelines and co
 ---
 
 ## 🚀 Project Overview
+
+![Animation](./img/infrastructure-mapper.gif)
 
 This project consists of:
 
