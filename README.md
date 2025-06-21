@@ -14,7 +14,7 @@ Welcome to **Infrastructure Mapper**! This repository contains guidelines and co
   - [📂 Folder Structure](#-folder-structure)
   - [🤖 Using 'AI' (Large Language Models)](#-using-ai-large-language-models)
   - [🌿 Design Aesthetic](#-design-aesthetic)
-  - [Components](#components)
+  - [Data Model](#data-model)
     - [⚡ Electricity](#-electricity)
     - [🏗️ Infrastructure](#️-infrastructure)
     - [💧 Water](#-water)
@@ -109,9 +109,9 @@ These colors are soft but grounded, avoiding oversaturation while maintaining a 
 
 ---
 
-## Components
+## Data Model
 
-This section describes each component of the infrastructure mapper data model.
+This section describes each component of the infrastructure mapper data model. You can also find a complete diagram of the data model in [diagrams/Schema.drawio](./diagrams/Schema_2025.drawio) (image render [here](./diagrams/Schema_2025.png)).
 
 ### ⚡ Electricity
 
