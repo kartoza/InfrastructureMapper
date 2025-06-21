@@ -1,3 +1,4 @@
 [sqlfluff]
 dialect = postgres
 max_file_length = 500
+exclude_rules = LT05
