@@ -11,26 +11,26 @@ LOG_FILE="vscode.log"
 
 REQUIRED_EXTENSIONS=(
     #timonwong.shellcheck@0.37.7
-    foxundermoon.shell-format@7.2.5
-    yzhang.markdown-all-in-one@3.6.3
-    github.vscode-github-actions@0.27.1
-    ms-ossdata.vscode-pgsql@1.4.2
-    GitHub.copilot-chat@0.27.3
-    VisualStudioExptTeam.intellicode-api-usage-examples@0.2.9
-    DavidAnson.vscode-markdownlint@0.60.0
-    GitHub.vscode-pull-request-github@0.108.0
-    waderyan.gitblame@11.1.3
-    ms-vscode.test-adapter-converter@0.2.1
-    mkhl.direnv@0.17.0
-    naumovs.color-highlight@2.8.0
-    shd101wyy.markdown-preview-enhanced@0.8.18
-    GitHub.copilot@1.331.0
-    trond-snekvik.simple-rst@1.5.4
-    hbenl.vscode-test-explorer@2.22.1
-    VisualStudioExptTeam.vscodeintellicode@1.3.2
-    dorzey.vscode-sqlfluff@3.3.1
-    GitHub.vscode-pull-request-github@0.110.0
-    searKing.preview-vscode@2.3.12
+foxundermoon.shell-format@7.2.5
+yzhang.markdown-all-in-one@3.6.3
+github.vscode-github-actions@0.27.1
+ms-ossdata.vscode-pgsql@1.4.2
+GitHub.copilot-chat@0.27.3
+VisualStudioExptTeam.intellicode-api-usage-examples@0.2.9
+DavidAnson.vscode-markdownlint@0.60.0
+GitHub.vscode-pull-request-github@0.108.0
+waderyan.gitblame@11.1.3
+ms-vscode.test-adapter-converter@0.2.1
+mkhl.direnv@0.17.0
+naumovs.color-highlight@2.8.0
+shd101wyy.markdown-preview-enhanced@0.8.18
+GitHub.copilot@1.331.0
+trond-snekvik.simple-rst@1.5.4
+hbenl.vscode-test-explorer@2.22.1
+VisualStudioExptTeam.vscodeintellicode@1.3.2
+dorzey.vscode-sqlfluff@3.3.1
+GitHub.vscode-pull-request-github@0.110.0
+searKing.preview-vscode@2.3.12
 )
 
 # ----------------------------------------------

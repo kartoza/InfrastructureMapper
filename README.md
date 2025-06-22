@@ -28,8 +28,7 @@ Welcome to **Infrastructure Mapper**! This repository contains guidelines and co
 
 ![Animation](./img/infrastructure-mapper.gif)
 
-[![SQL Lint and Load](https://github.com/kartoza/InfrastructureMapper/actions/workflows/SQLLintAndLoad.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/SQLLintAndLoad.yml)ccccccteberftebhjbtehlfekiiiercudrhjbguiuvke
-
+[![SQL Lint and Load](https://github.com/kartoza/InfrastructureMapper/actions/workflows/SQLLintAndLoad.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/SQLLintAndLoad.yml)
 This project consists of:
 
 1. a [SQL Schema](sql/schema.README.md) for PostgreSQL,
@@ -76,7 +75,7 @@ You can use the notes above and the table below if you are prompt engineering ad
 
 Our colour swatch looks like this:
 
-![Colour Swatch](./img/swatch.png)
+<img src="./img/swatch.png" alt="Electricity" width="164" height="164">
 
 | Name               | Hex      | Use Case                  | Preview                |
 |--------------------|----------|---------------------------|------------------------|
