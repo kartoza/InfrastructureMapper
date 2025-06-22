@@ -104,19 +104,19 @@ This section describes each component of the infrastructure mapper data model. Y
 
 | Icon | Description |
 |------|-------------|
-| ⚡   | [Electricity](./sql/2-electricity.md) infrastructure such as power lines, transformers, and substations. |
-| 🏗️   | General [infrastructure](./sql/1-infrastructure.md) elements like bridges, dams, and towers. |
-| 💧   | [Water](./sql/3-water.md)-related infrastructure including pipes, tanks, and pumps. |
-| 🌱   | [Vegetation](./sql/4-vegetation.md) features such as trees, hedges, and planted areas. |
-| 📡   | [Monitoring](./sql/5-monitoring.md) devices and their observations (e.g., sensors, cameras). |
-| 🏠   | [Buildings](./sql/6-buildings.md) and associated structures. |
-| 🚧   | [Fencing](./sql/7-fencing.md) and enclosure features, including standalone gates. |
-| 📍   | [Points of Interest](./sql/8-poi.md) (POI) for notable locations or features. |
-| 🗺️   | [Landuse areas](./sql/9-landuse.md) such as agricultural, residential, or conservation zones. |
-| 🚪   | [Gates](./sql/10-gates.md) as access points for properties or enclosures. |
-| 🪧   | [Poles](./sql/11-poles.md) for lighting, signage, or utility support. |
-| 🍽️   | [Culinary facilities](./sql/12-culinary.md) like kitchens, canteens, and food storage. |
-| 🛣️   | [Roads](./sql/13-roads.md), tracks, and paths for transportation infrastructure. |
+| <img src="./img/electricity.png" alt="Electricity" width="64" height="64"> | [Electricity](./sql/2-electricity.md) infrastructure such as power lines, transformers, and substations. |
+| <img src="./img/infrastructure.png" alt="Infrastructure" width="64" height="64"> | General [infrastructure](./sql/1-infrastructure.md) elements like bridges, dams, and towers. |
+| <img src="./img/water.png" alt="Water" width="64" height="64"> | [Water](./sql/3-water.md)-related infrastructure including pipes, tanks, and pumps. |
+| <img src="./img/vegetation.png" alt="Vegetation" width="64" height="64"> | [Vegetation](./sql/4-vegetation.md) features such as trees, hedges, and planted areas. |
+| <img src="./img/monitoring.png" alt="Monitoring" width="64" height="64"> | [Monitoring](./sql/5-monitoring.md) devices and their observations (e.g., sensors, cameras). |
+| <img src="./img/buildings.png" alt="Buildings" width="64" height="64"> | [Buildings](./sql/6-buildings.md) and associated structures. |
+| <img src="./img/fencing.png" alt="Fencing" width="64" height="64"> | [Fencing](./sql/7-fencing.md) and enclosure features, including standalone gates. |
+| <img src="./img/point-of-interest.png" alt="POI" width="64" height="64"> | [Points of Interest](./sql/8-poi.md) (POI) for notable locations or features. |
+| <img src="./img/landuse-areas.png" alt="Landuse" width="64" height="64"> | [Landuse areas](./sql/9-landuse.md) such as agricultural, residential, or conservation zones. |
+| <img src="./img/gates.png" alt="Gates" width="64" height="64"> | [Gates](./sql/10-gates.md) as access points for properties or enclosures. |
+| <img src="./img/poles.png" alt="Poles" width="64" height="64"> | [Poles](./sql/11-poles.md) for lighting, signage, or utility support. |
+| <img src="./img/food-services.png" alt="Culinary" width="64" height="64"> | [Culinary facilities](./sql/12-culinary.md) like kitchens, canteens, and food storage. |
+| <img src="./img/roads.png" alt="Roads" width="64" height="64"> | [Roads](./sql/13-roads.md), tracks, and paths for transportation infrastructure. |
 
 ## 📜 License
 
