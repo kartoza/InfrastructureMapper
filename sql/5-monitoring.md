@@ -1,6 +1,6 @@
 # 📡 Monitoring
 
-![Monitoring](./img/monitoring.png)
+![Monitoring](../img/monitoring.png)
 
 The **Monitoring** component captures infrastructure monitoring devices and their observations. This schema allows for the representation of sensors (such as weather stations, cameras, or environmental monitors), their types, and the data they collect over time.
 

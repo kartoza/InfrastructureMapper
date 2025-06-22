@@ -1,6 +1,6 @@
 # 🛣️ Roads
 
-![Roads](./img/roads.png)
+![Roads](../img/roads.png)
 
 The **Roads** component models transportation infrastructure, including roads, tracks, and paths within the mapped area. This schema enables the representation of different road types, individual road segments, and their spatial characteristics, supporting navigation, planning, and analysis.
 

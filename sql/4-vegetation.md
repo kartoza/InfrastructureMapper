@@ -1,6 +1,6 @@
 # 🌱 Vegetation
 
-![Vegetation](./img/vegetation.png)
+![Vegetation](../img/vegetation.png)
 
 The **Vegetation** component models natural and managed vegetation features, such as trees, hedges, and planted areas. This schema supports the representation of individual plants and grouped vegetation, along with their types and spatial characteristics.
 

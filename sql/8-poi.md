@@ -1,7 +1,7 @@
 
 # 📍 Points Of Interest
 
-![Points Of Interest](./img/point-of-interest.png)
+![Points Of Interest](../img/point-of-interest.png)
 
 The **Points Of Interest (POI)** component models notable locations or features that are relevant for mapping and analysis but do not fit into other infrastructure categories. This schema supports categorizing POIs, storing their spatial locations, and associating descriptive information.
 

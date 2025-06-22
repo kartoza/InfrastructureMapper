@@ -1,6 +1,6 @@
 # 🏠 Buildings
 
-![Buildings](./img/buildings.png)
+![Buildings](../img/buildings.png)
 
 The **Buildings** component models structures and their related entities. The schema supports different building types, fences, and gates, allowing for detailed representation of built infrastructure and their spatial relationships.
 

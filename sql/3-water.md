@@ -1,6 +1,6 @@
 # 💧 Water
 
-![Water](./img/water.png)
+![Water](../img/water.png)
 
 The **Water** component models water-related infrastructure, such as pipelines, tanks, and pumps. This schema enables the representation of the spatial layout and relationships of water distribution and storage elements.
 

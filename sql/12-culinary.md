@@ -1,6 +1,6 @@
 # 🍽️ Culinary
 
-![Culinary](./img/food-services.png)
+![Culinary](../img/food-services.png)
 
 The **Culinary** component models food service infrastructure, such as kitchens, dining areas, and food storage facilities. This schema enables the representation of culinary-related spaces, their types, and their spatial relationships within the infrastructure.
 

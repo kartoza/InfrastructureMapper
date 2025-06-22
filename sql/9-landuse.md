@@ -1,6 +1,6 @@
 # 🗺️ Landuse
 
-![Landuse](./img/landuse.png)
+![Landuse](../img/landuse.png)
 
 The **Landuse** component models how land parcels are utilized or designated, such as agricultural, residential, commercial, or conservation areas. This schema enables the representation of landuse types and individual landuse polygons, supporting spatial analysis and planning.
 
