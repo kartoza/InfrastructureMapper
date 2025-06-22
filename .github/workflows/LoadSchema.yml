@@ -53,5 +53,5 @@ jobs:
           PGDATABASE: gis
           PGPORT: 5432
         run: |
-          chmod +x ./load_schema.sh
-          ./load_schema.sh
+          chmod +x ./scripts/load_schema.sh
+          ./scripts/load_schema.sh
