@@ -142,7 +142,7 @@ The `scripts/` folder contains utility scripts to assist with database setup, da
 |----------------------------|----------------------------------------------------------------------------------------------|
 | `start_pg.sh`              | Nix specific to start a sandboxed postgresql instance with data stored in ./pgdata           |
 | `load_schema.sh`           | Loads the SQL schema files into the target database, setting up all required tables.         |
-| `stop_pg.sh`               | Stops the postgres database                                                                  |
+| `stop_pg.sh`               | Nix specific script to stop the postgres database                                            |
 | `check.sh`                 | Git precommit check and format SQL files                                                     |
 | `gource.sh`                | Visualise the code history using gource                                                      |
 | `vscode.sh`                | Launch VSCode with all settings and extensions needed to productively work on this project   |
