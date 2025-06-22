@@ -41,7 +41,7 @@ Welcome to **Infrastructure Mapper**! This repository contains guidelines and co
 
 ![Animation](./img/infrastructure-mapper.gif)
 
-[![SQL Lint and Load](https://github.com/kartoza/InfrastructureMapper/actions/workflows/SQLLintAndLoad.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/SQLLintAndLoad.yml)
+[![SQL Lint and Load](https://github.com/kartoza/InfrastructureMapper/actions/workflows/SQLLintAndLoad.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/SQLLintAndLoad.yml)ccccccteberftebhjbtehlfekiiiercudrhjbguiuvke
 
 This project consists of:
 
