@@ -29,7 +29,10 @@ Welcome to **Infrastructure Mapper**! This repository contains guidelines and co
 
 ![Animation](./img/infrastructure-mapper.gif)
 
-[![SQL Lint and Load](https://github.com/kartoza/InfrastructureMapper/actions/workflows/SQLLintAndLoad.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/SQLLintAndLoad.yml)
+[![PostGIS Load Test](https://github.com/kartoza/InfrastructureMapper/actions/workflows/LoadSchema.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/LoadSchema.yml)
+
+[![SQL Lint Test](https://github.com/kartoza/InfrastructureMapper/actions/workflows/SQLFluff.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/SQLFluff.yml)
+
 This project consists of:
 
 1. a [SQL Schema](sql/schema.README.md) for PostgreSQL,

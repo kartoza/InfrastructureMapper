@@ -1,4 +1,4 @@
-name: SQL Lint and Load
+name: SQL Lint Test
 
 on:
   push:
