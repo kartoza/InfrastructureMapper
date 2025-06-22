@@ -1,6 +1,6 @@
 # ⚡ Electricity
 
-![Electricity](./img/electricity.png)
+![Electricity](../img/electricity.png)
 
 The **Electricity** component models electrical infrastructure, including power lines, poles, and transformers. This schema enables the representation of the spatial layout and relationships of electricity distribution elements.
 
