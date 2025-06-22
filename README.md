@@ -11,12 +11,13 @@ Welcome to **Infrastructure Mapper**! This repository contains guidelines and co
 - [🌐 Infrastructure Mapper](#-infrastructure-mapper)
   - [📖 Table of Contents](#-table-of-contents)
   - [🚀 Project Overview](#-project-overview)
+  - [📜 License](#-license)
   - [📂 Folder Structure](#-folder-structure)
   - [🤖 Using 'AI' (Large Language Models)](#-using-ai-large-language-models)
   - [🌿 Design Aesthetic](#-design-aesthetic)
   - [Data Model](#data-model)
-  - [📜 License](#-license)
   - [⚒️ Using](#️-using)
+  - [🛠️ Scripts Overview](#️-scripts-overview)
   - [🧊 Using the Nix Flake](#-using-the-nix-flake)
   - [✨ Contributing](#-contributing)
   - [📧 Contact](#-contact)
@@ -35,6 +36,14 @@ This project consists of:
 2. a set of fixtures to load that schema with default values (particularly for lookup tables)
 3. a set of QGIS forms and layer styles for visualising the data
 
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
+
+___
+
 ## 📂 Folder Structure
 
 ```plaintext
@@ -42,8 +51,8 @@ InfrastructureMapper/
 ├── img/               # Images and media resources used in this documentation
 ├── qml/               # QGIS layer style and form definitions
 ├── diagrams/          # Documentation and ERD diagrams
-├── sql/               # Chema and fixtures to load into postgres
-├── tests/             # Unit tests and test cases
+├── sql/               # Schema and fixtures to load into postgres
+├── scripts/           # Helper scripts
 └── README.md          # Project overview and conventions
 ```
 
@@ -117,15 +126,30 @@ This section describes each component of the infrastructure mapper data model. Y
 | <img src="./img/food-services.png" alt="Culinary" width="64" height="64"> | [Culinary facilities](./sql/12-culinary.md) like kitchens, canteens, and food storage. |
 | <img src="./img/roads.png" alt="Roads" width="64" height="64"> | [Roads](./sql/13-roads.md), tracks, and paths for transportation infrastructure. |
 
-## 📜 License
-
-This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
-
 ---
 
 ## ⚒️ Using
 
 Simply take the sql files in the sql folder and load them into postgres.
+
+---
+
+## 🛠️ Scripts Overview
+
+The `scripts/` folder contains utility scripts to assist with database setup, data loading, and project maintenance. Below is a summary of each script:
+
+| Script Name                | Description                                                                                  |
+|----------------------------|----------------------------------------------------------------------------------------------|
+| `start_pg.sh`              | Nix specific to start a sandboxed postgresql instance with data stored in ./pgdata           |
+| `load_schema.sh`           | Loads the SQL schema files into the target database, setting up all required tables.         |
+| `stop_pg.sh`               | Stops the postgres database                                                                  |
+| `check.sh`                 | Git precommit check and format SQL files                                                     |
+| `gource.sh`                | Visualise the code history using gource                                                      |
+| `vscode.sh`                | Launch VSCode with all settings and extensions needed to productively work on this project   |
+
+> ✏️ **Note:** Run each script from the project root. Some scripts may require environment variables or configuration—see comments within each script for usage details.
+
+---
 
 ## 🧊 Using the Nix Flake
 
@@ -157,7 +181,7 @@ nix run .#qgis-ltr
 You can launch a ready-to-use VSCode environment:
 
 ```bash
-./vscode.sh
+./scripts/vscode.sh
 ```
 
 ---
