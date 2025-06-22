@@ -10,10 +10,10 @@ electricity_line_type (
     notes TEXT,
     image TEXT,
     sort_order INT UNIQUE,
--- Add unique together constraint for voltage and current
+    -- Add unique together constraint for voltage and current
     current_a FLOAT NOT NULL,
     voltage_v FLOAT NOT NULL,
--- Unique together constraint for voltage and current
+    -- Unique together constraint for voltage and current
     UNIQUE (current_a, voltage_v)
 );
 
@@ -115,13 +115,13 @@ electricity_line_conditions (
     electricity_line_condition_uuid UUID NOT NULL REFERENCES electricity_line_condition_type (
         uuid
     ),
--- Composite primary key
+    -- Composite primary key
     PRIMARY KEY (
         electricity_line_uuid,
         electricity_line_condition_uuid,
         date
     ),
--- Unique together
+    -- Unique together
     UNIQUE (
         electricity_line_uuid,
         electricity_line_condition_uuid,

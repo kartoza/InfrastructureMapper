@@ -78,9 +78,9 @@ IF NOT EXISTS fence_conditions (
     date date NOT NULL,
     fence_uuid uuid NOT NULL REFERENCES fence (uuid),
     condition_uuid uuid NOT NULL REFERENCES condition (uuid),
--- composite primary key
+    -- composite primary key
     PRIMARY KEY (fence_uuid, condition_uuid, date),
--- unique together
+    -- unique together
     UNIQUE (fence_uuid, condition_uuid, date)
 );
 

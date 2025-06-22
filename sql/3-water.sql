@@ -66,7 +66,7 @@ water_polygon (
     notes TEXT,
     image TEXT,
     estimated_depth_m FLOAT,
--- Estimated depth of water polygon constraint (0m < Estimated Depth < 20m).
+    -- Estimated depth of water polygon constraint (0m < Estimated Depth < 20m).
     CONSTRAINT depth_check CHECK (
         estimated_depth_m >= 0
         AND estimated_depth_m <= 20
@@ -167,12 +167,12 @@ water_line_type (
     sort_order INT UNIQUE,
     pipe_length_m FLOAT,
     pipe_diameter_m FLOAT,
--- Pipe length & pipe diameter constraint (length, diameter > 0)
+    -- Pipe length & pipe diameter constraint (length, diameter > 0)
     CONSTRAINT pipe_length_and_diameter_check CHECK (
         pipe_length_m >= 0
         AND pipe_diameter_m >= 0
     ),
--- Unique together
+    -- Unique together
     UNIQUE (pipe_length_m, pipe_diameter_m)
 );
 
@@ -208,7 +208,7 @@ water_line (
     notes TEXT,
     image TEXT,
     estimated_depth_m FLOAT,
--- Estimated depth of water line (depth > 0)
+    -- Estimated depth of water line (depth > 0)
     CONSTRAINT estimated_depth_m CHECK (estimated_depth_m >= 0),
     geometry GEOMETRY (LINESTRING, 4326),
     water_source_uuid UUID NOT NULL REFERENCES water_source (uuid),

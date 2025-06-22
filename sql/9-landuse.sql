@@ -172,13 +172,13 @@ IF NOT EXISTS landuse_area_conditions (
         uuid
     ),
     landuse_area_uuid UUID NOT NULL REFERENCES landuse_area (uuid),
--- Composite primary key
+    -- Composite primary key
     PRIMARY KEY (
         landuse_area_condition_type_uuid,
         landuse_area_uuid,
         date
     ),
--- Unique together
+    -- Unique together
     UNIQUE (
         landuse_area_condition_type_uuid,
         landuse_area_uuid,
