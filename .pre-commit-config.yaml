@@ -85,5 +85,18 @@ repos:
         types: [python]
         stages: [pre-commit]
 
-
+  - repo: local
+    hooks:
+      - id: nixfmt
+        name: nixfmt (RFC style)
+        description: Format Nix code with nixfmt-rfc-style
+        entry: nixfmt
+        language: system
+        args: ["--"]
+        types: [nix]
+        exclude: >
+          (?x)^(
+            nix/sources.nix|
+            test_data/.*
+          )$
 
