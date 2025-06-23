@@ -3,10 +3,11 @@ name: SQL Lint Test
 on:
   push:
     paths:
-      - 'sql/**.sql'
-      - '.sqlfluff'
-      - '.github/workflows/sql-lint-and-load.yml'
-      - 'load_schema.sh'
+      - '**'
+      #- 'sql/**.sql'
+      #- '.sqlfluff'
+      #- '.github/workflows/sql-lint-and-load.yml'
+      #- 'load_schema.sh'
   pull_request:
     paths:
       - 'sql/**.sql'
