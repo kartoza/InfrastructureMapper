@@ -3,9 +3,10 @@ name: PostGIS Load Test
 on:
   push:
     paths:
-      - 'sql/**.sql'
-      - '.github/workflows/sql-lint-and-load.yml'
-      - 'load_schema.sh'
+      - '**'
+      #- 'sql/**.sql'
+      #- '.github/workflows/sql-lint-and-load.yml'
+      #- 'load_schema.sh'
   pull_request:
     paths:
       - 'sql/**.sql'
