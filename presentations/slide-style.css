@@ -1,0 +1,98 @@
+/* slide-style.css */
+/* @theme infrastructure */
+
+/* Base slide styling */
+section {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #F5F5F2;
+    color: #2F5D50;
+    font-size: 2.2em;
+    padding: 2.5em;
+    border-radius: 16px;
+    box-shadow: 0 0 20px rgba(47, 93, 80, 0.05);
+}
+
+/* Headings */
+h1,
+h2,
+h3 {
+    font-weight: 100;
+    margin-bottom: 0.3em;
+}
+
+h1 {
+    font-size: 2.5em;
+    color: #2F5D50;
+}
+
+h2 {
+    font-size: 1.5em;
+    color: #2B7A78;
+}
+
+h3 {
+    font-size: 1em;
+    color: #7C9C75;
+}
+
+/* Custom utility classes */
+._lead {
+    font-size: 3.4em;
+    line-height: 1.5;
+    color: #2F5D50;
+}
+
+/* Lists */
+ul,
+ol {
+    margin-left: 3.5em;
+    line-height: 1.6;
+}
+
+/* Links */
+a {
+    color: #2B7A78;
+    text-decoration: underline dotted;
+}
+
+/* Images */
+img[alt*="bg"] {
+    max-height: 80%;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* Background image helpers */
+section.bg.contain.left {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: left center;
+    padding-left: 25%;
+}
+
+/* Header & Footer */
+header,
+footer {
+    font-size: 0.5em;
+    color: #5B7C6B;
+    position: absolute;
+    left: 0;
+    right: 0;
+    font-weight: 500;
+    background: rgba(245, 245, 242, 0.85);
+    padding: 0.7em 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(47, 93, 80, 0.07);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+header {
+    top: 1em;
+}
+
+footer {
+    bottom: 1em;
+}

@@ -191,16 +191,15 @@ COMMENT ON COLUMN road_segment.start_node IS 'The foreign key which references t
 COMMENT ON COLUMN road_segment.end_node IS 'The foreign key which references the uuid from the intersections table.';
 
 -- TRIGGER FUNCTION - SEGMENT LENGTH
-create or replace function calculate_length()
-returns trigger
-as $$
+CREATE OR REPLACE FUNCTION calculate_length()
+RETURNS TRIGGER
+AS $$
 BEGIN
     NEW.length_m := ST_Length(NEW.geom);
     RETURN NEW;
 END;
 $$
-language plpgsql
-;
+LANGUAGE plpgsql;
 
 -- TRIGGER
 CREATE TRIGGER set_length

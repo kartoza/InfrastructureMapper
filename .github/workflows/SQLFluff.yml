@@ -1,0 +1,35 @@
+name: SQL Lint Test
+
+on:
+  push:
+    paths:
+      - '**'
+      #- 'sql/**.sql'
+      #- '.sqlfluff'
+      #- '.github/workflows/sql-lint-and-load.yml'
+      #- 'load_schema.sh'
+  pull_request:
+    paths:
+      - 'sql/**.sql'
+      - '.sqlfluff'
+      - '.github/workflows/sql-lint-and-load.yml'
+      - 'load_schema.sh'
+  workflow_dispatch:
+
+jobs:
+  sqlfluff-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install sqlfluff
+        run: pip install sqlfluff
+
+      - name: Lint SQL files with sqlfluff
+        run: sqlfluff lint sql --config .sqlfluff

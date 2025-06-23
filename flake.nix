@@ -61,6 +61,7 @@
           pkgs.virtualenv
           pkgs.vscode
           pkgs.sqlfluff
+          pkgs.marp-cli
           postgresWithPostGIS
           (pkgs.python3.withPackages (ps: [
             ps.python
@@ -92,6 +93,9 @@
           ]))
         ];
         shellHook = ''
+          export PGHOST="$PWD/pgdata"
+          export PGPORT=5432
+
           if [ ! -d ".venv" ]; then
             python -m venv .venv
           fi

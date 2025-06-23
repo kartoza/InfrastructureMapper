@@ -145,17 +145,17 @@ vegetation_point (
     notes TEXT,
     image TEXT,
     estimated_crown_radius_m FLOAT,
--- Must be positive number
+    -- Must be positive number
     CONSTRAINT radius_check CHECK (estimated_crown_radius_m >= 0),
--- Takes 4 digits only
+    -- Takes 4 digits only
     estimated_planting_year DECIMAL(4, 0),
--- Must be before or equal this year
+    -- Must be before or equal this year
     CONSTRAINT year_check CHECK (estimated_planting_year >= 0),
     CONSTRAINT year_check2 CHECK (
         estimated_planting_year <= date_part('Year', now())
     ),
     estimated_height_m FLOAT,
--- Must be positive number
+    -- Must be positive number
     CONSTRAINT height_check CHECK (estimated_height_m >= 0),
     geometry GEOMETRY (POINT, 4326) NOT NULL,
     plant_type_uuid UUID NOT NULL REFERENCES plant_type (uuid)
@@ -265,7 +265,7 @@ plant_growth_activities (
     ),
     fk_plant_type_uuid UUID NOT NULL REFERENCES plant_type (uuid),
     fk_month_uuid UUID NOT NULL REFERENCES month (uuid),
--- Composite primary key using the three foreign keys above
+    -- Composite primary key using the three foreign keys above
     PRIMARY KEY (
         fk_plant_activity_uuid,
         fk_plant_type_uuid,

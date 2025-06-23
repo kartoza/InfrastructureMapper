@@ -11,12 +11,13 @@ Welcome to **Infrastructure Mapper**! This repository contains guidelines and co
 - [🌐 Infrastructure Mapper](#-infrastructure-mapper)
   - [📖 Table of Contents](#-table-of-contents)
   - [🚀 Project Overview](#-project-overview)
+  - [📜 License](#-license)
   - [📂 Folder Structure](#-folder-structure)
   - [🤖 Using 'AI' (Large Language Models)](#-using-ai-large-language-models)
   - [🌿 Design Aesthetic](#-design-aesthetic)
   - [Data Model](#data-model)
-  - [📜 License](#-license)
   - [⚒️ Using](#️-using)
+  - [🛠️ Scripts Overview](#️-scripts-overview)
   - [🧊 Using the Nix Flake](#-using-the-nix-flake)
   - [✨ Contributing](#-contributing)
   - [📧 Contact](#-contact)
@@ -28,13 +29,23 @@ Welcome to **Infrastructure Mapper**! This repository contains guidelines and co
 
 ![Animation](./img/infrastructure-mapper.gif)
 
-[![SQL Lint and Load](https://github.com/kartoza/InfrastructureMapper/actions/workflows/SQLLintAndLoad.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/SQLLintAndLoad.yml)ccccccteberftebhjbtehlfekiiiercudrhjbguiuvke
+[![PostGIS Load Test](https://github.com/kartoza/InfrastructureMapper/actions/workflows/LoadSchema.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/LoadSchema.yml)
+
+[![SQL Lint Test](https://github.com/kartoza/InfrastructureMapper/actions/workflows/SQLFluff.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/SQLFluff.yml)
 
 This project consists of:
 
 1. a [SQL Schema](sql/schema.README.md) for PostgreSQL,
 2. a set of fixtures to load that schema with default values (particularly for lookup tables)
 3. a set of QGIS forms and layer styles for visualising the data
+
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
+
+___
 
 ## 📂 Folder Structure
 
@@ -43,8 +54,9 @@ InfrastructureMapper/
 ├── img/               # Images and media resources used in this documentation
 ├── qml/               # QGIS layer style and form definitions
 ├── diagrams/          # Documentation and ERD diagrams
-├── sql/               # Chema and fixtures to load into postgres
-├── tests/             # Unit tests and test cases
+├── presentations/     # Presentations for this project and each model created using Marp
+├── sql/               # Schema and fixtures to load into postgres
+├── scripts/           # Helper scripts
 └── README.md          # Project overview and conventions
 ```
 
@@ -76,7 +88,7 @@ You can use the notes above and the table below if you are prompt engineering ad
 
 Our colour swatch looks like this:
 
-![Colour Swatch](./img/swatch.png)
+<img src="./img/swatch.png" alt="Electricity" width="164" height="164">
 
 | Name               | Hex      | Use Case                  | Preview                |
 |--------------------|----------|---------------------------|------------------------|
@@ -104,29 +116,45 @@ This section describes each component of the infrastructure mapper data model. Y
 
 | Icon | Description |
 |------|-------------|
-| ⚡   | [Electricity](./sql/2-electricity.md) infrastructure such as power lines, transformers, and substations. |
-| 🏗️   | General [infrastructure](./sql/1-infrastructure.md) elements like bridges, dams, and towers. |
-| 💧   | [Water](./sql/3-water.md)-related infrastructure including pipes, tanks, and pumps. |
-| 🌱   | [Vegetation](./sql/4-vegetation.md) features such as trees, hedges, and planted areas. |
-| 📡   | [Monitoring](./sql/5-monitoring.md) devices and their observations (e.g., sensors, cameras). |
-| 🏠   | [Buildings](./sql/6-buildings.md) and associated structures. |
-| 🚧   | [Fencing](./sql/7-fencing.md) and enclosure features, including standalone gates. |
-| 📍   | [Points of Interest](./sql/8-poi.md) (POI) for notable locations or features. |
-| 🗺️   | [Landuse areas](./sql/9-landuse.md) such as agricultural, residential, or conservation zones. |
-| 🚪   | [Gates](./sql/10-gates.md) as access points for properties or enclosures. |
-| 🪧   | [Poles](./sql/11-poles.md) for lighting, signage, or utility support. |
-| 🍽️   | [Culinary facilities](./sql/12-culinary.md) like kitchens, canteens, and food storage. |
-| 🛣️   | [Roads](./sql/13-roads.md), tracks, and paths for transportation infrastructure. |
-
-## 📜 License
-
-This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
+| <img src="./img/electricity.png" alt="Electricity" width="64" height="64"> | [Electricity](./sql/2-electricity.md) infrastructure such as power lines, transformers, and substations. |
+| <img src="./img/infrastructure.png" alt="Infrastructure" width="64" height="64"> | General [infrastructure](./sql/1-infrastructure.md) elements like bridges, dams, and towers. |
+| <img src="./img/water.png" alt="Water" width="64" height="64"> | [Water](./sql/3-water.md)-related infrastructure including pipes, tanks, and pumps. |
+| <img src="./img/vegetation.png" alt="Vegetation" width="64" height="64"> | [Vegetation](./sql/4-vegetation.md) features such as trees, hedges, and planted areas. |
+| <img src="./img/monitoring.png" alt="Monitoring" width="64" height="64"> | [Monitoring](./sql/5-monitoring.md) devices and their observations (e.g., sensors, cameras). |
+| <img src="./img/buildings.png" alt="Buildings" width="64" height="64"> | [Buildings](./sql/6-buildings.md) and associated structures. |
+| <img src="./img/fencing.png" alt="Fencing" width="64" height="64"> | [Fencing](./sql/7-fencing.md) and enclosure features, including standalone gates. |
+| <img src="./img/point-of-interest.png" alt="POI" width="64" height="64"> | [Points of Interest](./sql/8-poi.md) (POI) for notable locations or features. |
+| <img src="./img/landuse-areas.png" alt="Landuse" width="64" height="64"> | [Landuse areas](./sql/9-landuse.md) such as agricultural, residential, or conservation zones. |
+| <img src="./img/gates.png" alt="Gates" width="64" height="64"> | [Gates](./sql/10-gates.md) as access points for properties or enclosures. |
+| <img src="./img/poles.png" alt="Poles" width="64" height="64"> | [Poles](./sql/11-poles.md) for lighting, signage, or utility support. |
+| <img src="./img/food-services.png" alt="Culinary" width="64" height="64"> | [Culinary facilities](./sql/12-culinary.md) like kitchens, canteens, and food storage. |
+| <img src="./img/roads.png" alt="Roads" width="64" height="64"> | [Roads](./sql/13-roads.md), tracks, and paths for transportation infrastructure. |
 
 ---
 
 ## ⚒️ Using
 
 Simply take the sql files in the sql folder and load them into postgres.
+
+---
+
+## 🛠️ Scripts Overview
+
+The `scripts/` folder contains utility scripts to assist with database setup, data loading, and project maintenance. Below is a summary of each script:
+
+| Script Name                | Description                                                                                  |
+|----------------------------|----------------------------------------------------------------------------------------------|
+| `start_pg.sh`              | Nix specific to start a sandboxed postgresql instance with data stored in ./pgdata           |
+| `load_schema.sh`           | Loads the SQL schema files into the target database, setting up all required tables.         |
+| `stop_pg.sh`               | Nix specific script to stop the postgres database                                            |
+| `check.sh`                 | Git precommit check and format SQL files                                                     |
+| `gource.sh`                | Visualise the code history using gource                                                      |
+| `vscode.sh`                | Launch VSCode with all settings and extensions needed to productively work on this project   |
+| `create_presentations.sh`  | Generate presentations using marp.                                                           |
+
+> ✏️ **Note:** Run each script from the project root. Some scripts may require environment variables or configuration—see comments within each script for usage details.
+
+---
 
 ## 🧊 Using the Nix Flake
 
@@ -158,7 +186,7 @@ nix run .#qgis-ltr
 You can launch a ready-to-use VSCode environment:
 
 ```bash
-./vscode.sh
+./scripts/vscode.sh
 ```
 
 ---

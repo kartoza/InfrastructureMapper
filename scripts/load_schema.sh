@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 PSQL=$(which psql)
 $PSQL gis -f sql/extensions.sql
 $PSQL gis -f sql/1-infrastructure.sql

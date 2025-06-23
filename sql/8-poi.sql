@@ -84,9 +84,9 @@ IF NOT EXISTS point_of_interest_conditions (
     date date NOT NULL,
     point_of_interest_uuid uuid NOT NULL REFERENCES point_of_interest (uuid),
     condition_uuid uuid NOT NULL REFERENCES condition (uuid),
--- composite primary key
+    -- composite primary key
     PRIMARY KEY (point_of_interest_uuid, condition_uuid, date),
--- unique together
+    -- unique together
     UNIQUE (point_of_interest_uuid, condition_uuid, date)
 );
 

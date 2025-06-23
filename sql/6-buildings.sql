@@ -5,7 +5,7 @@ CREATE TABLE
 IF NOT EXISTS building_type (
 -- We said this should be serial, not int. Also 'id', not 'building_type_id'
     id serial PRIMARY KEY,
--- this was named 'name' in the erd, not 'type_name'. Must be unique
+    -- this was named 'name' in the erd, not 'type_name'. Must be unique
     name varchar UNIQUE NOT NULL,
     notes text,
     image text,
