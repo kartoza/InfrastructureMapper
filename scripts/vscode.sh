@@ -10,27 +10,27 @@ VSCODE_DIR=".vscode"
 LOG_FILE="vscode.log"
 
 REQUIRED_EXTENSIONS=(
-    #timonwong.shellcheck@0.37.7
-foxundermoon.shell-format@7.2.5
-yzhang.markdown-all-in-one@3.6.3
-github.vscode-github-actions@0.27.1
-ms-ossdata.vscode-pgsql@1.4.2
-GitHub.copilot-chat@0.27.3
-VisualStudioExptTeam.intellicode-api-usage-examples@0.2.9
-DavidAnson.vscode-markdownlint@0.60.0
-GitHub.vscode-pull-request-github@0.108.0
-waderyan.gitblame@11.1.3
-ms-vscode.test-adapter-converter@0.2.1
-mkhl.direnv@0.17.0
-naumovs.color-highlight@2.8.0
-shd101wyy.markdown-preview-enhanced@0.8.18
-GitHub.copilot@1.331.0
-trond-snekvik.simple-rst@1.5.4
-hbenl.vscode-test-explorer@2.22.1
-VisualStudioExptTeam.vscodeintellicode@1.3.2
-dorzey.vscode-sqlfluff@3.3.1
-GitHub.vscode-pull-request-github@0.110.0
-searKing.preview-vscode@2.3.12
+    foxundermoon.shell-format@7.2.5
+    yzhang.markdown-all-in-one@3.6.3
+    github.vscode-github-actions@0.27.1
+    marp-team.marp-vscode@3.2.0
+    ms-ossdata.vscode-pgsql@1.4.2
+    GitHub.copilot-chat@0.27.3
+    VisualStudioExptTeam.intellicode-api-usage-examples@0.2.9
+    DavidAnson.vscode-markdownlint@0.60.0
+    GitHub.vscode-pull-request-github@0.108.0
+    waderyan.gitblame@11.1.3
+    ms-vscode.test-adapter-converter@0.2.1
+    mkhl.direnv@0.17.0
+    naumovs.color-highlight@2.8.0
+    shd101wyy.markdown-preview-enhanced@0.8.18
+    GitHub.copilot@1.331.0
+    trond-snekvik.simple-rst@1.5.4
+    hbenl.vscode-test-explorer@2.22.1
+    VisualStudioExptTeam.vscodeintellicode@1.3.2
+    dorzey.vscode-sqlfluff@3.3.1
+    GitHub.vscode-pull-request-github@0.110.0
+    searKing.preview-vscode@2.3.12
 )
 
 # ----------------------------------------------
@@ -299,6 +299,19 @@ if ! jq -e '.["sqlfluff.dialect"]' "$SETTINGS_FILE" >/dev/null; then
     echo "  🔧 SQLFluff dialect set to postgres"
 else
     echo "  ✅ SQLFluff dialect already configured"
+fi
+
+# Ensure Marp stylesheet is set for Marp themes
+echo "🗨️ Ensuring Marp stylesheet is set for Marp themes..."
+MARP_STYLE_PATH="\${workspaceFolder}/presentations/slide-style.css"
+if jq -e '.["marp.themes"]' "$SETTINGS_FILE" >/dev/null; then
+    # Overwrite existing marp.themes
+    jq --arg style "$MARP_STYLE_PATH" '.["marp.themes"] = [$style]' "$SETTINGS_FILE" >"$SETTINGS_FILE.tmp" && mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
+    echo "  🔧 Updated marp.themes to use $MARP_STYLE_PATH"
+else
+    # Add marp.themes
+    jq --arg style "$MARP_STYLE_PATH" '. + {"marp.themes": [$style]}' "$SETTINGS_FILE" >"$SETTINGS_FILE.tmp" && mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
+    echo "  🔧 Added marp.themes with $MARP_STYLE_PATH"
 fi
 
 # TODO

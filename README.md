@@ -54,6 +54,7 @@ InfrastructureMapper/
 ├── img/               # Images and media resources used in this documentation
 ├── qml/               # QGIS layer style and form definitions
 ├── diagrams/          # Documentation and ERD diagrams
+├── presentations/     # Presentations for this project and each model created using Marp
 ├── sql/               # Schema and fixtures to load into postgres
 ├── scripts/           # Helper scripts
 └── README.md          # Project overview and conventions
@@ -149,6 +150,7 @@ The `scripts/` folder contains utility scripts to assist with database setup, da
 | `check.sh`                 | Git precommit check and format SQL files                                                     |
 | `gource.sh`                | Visualise the code history using gource                                                      |
 | `vscode.sh`                | Launch VSCode with all settings and extensions needed to productively work on this project   |
+| `create_presentations.sh`  | Generate presentations using marp.                                                           |
 
 > ✏️ **Note:** Run each script from the project root. Some scripts may require environment variables or configuration—see comments within each script for usage details.
 
