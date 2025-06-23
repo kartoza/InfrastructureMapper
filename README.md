@@ -151,6 +151,11 @@ The `scripts/` folder contains utility scripts to assist with database setup, da
 | `gource.sh`                | Visualise the code history using gource                                                      |
 | `vscode.sh`                | Launch VSCode with all settings and extensions needed to productively work on this project   |
 | `create_presentations.sh`  | Generate presentations using marp.                                                           |
+| `cripts/codebase_size_check.sh` | Precommit hook for checking if the codebase has grown. |
+| `scripts/commit_test_stats.py`| Precommit hook for checking if the test suite has grown. |
+| `scripts/docstrings_check.sh` | Precommit hook for checking that docstrings were used when creating new python code. |
+| `scripts/encoding_check.sh` | Precommit hook for checking python modules have their encoding set. |
+| `scripts/license_check.sh` | Precommit hook for license and copyright in source files. |
 
 > ✏️ **Note:** Run each script from the project root. Some scripts may require environment variables or configuration—see comments within each script for usage details.
 
@@ -209,7 +214,6 @@ Have questions or feedback? Feel free to reach out!
 
 - [Tim Sutton](https://github.com/timlinux) - project lead
 -  
-
 
 ---
 
