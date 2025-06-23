@@ -4,13 +4,20 @@
   inputs.geospatial.url = "github:imincik/geospatial-nix.repo";
   inputs.nixpkgs.follows = "geospatial/nixpkgs";
 
-  outputs = { self, geospatial, nixpkgs }:
+  outputs =
+    {
+      self,
+      geospatial,
+      nixpkgs,
+    }:
     let
       system = "x86_64-linux";
       profileName = "InfrastructureMapper";
       pkgs = import nixpkgs {
         inherit system;
-        config = { allowUnfree = true; };
+        config = {
+          allowUnfree = true;
+        };
       };
       extraPythonPackages = ps: [
         ps.pyqtwebengine
@@ -26,7 +33,8 @@
         inherit extraPythonPackages;
       };
       postgresWithPostGIS = pkgs.postgresql.withPackages (ps: [ ps.postgis ]);
-    in {
+    in
+    {
       packages.${system} = {
         default = qgisWithExtras;
         qgis-ltr = qgisLtrWithExtras;
@@ -142,12 +150,18 @@
         qgis = {
           type = "app";
           program = "${qgisWithExtras}/bin/qgis";
-          args = [ "--profile" "${profileName}" ];
+          args = [
+            "--profile"
+            "${profileName}"
+          ];
         };
         qgis-ltr = {
           type = "app";
           program = "${qgisLtrWithExtras}/bin/qgis";
-          args = [ "--profile" "${profileName}" ];
+          args = [
+            "--profile"
+            "${profileName}"
+          ];
         };
       };
     };
