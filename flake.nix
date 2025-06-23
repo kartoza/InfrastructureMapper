@@ -62,6 +62,8 @@
           pkgs.vscode
           pkgs.sqlfluff
           pkgs.marp-cli
+          pkgs.shellcheck
+          pkgs.shfmt
           postgresWithPostGIS
           (pkgs.python3.withPackages (ps: [
             ps.python
