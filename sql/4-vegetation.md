@@ -43,4 +43,4 @@ erDiagram
 >1. SubHeading: Vegetation
 >2. Image: img/vegetation.png
 >3. Text: Summary of the entities in sql/4-vegetation.sql
->4. Mermaid: Diagram of the entities in sql/>4-vegetationsql
+>4. Mermaid: Diagram of the entities in sql/>4-vegetation.sql

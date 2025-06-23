@@ -7,7 +7,6 @@ repos:
         language_version: python3
         additional_dependencies: []
         args: [sql]
-
   - repo: https://github.com/sqlfluff/sqlfluff
     rev: 3.0.7
     hooks:
@@ -21,7 +20,6 @@ repos:
         entry: sqlfluff fix --force
         language: python
         types: [sql]
-
   - repo: local
     hooks:
       - id: remove-core-file
@@ -30,7 +28,6 @@ repos:
         language: system
         stages:
           - pre-commit
-
   - repo: local
     hooks:
       - id: ensure-utf8-encoding
@@ -39,7 +36,6 @@ repos:
         language: system
         types: [python]
         stages: [pre-commit]
-
   - repo: local
     hooks:
       - id: ensure-license-header
@@ -48,7 +44,6 @@ repos:
         language: system
         types: [python, shell, sql]
         stages: [pre-commit]
-
   - repo: local
     hooks:
       - id: ensure-google-docstrings
@@ -57,15 +52,13 @@ repos:
         language: system
         types: [python]
         stages: [pre-commit]
-
   - repo: local
     hooks:
       - id: code-size-feedback
         name: "📏 Code Size Feedback"
         entry: bash scripts/codebase_size_check.sh
         language: system
-        stages: [pre-commit]        
-
+        stages: [pre-commit]
   - repo: local
     hooks:
       - id: test-count-feedback
@@ -74,7 +67,6 @@ repos:
         language: system
         types: [python]
         stages: [pre-commit]
-
   - repo: https://github.com/PyCQA/isort
     rev: 6.0.1
     hooks:
@@ -84,19 +76,36 @@ repos:
         language: python
         types: [python]
         stages: [pre-commit]
-
   - repo: local
     hooks:
       - id: nixfmt
-        name: nixfmt (RFC style)
+        name: "❄️ Nixfmt (RFC style)"
         description: Format Nix code with nixfmt-rfc-style
         entry: nixfmt
         language: system
         args: ["--"]
         types: [nix]
-        exclude: >
-          (?x)^(
-            nix/sources.nix|
-            test_data/.*
-          )$
-
+  - repo: local
+    hooks:
+      - id: yamllint
+        name: "🔍 yamllint - YAML linter"
+        entry: yamllint
+        language: system
+        types: [yaml]
+        stages: [pre-commit]
+  - repo: local
+    hooks:
+      - id: markdownlint
+        name: "📝 markdownlint - Markdown linter"
+        entry: markdownlint
+        language: system
+        types: [markdown]
+        stages: [pre-commit]
+  - repo: local
+    hooks:
+      - id: cspell
+        name: "🔤 cspell - Spell checker for Markdown"
+        entry: cspell --no-progress --no-summary
+        language: system
+        types: [markdown]
+        stages: [pre-commit]
