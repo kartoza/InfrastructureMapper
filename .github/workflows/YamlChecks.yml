@@ -17,4 +17,9 @@ jobs:
       - name: Install yamlfmt
         run: sudo snap install yamlfmt
       - name: Run yamlfmt
-        run: yamlfmt $(find . -name '*.yaml' -o -name '*.yml')
+        run:  |
+          for f in $(find . -name '*.yaml' -o -name '*.yml'); do
+            if grep -q '[^[:space:]#]' "$f"; then
+              yamlfmt "$f"
+            fi
+          done
