@@ -1,4 +1,4 @@
-name: Pre-commit Checks
+name: Yaml Checks
 on:
   pull_request:
   push:
@@ -17,9 +17,15 @@ jobs:
       - name: Install yamlfmt
         run: sudo snap install yamlfmt
       - name: Run yamlfmt
-        run:  |
+        run: |
           for f in $(find . -name '*.yaml' -o -name '*.yml'); do
-            if grep -q '[^[:space:]#]' "$f"; then
-              yamlfmt "$f"
+            # Skip empty files
+            if [ ! -s "$f" ]; then
+              continue
             fi
+            # Skip files with only whitespace/comments
+            if ! grep -q '[^[:space:]#]' "$f"; then
+              continue
+            fi
+            yamlfmt "$f"
           done
