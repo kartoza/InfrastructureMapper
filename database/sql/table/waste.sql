@@ -74,7 +74,7 @@ COMMENT ON COLUMN waste_container.covered IS 'True if the container has a cover.
 COMMENT ON COLUMN waste_container.capacity_liters IS 'Capacity of the container in liters.';
 COMMENT ON COLUMN waste_container.geom IS 'Location of the waste container. EPSG: 4326 (WGS 84).';
 COMMENT ON COLUMN waste_container.type_uuid IS 'Foreign key referencing container type.';
-COMMENT ON COLUMN waste_container_log.log_uuid IS 'Foreign key referencing a waste log.';
+
 
 
 -- WASTE LOG
