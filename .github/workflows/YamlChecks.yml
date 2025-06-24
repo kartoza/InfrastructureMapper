@@ -1,4 +1,4 @@
-name: Yaml Checks
+name: 🗜️ Yaml Checks
 on:
   pull_request:
   push:
@@ -18,7 +18,7 @@ jobs:
         run: sudo snap install yamlfmt
       - name: Run yamlfmt
         run: |
-          for f in $(find . -name '*.yaml' -o -name '*.yml'); do
+          find . -name '*.yaml' -o -name '*.yml' | while read -r f; do
             # Skip empty files
             if [ ! -s "$f" ]; then
               echo "🦘 Skipping empty file: $f"

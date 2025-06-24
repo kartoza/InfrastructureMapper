@@ -109,4 +109,12 @@ repos:
         language: system
         types: [yaml]
         stages: [pre-commit]
-
+  - repo: local
+    hooks:
+      - id: actionlint
+        name: "🤖 actionlint - GitHub Actions workflow linter"
+        entry: actionlint
+        language: system
+        types: [yaml]
+        files: ^\.github/workflows/.*\.ya?ml$
+        stages: [pre-commit]

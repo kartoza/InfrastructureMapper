@@ -75,6 +75,7 @@
           pkgs.markdownlint-cli
           pkgs.yamllint
           pkgs.yamlfmt
+          pkgs.actionlint # for checking gh actions
           postgresWithPostGIS
           pkgs.nodePackages.cspell
           (pkgs.python3.withPackages (ps: [
