@@ -15,10 +15,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install yamlfmt
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y wget
-          wget https://github.com/google/yamlfmt/releases/latest/download/yamlfmt_linux_amd64 -O /usr/local/bin/yamlfmt
-          chmod +x /usr/local/bin/yamlfmt
+        run: sudo snap install yamlfmt
       - name: Run yamlfmt
         run: yamlfmt -lint $(find . -name '*.yaml' -o -name '*.yml')
