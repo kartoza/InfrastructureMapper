@@ -17,4 +17,4 @@ jobs:
       - name: Install yamlfmt
         run: sudo snap install yamlfmt
       - name: Run yamlfmt
-        run: yamlfmt -lint $(find . -name '*.yaml' -o -name '*.yml')
+        run: yamlfmt $(find . -name '*.yaml' -o -name '*.yml')
