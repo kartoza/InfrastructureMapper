@@ -5,7 +5,7 @@ class: _lead
 header: 'Infrastructure Mapper'
 footer: 'Kartoza (Pty) Ltd. 2025'
 ---
-
+<!-- cspell:ignore landuse -->
 # Infrastructure Mapper
 
 A spatial database for managing infrastructure-related data.
@@ -24,7 +24,7 @@ A spatial database for managing infrastructure-related data.
 
 ---
 
-## Models
+## Models 1
 
 |  |  |
 |------|-------------|
@@ -37,20 +37,20 @@ A spatial database for managing infrastructure-related data.
 
 ---
 
-## Models (ctd.)
+## Models 2 (ctd.)
 
 |  |  |
 |------|-------------|
 | <img src="../img/fencing.png" alt="Fencing" width="64" height="64"> | [Fencing](../sql/7-fencing.md) and enclosure features, including standalone gates. |
 | <img src="../img/point-of-interest.png" alt="POI" width="64" height="64"> | [Points of Interest](./sql/8-poi.md) (POI) for notable locations or features. |
-| <img src="../img/landuse-areas.png" alt="Landuse" width="64" height="64"> | [Landuse areas](../sql/9-landuse.md) such as agricultural, residential, or conservation zones. |
+| <img src="../img/landuse-areas.png" alt="Land use" width="64" height="64"> | [Land use areas](../sql/9-landuse.md) such as agricultural, residential, or conservation zones. |
 | <img src="../img/gates.png" alt="Gates" width="64" height="64"> | [Gates](../sql/10-gates.md) as access points for properties or enclosures. |
 | <img src="../img/poles.png" alt="Poles" width="64" height="64"> | [Poles](../sql/11-poles.md) for lighting, signage, or utility support. |
 | <img src="../img/food-services.png" alt="Culinary" width="64" height="64"> | [Culinary facilities](./sql/12-culinary.md) like kitchens, canteens, and food storage. |
 
 ---
 
-## Models (ctd.)
+## Models 3 (ctd.)
 
 |  |  |
 |------|-------------|

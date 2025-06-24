@@ -1,19 +1,17 @@
-name: PostGIS Load Test
-
+name: 🏋🏽 PostGIS Load Test
 on:
   push:
     paths:
       - '**'
-      #- 'sql/**.sql'
-      #- '.github/workflows/sql-lint-and-load.yml'
-      #- 'load_schema.sh'
+      # - 'sql/**.sql'
+      # - '.github/workflows/sql-lint-and-load.yml'
+      # - 'load_schema.sh'
   pull_request:
     paths:
       - 'sql/**.sql'
       - '.github/workflows/sql-lint-and-load.yml'
       - 'load_schema.sh'
   workflow_dispatch:
-
 jobs:
   postgis-load:
     runs-on: ubuntu-latest
@@ -27,25 +25,18 @@ jobs:
         ports:
           - 5432:5432
         options: >-
-          --health-cmd="pg_isready -U postgres"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
+          --health-cmd="pg_isready -U postgres" --health-interval=10s --health-timeout=5s --health-retries=5
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Wait for Postgres to be ready
         run: |
-          for i in {1..30}; do
+          for _ in {1..30}; do
             pg_isready -h localhost -U postgres && break
             sleep 2
           done
-
       - name: Install PostgreSQL client
         run: sudo apt-get update && sudo apt-get install -y postgresql-client
-
       - name: Run load_schema.sh
         env:
           PGHOST: localhost

@@ -1,13 +1,14 @@
-# 🗺️ Landuse
+# 🗺️ Land use
+<!-- cspell:ignore landuse -->
 
-![Landuse](../img/landuse-areas.png)
+![Land use](../img/landuse-areas.png)
 
-The **Landuse** component models how land parcels are utilized or designated, such as agricultural, residential, commercial, or conservation areas. This schema enables the representation of landuse types and individual landuse polygons, supporting spatial analysis and planning.
+The **Land use** component models how land parcels are utilized or designated, such as agricultural, residential, commercial, or conservation areas. This schema enables the representation of land use types and individual land use polygons, supporting spatial analysis and planning.
 
 **Entities from `sql/9-landuse.sql`:**
 
-- `landuse_type`: Lookup table for different landuse categories (e.g., agricultural, residential, industrial).
-- `landuse`: Represents individual landuse areas, with geometry and a reference to `landuse_type`.
+- `landuse_type`: Lookup table for different land use categories (e.g., agricultural, residential, industrial).
+- `landuse`: Represents individual land use areas, with geometry and a reference to `landuse_type`.
 
 ```mermaid
 erDiagram
@@ -31,7 +32,7 @@ erDiagram
 
 > 🤖 **Prompt:** Add a subsection to ## Components which provides
 >
->1. SubHeading: Landuse
+>1. SubHeading: Land use
 >2. Image: img/landuse.png
 >3. Text: Summary of the entities in sql/9-landuse.sql
 >4. Mermaid: Diagram of the entities in sql/9-landuse.sql

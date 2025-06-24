@@ -1,0 +1,12 @@
+name: ✏️ Markdown Checks
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+jobs:
+  markdownlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm install -g markdownlint-cli
+      - run: markdownlint '**/*.md'

@@ -1,6 +1,9 @@
 # ✨ Contributing to Infrastructure Mapper
 
-Thank you for considering contributing to **Infrastructure Mapper**! We welcome contributions of all kinds, including bug fixes, feature requests, documentation improvements, and more. Please follow the guidelines below to ensure a smooth contribution process.
+Thank you for considering contributing to **Infrastructure Mapper**!  
+We welcome contributions of all kinds, including bug fixes, feature requests,  
+documentation improvements, and more. Please follow the guidelines below to  
+ensure a smooth contribution process.
 
 ---
 
@@ -8,7 +11,8 @@ Thank you for considering contributing to **Infrastructure Mapper**! We welcome 
 
 ### 1. Fork the Repository
 
-- Click the **Fork** button at the top-right corner of this repository to create your own copy.
+- Click the **Fork** button at the top-right corner of this repository to create  
+  your own copy.
 
 ### 2. Clone Your Fork
 
@@ -66,7 +70,8 @@ Thank you for considering contributing to **Infrastructure Mapper**! We welcome 
 
 ## 🧹 Code of Conduct
 
-Please adhere to our [Code of Conduct](CODE_OF_CONDUCT.md) to ensure a welcoming and inclusive environment for everyone.
+Please adhere to our [Code of Conduct](CODE_OF_CONDUCT.md) to ensure a  
+welcoming and inclusive environment for everyone.
 
 ---
 
@@ -74,7 +79,8 @@ Please adhere to our [Code of Conduct](CODE_OF_CONDUCT.md) to ensure a welcoming
 
 ### Coding Standards
 
-- Follow the naming conventions and SQL standards outlined in the [README.md](README.md).
+- Follow the naming conventions and SQL standards outlined in the  
+  [README.md](README.md).
 - Write clean, readable, and well-documented code.
 
 ### Commit Messages
@@ -146,7 +152,8 @@ Please adhere to our [Code of Conduct](CODE_OF_CONDUCT.md) to ensure a welcoming
 
 ## 💡 Need Help?
 
-If you have any questions or need assistance, feel free to reach out via [info@kartoza.com](mailto:info@kartoza.com).
+If you have any questions or need assistance, feel free to reach out via  
+[info@kartoza.com](mailto:info@kartoza.com).
 
 ---
 
