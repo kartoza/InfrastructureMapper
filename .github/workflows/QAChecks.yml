@@ -1,0 +1,16 @@
+name: Pre-commit Checks
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+jobs:
+  ensure-license-header:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash scripts/license_check.sh
+  code-size-feedback:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash scripts/codebase_size_check.sh
