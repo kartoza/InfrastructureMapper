@@ -21,11 +21,14 @@ jobs:
           for f in $(find . -name '*.yaml' -o -name '*.yml'); do
             # Skip empty files
             if [ ! -s "$f" ]; then
+              echo "🦘 Skipping empty file: $f"
               continue
             fi
             # Skip files with only whitespace/comments
             if ! grep -q '[^[:space:]#]' "$f"; then
+              echo "🦘 Skipping file containing only whitespace or comments: $f"
               continue
             fi
+            echo "⚒️ Formatting yaml file: $f"
             yamlfmt "$f"
           done
