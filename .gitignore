@@ -91,4 +91,4 @@ pgdata/
 presentations/*.html
 
 
-
+scripts/.test_stats.json
