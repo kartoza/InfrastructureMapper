@@ -1,4 +1,4 @@
-name: Pre-commit Checks
+name: 👨🏽 SQL Checks
 on:
   pull_request:
   push:

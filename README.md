@@ -30,6 +30,19 @@ Welcome to **Infrastructure Mapper**! This repository contains guidelines and co
 
 ![Animation](./img/infrastructure-mapper.gif)
 
+| Test | Description |
+|-----------|-------------|
+|[![🗜️ Yaml Checks](https://github.com/kartoza/InfrastructureMapper/actions/workflows/YamlChecks.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/YamlChecks.yml)           | Check that all yaml files are well formed. |
+|[![✏️ Markdown Checks](https://github.com/kartoza/InfrastructureMapper/actions/workflows/MarkdownChecks.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/MarkdownChecks.yml)           | Check that all markdown files are well formed.            |
+|[![🏋🏽 PostGIS Load Test](https://github.com/kartoza/InfrastructureMapper/actions/workflows/LoadSchema.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/LoadSchema.yml)           | Check that PostgreSQL / PostGIS fixtures load.             |
+|[![👨🏽 Pre-commit Checks](https://github.com/kartoza/InfrastructureMapper/actions/workflows/SQLChecks.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/SQLChecks.yml)           |  Check that all SQL files are well formed and formatted.           |
+|           |             |
+|           |             |
+|           |             |
+|           |             |
+|           |             |
+|           |             |
+
 [![PostGIS Load Test](https://github.com/kartoza/InfrastructureMapper/actions/workflows/LoadSchema.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/LoadSchema.yml)
 
 [![SQL Lint Test](https://github.com/kartoza/InfrastructureMapper/actions/workflows/SQLFluff.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/SQLFluff.yml)
