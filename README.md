@@ -12,6 +12,7 @@ Welcome to **Infrastructure Mapper**! This repository contains guidelines and co
 - [🌐 Infrastructure Mapper](#-infrastructure-mapper)
   - [📖 Table of Contents](#-table-of-contents)
   - [🚀 Project Overview](#-project-overview)
+  - [QA Status](#qa-status)
   - [📜 License](#-license)
   - [📂 Folder Structure](#-folder-structure)
   - [🤖 Using 'AI' (Large Language Models)](#-using-ai-large-language-models)
@@ -29,6 +30,10 @@ Welcome to **Infrastructure Mapper**! This repository contains guidelines and co
 ## 🚀 Project Overview
 
 ![Animation](./img/infrastructure-mapper.gif)
+
+---
+
+## QA Status
 
 | Test | Description |
 |-----------|-------------|
