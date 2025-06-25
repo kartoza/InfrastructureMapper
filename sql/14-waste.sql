@@ -62,8 +62,8 @@ CREATE TABLE IF NOT EXISTS waste_container (
     last_update_by TEXT NOT NULL,
     covered BOOLEAN,
     capacity_liters INT CHECK (capacity_liters > 0),
-    geom GEOMETRY(POINT, 4326),
-    type_uuid UUID NOT NULL REFERENCES container_type(uuid)
+    geom GEOMETRY (POINT, 4326),
+    type_uuid UUID NOT NULL REFERENCES container_type (uuid)
 );
 COMMENT ON TABLE waste_container IS 'Waste containers used in the field, linked to container type and location.';
 COMMENT ON COLUMN waste_container.id IS 'The unique waste container ID. This is the Primary Key.';
@@ -75,8 +75,6 @@ COMMENT ON COLUMN waste_container.capacity_liters IS 'Capacity of the container 
 COMMENT ON COLUMN waste_container.geom IS 'Location of the waste container. EPSG: 4326 (WGS 84).';
 COMMENT ON COLUMN waste_container.type_uuid IS 'Foreign key referencing container type.';
 
-
-
 -- WASTE LOG
 CREATE TABLE IF NOT EXISTS waste_log (
     id SERIAL NOT NULL PRIMARY KEY,
@@ -86,9 +84,10 @@ CREATE TABLE IF NOT EXISTS waste_log (
     log_description TEXT,
     observation_date DATE,
     observation_time TIME,
-    container_uuid UUID NOT NULL REFERENCES waste_container(uuid),
-    condition_uuid UUID NOT NULL REFERENCES container_condition(uuid),
-    level_uuid UUID NOT NULL REFERENCES waste_level(uuid)
+    container_uuid UUID NOT NULL REFERENCES waste_container (uuid),
+    condition_uuid UUID NOT NULL REFERENCES container_condition (uuid),
+    level_uuid UUID NOT NULL REFERENCES waste_level (uuid)
+
 );
 COMMENT ON TABLE waste_log IS 'Observations made about waste containers including condition and fill level.';
 COMMENT ON COLUMN waste_log.id IS 'The unique waste log ID. This is the Primary Key.';
