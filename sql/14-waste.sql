@@ -101,3 +101,4 @@ COMMENT ON COLUMN waste_log.container_uuid IS 'Foreign key referencing the waste
 COMMENT ON COLUMN waste_log.condition_uuid IS 'Foreign key referencing the container condition.';
 COMMENT ON COLUMN waste_log.level_uuid IS 'Foreign key referencing the waste level.';
 -- trigger action
+-- force CI trigger
