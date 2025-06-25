@@ -15,4 +15,5 @@ $PSQL gis -f sql/10-gates.sql
 $PSQL gis -f sql/11-poles.sql
 $PSQL gis -f sql/12-culinary.sql
 $PSQL gis -f sql/13-roads.sql
+$PSQL gis -f sql/14-waste.sql
 $PSQL gis -f sql/fixtures.sql
