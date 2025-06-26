@@ -25,8 +25,7 @@ footer: 'Kartoza (Pty) Ltd. 2025'
 
 ## 🧱 The Model
 
-- The project uses a custom PostgreSQL/PostGIS schema  
-- Diagram below shows the roads ERD: 
+The project uses a custom PostgreSQL/PostGIS schema   
 
 ![ERD](../img/roads-erd.png)
 
@@ -42,7 +41,7 @@ QGIS smart forms created to collect and validate field data efficiently.
 
 ## 🏞️ Field Collection
 
-> Data collected in the field using mobile GIS apps and GPS-enabled devices.
+Data collected in the field using mobile GIS apps and GPS-enabled devices.
 
 ![Field Photos](../img/roads-field.png)
 
@@ -52,8 +51,7 @@ QGIS smart forms created to collect and validate field data efficiently.
 
 - **Total features collected:** 
     - `Points`: 108
-    - `Lines`: 139
-- **Main types:** intersections, road segments.  
+    - `Lines`: 139 
 - **Area covered:** 1,9 km²  
 
 ![Map of Features](../img/roads-collection.png)
@@ -62,15 +60,13 @@ QGIS smart forms created to collect and validate field data efficiently.
 
 ## ❓ Analysis Problem
 
-- What would be the shortest travel distance between 2 points?
-
 ![Analysis Problem](../img/roads-problem.png)
 
 ---
 
 ## ⚙️ Methodology
 
-- A custom QGIS Model Designer diagram used for repeatable spatial processing.
+The custom QGIS Model Designer diagram used for repeatable spatial processing.
 
 ![QGIS Model](../img/roads-model.png)
 
