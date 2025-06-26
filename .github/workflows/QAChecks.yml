@@ -1,0 +1,11 @@
+name: ⚒️ QA Checks
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+jobs:
+  code-size-feedback:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash scripts/codebase_size_check.sh

@@ -1,0 +1,12 @@
+name: 👁️ Spelling Checks
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+jobs:
+  cspell:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm install -g cspell
+      - run: cspell --no-progress --no-summary '**/*.md'

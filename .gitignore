@@ -86,3 +86,9 @@ core
 test_osm_roads_output.gpkg
 history.mp4
 history.gif
+pgdata/
+
+presentations/*.html
+
+
+scripts/.test_stats.json

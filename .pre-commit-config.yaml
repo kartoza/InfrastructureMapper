@@ -3,16 +3,118 @@ repos:
     rev: 24.4.0
     hooks:
       - id: black
-        name: black
+        name: "🖤 black"
         language_version: python3
         additional_dependencies: []
         args: [sql]
-
+  - repo: https://github.com/sqlfluff/sqlfluff
+    rev: 3.0.7
+    hooks:
+      - id: sqlfluff-lint
+        name: "🧹 sqlfluff-lint"
+        entry: sqlfluff lint
+        language: python
+        types: [sql]
+      - id: sqlfluff-fix
+        name: "🛠️ sqlfluff-fix"
+        entry: sqlfluff fix --force
+        language: python
+        types: [sql]
   - repo: local
     hooks:
       - id: remove-core-file
-        name: Remove core file if it exists
+        name: "🗑️ Remove core file if it exists"
         entry: bash -c '[[ -f core && ! -d core ]] && rm core || exit 0'
         language: system
         stages:
           - pre-commit
+  - repo: local
+    hooks:
+      - id: ensure-utf8-encoding
+        name: "🌐 Ensure UTF-8 encoding declaration in Python files"
+        entry: bash scripts/encoding_check.sh
+        language: system
+        types: [python]
+        stages: [pre-commit]
+  - repo: local
+    hooks:
+      - id: ensure-license-header
+        name: "📄 Ensure license, copyright, and Kartoza link"
+        entry: bash scripts/license_check.sh
+        language: system
+        types: [python, shell, sql]
+        stages: [pre-commit]
+  - repo: local
+    hooks:
+      - id: ensure-google-docstrings
+        name: "📚 Ensure Google-style docstrings in Python modules"
+        entry: bash scripts/docstrings_check.sh
+        language: system
+        types: [python]
+        stages: [pre-commit]
+  - repo: local
+    hooks:
+      - id: code-size-feedback
+        name: "📏 Code Size Feedback"
+        entry: bash scripts/codebase_size_check.sh
+        language: system
+        stages: [pre-commit]
+  - repo: local
+    hooks:
+      - id: test-count-feedback
+        name: "🧪 Test Count Feedback"
+        entry: python scripts/commit_test_stats.py
+        language: system
+        types: [python]
+        stages: [pre-commit]
+  - repo: https://github.com/PyCQA/isort
+    rev: 6.0.1
+    hooks:
+      - id: isort
+        name: "📦 isort - sort Python imports"
+        entry: isort --check --diff
+        language: python
+        types: [python]
+        stages: [pre-commit]
+  - repo: local
+    hooks:
+      - id: nixfmt
+        name: "❄️ Nixfmt (RFC style)"
+        description: Format Nix code with nixfmt-rfc-style
+        entry: nixfmt
+        language: system
+        args: ["--"]
+        types: [nix]
+  - repo: local
+    hooks:
+      - id: markdownlint
+        name: "📝 markdownlint - Markdown linter"
+        entry: markdownlint
+        language: system
+        types: [markdown]
+        stages: [pre-commit]
+  - repo: local
+    hooks:
+      - id: cspell
+        name: "🔤 cspell - Spell checker for Markdown"
+        entry: cspell --no-progress --no-summary
+        language: system
+        types: [markdown]
+        stages: [pre-commit]
+  - repo: local
+    hooks:
+      - id: yamllint
+        name: "🔍 yamllint - YAML linter"
+        entry: yamllint
+        language: system
+        types: [yaml]
+        stages: [pre-commit]
+  - repo: local
+    hooks:
+      - id: actionlint
+        name: "🤖 actionlint - GitHub Actions workflow linter"
+        entry: actionlint
+        language: system
+        types: [yaml]
+        files: ^\.github/workflows/.*\.ya?ml$
+        stages: [pre-commit]
