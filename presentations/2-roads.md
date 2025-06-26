@@ -9,7 +9,9 @@ footer: 'Kartoza (Pty) Ltd. 2025'
 <!-- Title Slide -->
 
 # 🌍 *Infrastructure Mapper - Roads*  
-## *Lindie Strijdom*  
+
+## *Lindie Strijdom* 
+ 
 📅 *04/07/2025*
 
 ---
@@ -18,14 +20,14 @@ footer: 'Kartoza (Pty) Ltd. 2025'
 
 - Intern at **Kartoza**
 - Background in spatial analysis
-- Passionate about data-driven decision making, sustainable developement, and map design
+- Passionate about data-driven decision making, sustainable development, and map design
 - Tools used: QGIS, QFieldCloud, PostgreSQL, pgAdmin, VS Code, Marp, GitHub, etc.
 
 ---
 
 ## 🧱 The Model
 
-The project uses a custom PostgreSQL/PostGIS schema   
+The project uses a custom PostgreSQL/PostGIS schema
 
 ![ERD](../img/roads-erd.png)
 
@@ -49,10 +51,10 @@ Data collected in the field using mobile GIS apps and GPS-enabled devices.
 
 ## 🗺️ Collection Results
 
-- **Total features collected:** 
-    - `Points`: 108
-    - `Lines`: 139 
-- **Area covered:** 1,9 km²  
+- **Total features collected:**
+  - `Points`: 108
+  - `Lines`: 139
+- **Area covered:** 1,9 km²
 
 ![Map of Features](../img/roads-collection.png)
 
@@ -93,7 +95,7 @@ The custom QGIS Model Designer diagram used for repeatable spatial processing.
 
 If I had more time, I would:
 
-- Use more advaced networking tools (pgRouting)
+- Use more advanced networking tools (pgRouting)
 - Digitize bridge and speed bump features
 - Increase the study area
 
@@ -101,20 +103,22 @@ If I had more time, I would:
 
 ## 🧳 My Internship Experience
 
-### Highlights:
+### Highlights
 
-- ✅ Learned to use QGIS and a lot of other software/tools
+- ✅ Learned to use QGIS and multiple other software/tools
 - 🤝 Collaborated on a real project and gained practical experience
 - 🎯 Gained confidence in presenting and communication
-- 💬 Learned effectiver time management
+- 💬 Learned effective time management
  
 ---
 
 ## 📧 Contact Me
 
-👤 Lindie Strijdom  
-📨 lindiestrijdom@gmail.com  
-🔗 [instagram.com/sickly_hippie](https://www.instagram.com/sickly_hippie/)  
+👤 Lindie Strijdom
+📨 [lindiestrijdom@gmail.com](mailto:lindiestrijdom@gmail.com)
+🔗 [instagram.com/sickly_hippie](https://www.instagram.com/sickly_hippie/)
 💼 [github.com/linstrijdom](https://github.com/linstrijdom)
 
 ---
+
+> 🤖 **Prompt:** Create a GIS related image for the Analysis Problem slide

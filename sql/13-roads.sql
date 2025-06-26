@@ -117,7 +117,7 @@ CREATE TABLE IF NOT EXISTS road (
     uuid UUID UNIQUE NOT NULL DEFAULT gen_random_uuid(),
     last_update TIMESTAMP DEFAULT now() NOT NULL,
     last_update_by TEXT NOT NULL,
-    name TEXT,
+    name TEXT
 );
 COMMENT ON TABLE road IS 'Logical road entities, composed of road segments.';
 

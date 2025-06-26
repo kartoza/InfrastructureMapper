@@ -2,7 +2,7 @@
 
 This folder contains Marp-based presentations for the **Infrastructure Mapper** project.
 
-All presentations should follow the standardised format below to ensure clarity, consistency, and a strong narrative structure for open days and portfolio use. Presentations are written in Markdown and rendered using [Marp](https://marp.app/).
+All presentations should follow the standardized format below to ensure clarity, consistency, and a strong narrative structure for open days and portfolio use. Presentations are written in Markdown and rendered using [Marp](https://marp.app/).
 
 ---
 
@@ -52,7 +52,7 @@ When creating a presentation, please include the following slides **in order**:
     - What you'd explore further with more time or data
 
 12. **🧳 Your Internship**
-    - 5–6 highlights or lowlights from your internship experience
+    - 5–6 highlights or low points from your internship experience
 
 13. **📢 Contact Slide**
     - Your name
