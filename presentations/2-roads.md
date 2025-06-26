@@ -8,10 +8,10 @@ footer: 'Kartoza (Pty) Ltd. 2025'
 
 <!-- Title Slide -->
 
-# 🌍 *Infrastructure Mapper - Roads*  
+# 🌍 *Infrastructure Mapper - Roads*
 
-## *Lindie Strijdom* 
- 
+## *Lindie Strijdom*
+
 📅 *04/07/2025*
 
 ---
@@ -109,7 +109,7 @@ If I had more time, I would:
 - 🤝 Collaborated on a real project and gained practical experience
 - 🎯 Gained confidence in presenting and communication
 - 💬 Learned effective time management
- 
+
 ---
 
 ## 📧 Contact Me
