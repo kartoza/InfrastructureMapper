@@ -28,15 +28,15 @@ footer: 'Kartoza (Pty) Ltd. 2025'
 - The project uses a custom PostgreSQL/PostGIS schema  
 - Diagram below shows the culinary facilities ERD: 
 
-<img src="../img/culinaryfacilities-erd.png" alt="ERD" width="80%">
+![ERD](../img/culinaryfacilities-erd.png)
 
 ---
 
 ## 📋 The Forms
 
 QGIS smart forms created to collect and validate field data efficiently.
-<img src="../img/culinaryfacilities-forms.png" alt="ERD" width="45%">
 
+![Forms Collage](../img/culinaryfacilities-forms.png)
 
 ---
 ## 🏞️ Field Collection
@@ -54,7 +54,7 @@ QGIS smart forms created to collect and validate field data efficiently.
 - **Main types:** culinary spots.  
 - **Area covered:** 15 km²  
 
-<img src="../img/culinaryfacilities-collection.png" alt="ERD" width="40%">
+![Map of Features](../img/culinaryfacilities-collection.png)
 
 ---
 
@@ -77,7 +77,6 @@ QGIS smart forms created to collect and validate field data efficiently.
 
 - Isochrones analysis output 
 - Features within specific travel time and given parameters.
-
 ![Results](../img/culinaryfacilities-results.png)
 
 ---
@@ -124,3 +123,5 @@ If I had more time, I would:
 💼 [github.com/hefniraera](https://github.com/hefniraera)
 
 ---
+
+> 🤖 **Prompt:** Create a GIS related image for the Analysis Problem slide
