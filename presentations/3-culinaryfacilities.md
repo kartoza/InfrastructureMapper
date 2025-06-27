@@ -77,7 +77,8 @@ QGIS smart forms created to collect and validate field data efficiently.
 
 - Isochrones analysis output 
 - Features within specific travel time and given parameters.
-<img src="../img/culinaryfacilities-results.png" alt="ERD" width="57%">
+
+![Results](../img/culinaryfacilities-results.png)
 
 ---
 
