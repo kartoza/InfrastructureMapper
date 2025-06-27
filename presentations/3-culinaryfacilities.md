@@ -9,7 +9,7 @@ footer: 'Kartoza (Pty) Ltd. 2025'
 <!-- Title Slide -->
 
 # 🌍 *Infrastructure Mapper - Culinary Facilities*  
-## *Hefni R. R. A.*  
+## *Hefni Rae R. A.*  
 📅 *04/07/2025*
 
 ---
