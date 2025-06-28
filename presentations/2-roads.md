@@ -7,8 +7,9 @@ footer: 'Kartoza (Pty) Ltd. 2025'
 ---
 
 <!-- Title Slide -->
+<!-- _class: lead -->
 
-# 🌍 *Infrastructure Mapper - Roads*
+# *Infrastructure Mapper - Roads*
 
 ## *Lindie Strijdom*
 
@@ -16,7 +17,7 @@ footer: 'Kartoza (Pty) Ltd. 2025'
 
 ---
 
-## 👩‍💻 About Me
+## About Me
 
 - Intern at **Kartoza**
 - Background in spatial analysis
@@ -25,65 +26,66 @@ footer: 'Kartoza (Pty) Ltd. 2025'
 
 ---
 
-## 🧱 The Model
+## The Model
 
-The project uses a custom PostgreSQL/PostGIS schema
-
-![ERD](../img/roads-erd.png)
+![bg contain ](../img/roads-erd.png)
 
 ---
 
-## 📋 The Forms
-
-QGIS smart forms created to collect and validate field data efficiently.
-
-![Forms Collage](../img/roads-forms.png)
+## The Forms
 
 ---
 
-## 🏞️ Field Collection
+![bg contain ](../img/roads-forms.png)
+
+---
+
+## Field Collection
 
 Data collected in the field using mobile GIS apps and GPS-enabled devices.
 
 ![Field Photos](../img/roads-field.png)
 
----
+---Ff0000
 
-## 🗺️ Collection Results
+## Collection Results
 
 - **Total features collected:**
-  - `Points`: 108
-  - `Lines`: 139
+  - Points: 108
+  - Lines: 139
 - **Area covered:** 1,9 km²
 
-![Map of Features](../img/roads-collection.png)
+![bg contain left](../img/roads-collection.png)
 
 ---
 
-## ❓ Analysis Problem
+## Analysis Problem
 
-![Analysis Problem](../img/roads-problem.png)
+---
+![bg center](../img/roads-problem.png)
 
 ---
 
-## ⚙️ Methodology
-
-The custom QGIS Model Designer diagram used for repeatable spatial processing.
-
-![QGIS Model](../img/roads-model.png)
+## Methodology
 
 ---
 
-## 📊 Results
+![bg contain center](../img/roads-model.png)
+
+---
+
+## Results
 
 - Shortest distance analysis output
 - Map displaying road condition
 
-![Results](../img/roads-results.png)
+---
+
+![bg center](../img/roads-results.png)
 
 ---
 
-## 💡 Insights
+## Insights
 
 - Found 30 road segments (~5km total) that are in need of repair
 - Found 3 road segments (~639m total) in desperate need of repair
@@ -91,7 +93,7 @@ The custom QGIS Model Designer diagram used for repeatable spatial processing.
 
 ---
 
-## 🔬 Further Research
+## Further Research
 
 If I had more time, I would:
 
@@ -101,7 +103,7 @@ If I had more time, I would:
 
 ---
 
-## 🧳 My Internship Experience
+## My Internship Experience
 
 ### Highlights
 
@@ -112,7 +114,7 @@ If I had more time, I would:
 
 ---
 
-## 📧 Contact Me
+## Contact Me
 
 👤 Lindie Strijdom
 📨 [lindiestrijdom@gmail.com](mailto:lindiestrijdom@gmail.com)

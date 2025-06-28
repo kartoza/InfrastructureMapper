@@ -10,7 +10,6 @@ VSCODE_DIR=".vscode"
 LOG_FILE="vscode.log"
 
 REQUIRED_EXTENSIONS=(
-    foxundermoon.shell-format@7.2.5
     yzhang.markdown-all-in-one@3.6.3
     github.vscode-github-actions@0.27.1
     marp-team.marp-vscode@3.2.0
@@ -31,6 +30,7 @@ REQUIRED_EXTENSIONS=(
     dorzey.vscode-sqlfluff@3.3.1
     GitHub.vscode-pull-request-github@0.110.0
     searKing.preview-vscode@2.3.12
+    foxundermoon.shell-format@7.2.5
 )
 
 # ----------------------------------------------
@@ -303,15 +303,15 @@ fi
 
 # Ensure Marp stylesheet is set for Marp themes
 echo "🗨️ Ensuring Marp stylesheet is set for Marp themes..."
-MARP_STYLE_PATH="\${workspaceFolder}/presentations/slide-style.css"
-if jq -e '.["marp.themes"]' "$SETTINGS_FILE" >/dev/null; then
+MARP_STYLE_PATH="presentations/slide-style.css"
+if jq -e '.["markdown.marp.themes"]' "$SETTINGS_FILE" >/dev/null; then
     # Overwrite existing marp.themes
-    jq --arg style "$MARP_STYLE_PATH" '.["marp.themes"] = [$style]' "$SETTINGS_FILE" >"$SETTINGS_FILE.tmp" && mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
-    echo "  🔧 Updated marp.themes to use $MARP_STYLE_PATH"
+    jq --arg style "$MARP_STYLE_PATH" '.["markdown.marp.themes"] = [$style]' "$SETTINGS_FILE" >"$SETTINGS_FILE.tmp" && mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
+    echo "  🔧 Updated markdown.marp.themes to use $MARP_STYLE_PATH"
 else
     # Add marp.themes
-    jq --arg style "$MARP_STYLE_PATH" '. + {"marp.themes": [$style]}' "$SETTINGS_FILE" >"$SETTINGS_FILE.tmp" && mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
-    echo "  🔧 Added marp.themes with $MARP_STYLE_PATH"
+    jq --arg style "$MARP_STYLE_PATH" '. + {"markdown.marp.themes": [$style]}' "$SETTINGS_FILE" >"$SETTINGS_FILE.tmp" && mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
+    echo "  🔧 Added markdown.marp.themes with $MARP_STYLE_PATH"
 fi
 
 # TODO
