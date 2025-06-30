@@ -9,7 +9,7 @@ footer: 'Kartoza (Pty) Ltd. 2025'
 <!-- Title Slide -->
 
 # 🌍 *Infrastructure Mapper - Culinary Facilities*  
-## *Hefni Rae R. A.*  
+## *Hefni Rae R. A.*
 📅 *04/07/2025*
 
 ---
@@ -42,8 +42,6 @@ QGIS smart forms created to collect and validate field data efficiently.
 ## 🏞️ Field Collection
 
 > Data collected in the field using mobile GIS apps and GPS-enabled devices.
-
-![Field Photos](../img/culinaryfacilities-field.png)
 
 ---
 
