@@ -17,6 +17,7 @@ footer: 'Kartoza (Pty) Ltd. 2025'
 
 ---
 
+
 ## 👩‍💻 About Me
 
 - Intern at **Kartoza**
