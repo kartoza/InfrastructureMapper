@@ -1,3 +1,15 @@
+# SPDX-FileCopyrightText: 
+# SPDX-License-Identifier: 
+# Precommit configuration file for managing code quality checks and formatting tools.
+# This file defines various hooks for linting, formatting, security checks, and more.
+# For more information, see https://pre-commit.com
+# You can run individual hooks to check them - some also accept a arguments
+# to e.g. run in verify mode.
+# To run all hooks, use `pre-commit run --all-files`
+# To run a single hook, use `pre-commit run <hook_id> --all-files`
+# To run a single hook verbosely, use `pre-commit run <hook_id> --all-files -v`
+# Tim Sutton, 2025
+
 repos:
   - repo: https://github.com/psf/black
     rev: 24.4.0
@@ -117,4 +129,111 @@ repos:
         language: system
         types: [yaml]
         files: ^\.github/workflows/.*\.ya?ml$
+        stages: [pre-commit]
+  - repo: local
+    hooks:
+      - id: bandit-sql
+        name: "🔒 Bandit - Python security analysis"
+        entry: bandit -r sql
+        language: system
+        types: [python]
+        stages: [pre-commit]
+  - repo: local
+    hooks:
+      - id: bandit-scripts
+        name: "🔒 Bandit - Python security analysis"
+        entry: bandit -r scripts
+        language: system
+        types: [python]
+        stages: [pre-commit]
+  - repo: local
+    hooks:
+      - id: bearer-sql
+        name: "🛡️ Bearer - Security & privacy scanner"
+        entry: bearer scan --exit-code 1 sql
+        language: system
+        pass_filenames: false
+        stages: [pre-commit]
+  - repo: local
+    hooks:
+      - id: bearer-scripts
+        name: "🛡️ Bearer - Security & privacy scanner"
+        entry: bearer scan --exit-code 1 scripts
+        language: system
+        pass_filenames: false
+        stages: [pre-commit]
+  - repo: local
+    hooks:
+      - id: semgrep-sql
+        name: "🔍 Semgrep - Static analysis"
+        entry: semgrep --config=auto sql
+        language: system
+        types: [python]
+        stages: [pre-commit]
+  - repo: local
+    hooks:
+      - id: semgrep-scripts
+        name: "🔍 Semgrep - Static analysis"
+        entry: semgrep --config=auto scripts
+        language: system
+        types: [python]
+        stages: [pre-commit]
+  - repo: local
+    hooks:
+      - id: codeql
+        name: "🧬 CodeQL - Code analysis"
+        entry: codeql database analyze ./codeql-db codeql/python-queries
+        language: system
+        types: [python]
+        stages: [pre-commit]
+  # - repo: local # needs a github token to run
+  #   hooks:
+  #     - id: renovate
+  #       name: "🔄 Renovate - Dependency updater"
+  #       entry: renovate
+  #       language: system
+  #       types: [json, yaml]
+  #       stages: [pre-commit]
+  
+  # This must run before reuse license compliance check
+  - repo: local
+    hooks:
+    - id: add-spdx-headers
+      name: "📄 Add SPDX headers if missing"
+      entry: scripts/add_spdx_headers.sh
+      language: script
+      files: \.(py|sh|sql|md|yaml|yml|json|nix|txt|toml|conf|env)$
+      stages: [pre-commit]
+
+  - repo: local
+    hooks:
+      - id: reuse
+        name: "📄 REUSE - License compliance"
+        entry: reuse lint
+        language: system
+        always_run: true # Ensures it runs on all files, not just staged ones
+        stages: [pre-commit]
+  - repo: local
+    hooks:
+      - id: snyk
+        name: "🕵️ Snyk - Vulnerability scanner"
+        entry: snyk test
+        language: system
+        types: [python]
+        stages: [pre-commit]
+  - repo: local
+    hooks:
+      - id: pylint
+        name: "🦉 Pylint - Python linter"
+        entry: pylint .
+        language: system
+        types: [python]
+        stages: [pre-commit]
+  - repo: local
+    hooks:
+      - id: codecov
+        name: "📊 Codecov - Coverage reporting"
+        entry: codecov-cli
+        language: system
+        types: [python]
         stages: [pre-commit]
