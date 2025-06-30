@@ -28,7 +28,7 @@ footer: 'Kartoza (Pty) Ltd. 2025'
 ## 🧱 The Model
 
 - The project uses a custom PostgreSQL/PostGIS schema  
-- Diagram below shows the culinary facilities ERD: 
+- Diagram below shows the culinary facilities ERD:
 
 ![ERD](../img/culinaryfacilities-erd.png)
 
@@ -41,6 +41,7 @@ QGIS smart forms created to collect and validate field data efficiently.
 ![Forms Collage](../img/culinaryfacilities-forms.png)
 
 ---
+
 ## 🏞️ Field Collection
 
 > Data collected in the field using mobile GIS apps and GPS-enabled devices.
@@ -49,10 +50,9 @@ QGIS smart forms created to collect and validate field data efficiently.
 
 ## 🗺️ Collection Results
 
-- **Total features collected:** 
-    - `Points`: 80
-- **Main types:** culinary spots.  
-- **Area covered:** 15 km²  
+* **Total features collected:**
+  * Points: 80
+* **Area covered:** 15 km²
 
 ![Map of Features](../img/culinaryfacilities-collection.png)
 
@@ -61,7 +61,7 @@ QGIS smart forms created to collect and validate field data efficiently.
 ## ❓ Analysis Problem
 
 - How can we determine culinary facilities that are reachable within a specific travel time from a central point?
-- Which culinary facilities that can be reached within 8 minutes and offer the best combination of **low price**, **high ratings**, specific **facilities** like Wi-Fi and indoor seating, and specific **category** like Cafe/Bakery? 
+- Which culinary facilities that can be reached within 8 minutes and offer the best combination of **low price**, **high ratings**, specific **facilities** like Wi-Fi and indoor seating, and specific **category** like Cafe/Bakery?
 
 ---
 
@@ -105,19 +105,19 @@ If I had more time, I would:
 
 ## 🧳 My Internship Experience
 
-### Highlights:
+### Highlights
 
 - ✅ Mastered QGIS and explored various GIS tools and workflows  
 - 🔍 Contributed to impactful projects
 - 🌟 Improved problem-solving, adaptability, and critical thinking  
-- ⏰ Enhanced time management while balancing multiple tasks and responsibilities 
+- ⏰ Enhanced time management while balancing multiple tasks and responsibilities
 - 🌍 Improved English communication skills through professional and collaborative engagements
- 
+
 ---
 
 ## 📧 Contact Me
 
-👤 Hefni Rae R. A.   
+👤 Hefni Rae R. A.
 📨 [hefniraera17@gmail.com](mailto:hefniraera17@gmail.com)
 🔗 [linkedin.com/in/hefniraera](https://www.linkedin.com/in/hefniraera/)  
 💼 [github.com/hefniraera](https://github.com/hefniraera)
@@ -125,4 +125,4 @@ If I had more time, I would:
 ---
 
 > 🤖 **Prompt:** Create a GIS related image for the Analysis Problem slide
-> 
+>
