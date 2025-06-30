@@ -24,27 +24,40 @@ footer: 'Kartoza (Pty) Ltd. 2025'
 - Intern at **Kartoza**
 - Bachelor of Engineering, majored in Geodetic Engineering
 - Currently exploring GIS with a growing interest in open-source GIS. Passionate about GIS and map styling.
-- Tools used: QGIS, QFieldCloud, PostgreSQL, pgAdmin, VS Code, Marp, GitHub, etc.
+  
+---
+
+## ⚙️ Tools Used
+
+- QGIS
+- QFieldCloud
+- PostgreSQL
+- PostGIS
+- pgAdmin
+- VS Code
+- Marp
+- Git
+- GitHub
 
 ---
 
 ## 🧱 The Model
 
-![ERD](../img/culinaryfacilities-erd.png)
+![ERD-culinaryfacilities](../img/culinaryfacilities-erd.png)
 
 ---
 
 ## 📋 The Forms
 
-QGIS smart forms created to collect and validate field data efficiently.
-
-![Forms Collage](../img/culinaryfacilities-forms.png)
+![Forms-culinaryfacilities](../img/culinaryfacilities-forms.png)
 
 ---
 
 ## 🏞️ Field Collection
 
 > Data collected in the field using mobile GIS apps and GPS-enabled devices.
+
+![bg right](../img/culinaryfacilities-field.png)
 
 ---
 
@@ -54,7 +67,7 @@ QGIS smart forms created to collect and validate field data efficiently.
   - Points: 80
 - **Area covered:** 15 km²
 
-![Map of Features](../img/culinaryfacilities-collection.png)
+![bg right](../img/culinaryfacilities-collection.png)
 
 ---
 
@@ -67,17 +80,13 @@ QGIS smart forms created to collect and validate field data efficiently.
 
 ## ⚙️ Methodology
 
-- A custom QGIS Model Designer diagram used for repeatable spatial processing.
-
-![QGIS Model](../img/culinaryfacilities-model.png)
+![QGIS Model-culinaryfacilities](../img/culinaryfacilities-model.png)
 
 ---
 
 ## 📊 Results
 
-- Isochrones analysis output
-- Features within specific travel time and given parameters.
-![Results](../img/culinaryfacilities-results.png)
+![Results-culinaryfacilities](../img/culinaryfacilities-results.png)
 
 ---
 

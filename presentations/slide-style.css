@@ -74,7 +74,6 @@ a:hover {
 
 box-shadow: 0 2px 8px rgba(47, 93, 80, 0.07);
 
-
 /* Images */
 img[alt*="bg"] {
     max-height: 80%;
@@ -123,4 +122,32 @@ table.contact-table {
     border-collapse: collapse;
     table-layout: auto;
     text-align: center;
+}
+
+section img[alt*="ERD-culinaryfacilities"] {
+  display: block;
+  margin: auto;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+section img[alt*="Forms-culinaryfacilities"] {
+  display: block;
+  margin: auto;
+  max-width: 60%;
+  max-height: 60%;
+}
+
+section img[alt*="QGIS Model-culinaryfacilities"] {
+  display: block;
+  margin: auto;
+  max-width: 60%;
+  max-height: 100%;
+}
+
+section img[alt*="Results-culinaryfacilities"] {
+  display: block;
+  margin: auto;
+  max-width: 73%;
+  max-height: 100%;
 }
