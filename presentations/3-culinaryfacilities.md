@@ -9,7 +9,9 @@ footer: 'Kartoza (Pty) Ltd. 2025'
 <!-- Title Slide -->
 
 # 🌍 *Infrastructure Mapper - Culinary Facilities*  
+
 ## *Hefni Rae R. A.*
+
 📅 *04/07/2025*
 
 ---
@@ -116,10 +118,11 @@ If I had more time, I would:
 ## 📧 Contact Me
 
 👤 Hefni Rae R. A.   
-📨 hefniraera17@gmail.com  
+📨 [hefniraera17@gmail.com](mailto:hefniraera17@gmail.com)
 🔗 [linkedin.com/in/hefniraera](https://www.linkedin.com/in/hefniraera/)  
 💼 [github.com/hefniraera](https://github.com/hefniraera)
 
 ---
 
 > 🤖 **Prompt:** Create a GIS related image for the Analysis Problem slide
+> 
