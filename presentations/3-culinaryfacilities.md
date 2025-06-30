@@ -8,9 +8,9 @@ footer: 'Kartoza (Pty) Ltd. 2025'
 
 <!-- Title Slide -->
 
-# 🌍 *Infrastructure Mapper - Culinary Facilities*  
+# 🌍 *Infrastructure Mapper - Culinary Facilities*
 
-## *Hefni Rae R. A.*
+## *Hefni Rae R A*
 
 📅 *04/07/2025*
 
@@ -75,7 +75,7 @@ QGIS smart forms created to collect and validate field data efficiently.
 
 ## 📊 Results
 
-- Isochrones analysis output 
+- Isochrones analysis output
 - Features within specific travel time and given parameters.
 ![Results](../img/culinaryfacilities-results.png)
 
