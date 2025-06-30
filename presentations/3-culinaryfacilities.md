@@ -7,6 +7,7 @@ footer: 'Kartoza (Pty) Ltd. 2025'
 ---
 
 <!-- Title Slide -->
+<!-- _class: lead -->
 
 # 🌍 *Infrastructure Mapper - Culinary Facilities*
 
