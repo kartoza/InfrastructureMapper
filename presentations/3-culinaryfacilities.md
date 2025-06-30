@@ -19,6 +19,8 @@ footer: 'Kartoza (Pty) Ltd. 2025'
 
 ## 👩‍💻 About Me
 
+![bg  left](../img/interns/hefni-raera.png)
+
 - Intern at **Kartoza**
 - Bachelor of Engineering, majored in Geodetic Engineering
 - Currently exploring GIS with a growing interest in open-source GIS. Passionate about GIS and map styling.
@@ -27,9 +29,6 @@ footer: 'Kartoza (Pty) Ltd. 2025'
 ---
 
 ## 🧱 The Model
-
-- The project uses a custom PostgreSQL/PostGIS schema  
-- Diagram below shows the culinary facilities ERD:
 
 ![ERD](../img/culinaryfacilities-erd.png)
 
