@@ -51,7 +51,7 @@ QGIS smart forms created to collect and validate field data efficiently.
 ## 🗺️ Collection Results
 
 - **Total features collected:**
-  * Points: 80
+  - Points: 80
 - **Area covered:** 15 km²
 
 ![Map of Features](../img/culinaryfacilities-collection.png)
