@@ -24,17 +24,34 @@ footer: 'Kartoza (Pty) Ltd. 2025'
 * Intern at **Kartoza**
 * Background in spatial analysis
 * Passionate about data-driven decision making, sustainable development, and map design
-* Tools used: QGIS, QFieldCloud, PostgreSQL, pgAdmin, VS Code, Marp, GitHub, etc.
+
+---
+
+## The Tools
+
+* QGIS
+* QFieldCloud
+* PostgreSQL
+* pgAdmin
+* VS Code
+* Marp
+* GitHub
 
 ---
 
 ## The Model
 
-![bg contain ](../img/roads-erd.png)
+<div align="center">
+  <img src="../img/roads-erd.png" alt="ER Diagram" width="750">
+</div>
 
 ---
 
 ## The Forms
+
+<div align="center">
+  <img src="../img/roads-forms-desktop.png" alt="ER Diagram" width="1000">
+</div>
 
 ---
 
@@ -63,8 +80,8 @@ Data collected in the field using mobile GIS apps and GPS-enabled devices.
 
 ## Analysis Problem
 
----
-![bg center](../img/roads-problem.png)
+* Routing analysis
+* Road condition assessment
 
 ---
 
@@ -72,7 +89,11 @@ Data collected in the field using mobile GIS apps and GPS-enabled devices.
 
 ---
 
-![bg contain center](../img/roads-model.png)
+![bg contain center](../img/roads-model-1.png)
+
+---
+
+![bg contain center](../img/roads-model-2.png)
 
 ---
 
@@ -94,9 +115,11 @@ Road condition
 
 ## Insights
 
-* Found 30 road segments (~5km total) that are in need of repair
-* Found 3 road segments (~639m total) in desperate need of repair
-* The local municipality should consider redoing the entirety of Burg Street
+* 30 segments need repair (~2,6 km total)
+* 3 segments critical (~639 m total)
+
+🔧 Recommendation:
+  * Redo entire Burg Street
 
 ---
 
@@ -131,5 +154,3 @@ If I had more time, I would:
 | 🔗 [instagram.com/sickly_hippie](https://www.instagram.com/sickly_hippie/)     |   💼 [github.com/linstrijdom](https://github.com/linstrijdom)    |
 
 ---
-
-> 🤖 **Prompt:** Create a GIS related image for the Analysis Problem slide
