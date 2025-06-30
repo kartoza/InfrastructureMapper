@@ -117,8 +117,7 @@ CREATE TABLE IF NOT EXISTS road (
     uuid UUID UNIQUE NOT NULL DEFAULT gen_random_uuid(),
     last_update TIMESTAMP DEFAULT now() NOT NULL,
     last_update_by TEXT NOT NULL,
-    name TEXT,
-    geom GEOMETRY (LINESTRING, 4326) NOT NULL
+    name TEXT
 );
 COMMENT ON TABLE road IS 'Logical road entities, composed of road segments.';
 
@@ -132,8 +131,6 @@ COMMENT ON COLUMN road.last_update_by IS 'The name of the user responsible for t
 
 COMMENT ON COLUMN road.name IS 'Road name information.';
 
-COMMENT ON COLUMN road.geom IS 'Approximate full geometry of the road. EPSG: 4326';
-
 -- ROAD SEGMENTS
 CREATE TABLE IF NOT EXISTS road_segment (
     id SERIAL NOT NULL PRIMARY KEY,
@@ -146,13 +143,13 @@ CREATE TABLE IF NOT EXISTS road_segment (
     speed_limit_kmh INT CHECK (speed_limit_kmh > 0),
     one_way BOOLEAN,
     geom GEOMETRY (LINESTRING, 32734) NOT NULL,
-    road_uuid UUID NOT NULL REFERENCES road (uuid),
+    road_uuid UUID REFERENCES road (uuid),
     type_uuid UUID NOT NULL REFERENCES segment_type (uuid),
     status_uuid UUID NOT NULL REFERENCES segment_status (uuid),
     surface_uuid UUID NOT NULL REFERENCES segment_surface (uuid),
     condition_uuid UUID NOT NULL REFERENCES segment_condition (uuid),
-    start_node UUID NOT NULL REFERENCES intersection (uuid),
-    end_node UUID NOT NULL REFERENCES intersection (uuid)
+    start_node UUID REFERENCES intersection (uuid),
+    end_node UUID REFERENCES intersection (uuid)
 );
 COMMENT ON TABLE road_segment IS 'Represents physical segments of a road between two nodes.';
 
@@ -164,7 +161,7 @@ COMMENT ON COLUMN road_segment.last_update IS 'The date that the last update was
 
 COMMENT ON COLUMN road_segment.last_update_by IS 'The name of the user responsible for the latest update.';
 
-COMMENT ON COLUMN road_segment.segment_number IS 'The captured order of road segments.';
+COMMENT ON COLUMN road_segment.segment_number IS 'The order of road segments.';
 
 COMMENT ON COLUMN road_segment.lanes IS 'The total amount of lanes, including both sides.';
 
