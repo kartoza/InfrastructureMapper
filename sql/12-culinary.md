@@ -14,7 +14,6 @@ The **Culinary** component models food service infrastructure, such as kitchens,
 
 - `culinary_facility_types`: Association table linking `culinary_facility` with `facility_type`. Represents a many-to-many relationship between facilities and their associated types, with additional metadata and optional notes for the association.
 
-
 ```mermaid
 erDiagram
   culinary_category {
