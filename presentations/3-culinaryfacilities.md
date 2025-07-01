@@ -100,16 +100,16 @@ footer: 'Kartoza (Pty) Ltd. 2025'
 
 ## 💡 Insights
 
-- Top Categories with High Ratings
+- Top categories with high ratings
 
-| fid | category_name         | avg_rating        |
-|-----|-----------------------|-------------------|
-| 1   | Desserts/Sweets       | 4.6125           |
-| 2   | International Cuisine | 4.583333333333333 |
-| 3   | Buffet                | 4.55             |
+| fid | category name           | average rating        |
+|-----|-------------------------|-------------------|
+| 1   | Desserts/Sweets         | 4.61              |
+| 2   | International Cuisine   | 4.58              |
+| 3   | Buffet                  | 4.55              |
 
-- Most common facility: Parking Area (70)
-- Most common category: Traditional (28)
+- Most common facility: Parking Area (69)
+- Most common category: Traditional (27)
 
 ---
 
