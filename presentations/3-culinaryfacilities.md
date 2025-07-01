@@ -31,13 +31,11 @@ footer: 'Kartoza (Pty) Ltd. 2025'
 
 - QGIS
 - QFieldCloud
-- PostgreSQL
-- PostGIS
+- PostgreSQL and PostGIS
 - pgAdmin
 - VS Code
 - Marp
-- Git
-- GitHub
+- Git and GitHub
 
 ---
 
