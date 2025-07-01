@@ -75,7 +75,7 @@ footer: 'Kartoza (Pty) Ltd. 2025'
 
 ## ❓ Analysis Problem
 
-- How can we determine culinary facilities that are reachable within a specific travel time from a central point?
+- How can we determine culinary facilities that are reachable within a specific travel time from a starting point?
 - Which culinary facilities that can be reached within 8 minutes and offer the best combination of **low price**, **high ratings**, specific **facilities** like Wi-Fi and indoor seating, and specific **category** like Cafe/Bakery?
 
 ---
@@ -93,6 +93,10 @@ footer: 'Kartoza (Pty) Ltd. 2025'
 ## 📊 Results
 
 ![Results-culinaryfacilities](../img/culinaryfacilities-results.png)
+
+---
+
+![Results-culinaryfacilities](../img/culinaryfacilities-results2.png)
 
 ---
 
@@ -117,7 +121,7 @@ If I had more time, I would:
 
 - Develop a specific travel mode for motorcycles to better represent real conditions, possibly using custom routing technology.
 - Improve the model so users can select facilities and categories using dropdowns connected to the lookup table, ensuring updates are reflected automatically.
-- Increase the study area and collect more data to improve the analysis
+- Increase the study area and collect more data to improve the analysis.
 
 ---
 
