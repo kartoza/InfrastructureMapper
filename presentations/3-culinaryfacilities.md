@@ -3,17 +3,16 @@ marp: true
 theme: infrastructure
 class: _lead
 header: 'Infrastructure Mapper'
-footer: 'Kartoza (Pty) Ltd. 2025'
+footer: 'Kartoza ❤️ 2025'
+title: Infrastructure Mapper - Culinary Spots
 ---
+![bg left](../img/food-services.png)
 
-<!-- Title Slide -->
-<!-- _class: lead -->
+## Infrastructure Mapper - Culinary Spots
 
-# 🌍 *Infrastructure Mapper - Culinary Facilities*
+Hefni Rae R. A.
 
-## *Hefni Rae R A*
-
-📅 *04/07/2025*
+<span class="presentation-date">📅 July 2025</span>
 
 ---
 
@@ -21,24 +20,40 @@ footer: 'Kartoza (Pty) Ltd. 2025'
 
 ![bg  left](../img/interns/hefni-raera.png)
 
-- Intern at **Kartoza**
-- Bachelor of Engineering, majored in Geodetic Engineering
-- Currently exploring GIS with a growing interest in open-source GIS. Passionate about GIS and map styling.
-- Tools used: QGIS, QFieldCloud, PostgreSQL, pgAdmin, VS Code, Marp, GitHub, etc.
+* Intern at **Kartoza**
+* Bachelor of Engineering, majored in Geodetic Engineering
+* Currently exploring GIS with a growing interest in open-source GIS. Passionate about GIS and map styling.
+  
+---
+
+## ⚙️ Tools Used
+
+|        |     |
+|-------------------|---------------------|
+| QGIS              | pgAdmin             |
+| QFieldCloud       | VS Code             |
+| PostgreSQL/PostGIS| Marp                |
+|                   | Git and GitHub      |
 
 ---
 
 ## 🧱 The Model
 
-![ERD](../img/culinaryfacilities-erd.png)
+---
+
+![bg](../img/culinaryfacilities-erd.png)
 
 ---
 
 ## 📋 The Forms
 
-QGIS smart forms created to collect and validate field data efficiently.
+---
 
-![Forms Collage](../img/culinaryfacilities-forms.png)
+![bg contain](../img/culinaryfacilities-formsqgis.png)
+
+---
+
+![bg contain](../img/culinaryfacilities-forms.png)
 
 ---
 
@@ -46,50 +61,77 @@ QGIS smart forms created to collect and validate field data efficiently.
 
 > Data collected in the field using mobile GIS apps and GPS-enabled devices.
 
+![bg left](../img/culinaryfacilities-field.png)
+
 ---
 
 ## 🗺️ Collection Results
 
-- **Total features collected:**
-  - Points: 80
-- **Area covered:** 15 km²
+* **Total features collected:**
+  * Points: 80
+* **Area covered:** 15 km²
 
-![Map of Features](../img/culinaryfacilities-collection.png)
+![bg right](../img/culinaryfacilities-collection.png)
 
 ---
 
 ## ❓ Analysis Problem
 
-- How can we determine culinary facilities that are reachable within a specific travel time from a central point?
-- Which culinary facilities that can be reached within 8 minutes and offer the best combination of **low price**, **high ratings**, specific **facilities** like Wi-Fi and indoor seating, and specific **category** like Cafe/Bakery?
+* How can we determine culinary facilities that are reachable within a specific travel time from a starting point?
+* Which culinary facilities that can be reached within 8 minutes and offer the best combination of **low price**, **high ratings**, specific **facilities** like Wi-Fi and indoor seating, and specific **category** like Cafe/Bakery?
 
 ---
 
 ## ⚙️ Methodology
 
-- A custom QGIS Model Designer diagram used for repeatable spatial processing.
+---
 
-![QGIS Model](../img/culinaryfacilities-model.png)
+![bg contain](../img/culinaryfacilities-model2.png)
 
 ---
 
-## 📊 Results
+![bg contain](../img/culinaryfacilities-model.png)
 
-- Isochrones analysis output
-- Features within specific travel time and given parameters.
-![Results](../img/culinaryfacilities-results.png)
+---
+
+## 📊 Results - 1
+
+![bg left](../img/culinaryfacilities-results1.png)
+
+Isochrones showing location of culinary spots relative to travel time from the center.
+
+---
+
+![bg right](../img/culinaryfacilities-results2.png)
+
+## 📊 Results - 2
+
+* **Price Range:** 1.000–50.000  
+* **Rating:** above 4.5  
+* **Facilities:** Indoor Seating, Wi-Fi  
+* **Category:** Cafe/Bakery  
+* **Travel Time:** 8 minutes
+
+---
+
+![bg contain](../img/culinaryfacilities-results3.png)
+
+## 📊 Results - 3
 
 ---
 
 ## 💡 Insights
 
-- Average Price Range by Category
-- Rating Distribution
-- Top Categories with High Ratings
-- Most common facility
-- Most common category
-- Facilities Coverage
-- Facilities by Category
+* Top categories with high ratings
+
+| fid | category name           | average rating        |
+|-----|-------------------------|-------------------|
+| 1   | Desserts/Sweets         | 4.61   / 5           |
+| 2   | International Cuisine   | 4.58      / 5        |
+| 3   | Buffet                  | 4.55         / 5     |
+
+* Most common facility: Parking Area (69)
+* Most common category: Traditional (27)
 
 ---
 
@@ -97,9 +139,9 @@ QGIS smart forms created to collect and validate field data efficiently.
 
 If I had more time, I would:
 
-- Develop a specific travel mode for motorcycles to better represent real conditions, possibly using custom routing technology.
-- Improve the model so users can select facilities and categories using dropdowns connected to the lookup table, ensuring updates are reflected automatically.
-- Increase the study area and collect more data to improve the analysis
+* Develop a specific travel mode for motorcycles to better represent real conditions, possibly using custom routing technology.
+* Improve the model so users can select facilities and categories using dropdowns connected to the lookup table, ensuring updates are reflected automatically.
+* Increase the study area and collect more data to improve the analysis.
 
 ---
 
@@ -107,22 +149,17 @@ If I had more time, I would:
 
 ### Highlights
 
-- ✅ Mastered QGIS and explored various GIS tools and workflows  
-- 🔍 Contributed to impactful projects
-- 🌟 Improved problem-solving, adaptability, and critical thinking  
-- ⏰ Enhanced time management while balancing multiple tasks and responsibilities
-- 🌍 Improved English communication skills through professional and collaborative engagements
+* ✅ Mastered QGIS and explored various GIS tools and workflows  
+* 🔍 Contributed to impactful projects
+* 🌟 Improved problem-solving, adaptability, and critical thinking  
+* ⏰ Enhanced time management while balancing multiple tasks and responsibilities
+* 🌍 Improved English communication skills through professional and collaborative engagements
 
 ---
 
 ## 📧 Contact Me
-
-👤 Hefni Rae R. A.
-📨 [hefniraera17@gmail.com](mailto:hefniraera17@gmail.com)
-🔗 [linkedin.com/in/hefniraera](https://www.linkedin.com/in/hefniraera/)  
-💼 [github.com/hefniraera](https://github.com/hefniraera)
-
----
-
-> 🤖 **Prompt:** Create a GIS related image for the Analysis Problem slide
->
+<!-- _class: contact-table -->
+|        |                                  |
+|--------|----------------------------------|
+| 👤   Hefni Rae R. A.       |    💼     [github.com/hefniraera](https://github.com/hefniraera)           |
+| 📧  [hefniraera17@gmail.com](mailto:hefniraera17@gmail.com)    |  🔗 LinkedIn  [linkedin.com/in/hefniraera](https://www.linkedin.com/in/hefniraera/) |
