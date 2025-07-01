@@ -11,7 +11,7 @@ footer: 'Kartoza (Pty) Ltd. 2025'
 
 # 🌍 *Infrastructure Mapper - Culinary Facilities*
 
-## *Hefni Rae R A*
+## *Hefni Rae R. A.*
 
 📅 *04/07/2025*
 
@@ -49,6 +49,10 @@ footer: 'Kartoza (Pty) Ltd. 2025'
 
 ## 📋 The Forms
 
+![Forms-culinaryfacilities](../img/culinaryfacilities-formsqgis.png)
+
+---
+
 ![Forms-culinaryfacilities](../img/culinaryfacilities-forms.png)
 
 ---
@@ -80,6 +84,10 @@ footer: 'Kartoza (Pty) Ltd. 2025'
 
 ## ⚙️ Methodology
 
+![QGIS Model-culinaryfacilities](../img/culinaryfacilities-model2.png)
+
+---
+
 ![QGIS Model-culinaryfacilities](../img/culinaryfacilities-model.png)
 
 ---
@@ -92,13 +100,16 @@ footer: 'Kartoza (Pty) Ltd. 2025'
 
 ## 💡 Insights
 
-- Average Price Range by Category
-- Rating Distribution
 - Top Categories with High Ratings
-- Most common facility
-- Most common category
-- Facilities Coverage
-- Facilities by Category
+
+| fid | category_name         | avg_rating        |
+|-----|-----------------------|-------------------|
+| 1   | Desserts/Sweets       | 4.6125           |
+| 2   | International Cuisine | 4.583333333333333 |
+| 3   | Buffet                | 4.55             |
+
+- Most common facility: Parking Area (70)
+- Most common category: Traditional (28)
 
 ---
 
