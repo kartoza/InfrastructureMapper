@@ -11,7 +11,7 @@ footer: 'Kartoza (Pty) Ltd. 2025'
 
 # 🌍 *Infrastructure Mapper - Culinary Facilities*
 
-## *Hefni Rae R A*
+## *Hefni Rae R. A.*
 
 📅 *04/07/2025*
 
@@ -24,27 +24,42 @@ footer: 'Kartoza (Pty) Ltd. 2025'
 - Intern at **Kartoza**
 - Bachelor of Engineering, majored in Geodetic Engineering
 - Currently exploring GIS with a growing interest in open-source GIS. Passionate about GIS and map styling.
-- Tools used: QGIS, QFieldCloud, PostgreSQL, pgAdmin, VS Code, Marp, GitHub, etc.
+  
+---
+
+## ⚙️ Tools Used
+
+- QGIS
+- QFieldCloud
+- PostgreSQL and PostGIS
+- pgAdmin
+- VS Code
+- Marp
+- Git and GitHub
 
 ---
 
 ## 🧱 The Model
 
-![ERD](../img/culinaryfacilities-erd.png)
+![ERD-culinaryfacilities](../img/culinaryfacilities-erd.png)
 
 ---
 
 ## 📋 The Forms
 
-QGIS smart forms created to collect and validate field data efficiently.
+![Forms-culinaryfacilities](../img/culinaryfacilities-formsqgis.png)
 
-![Forms Collage](../img/culinaryfacilities-forms.png)
+---
+
+![Forms-culinaryfacilities](../img/culinaryfacilities-forms.png)
 
 ---
 
 ## 🏞️ Field Collection
 
 > Data collected in the field using mobile GIS apps and GPS-enabled devices.
+
+![bg right](../img/culinaryfacilities-field.png)
 
 ---
 
@@ -54,42 +69,49 @@ QGIS smart forms created to collect and validate field data efficiently.
   - Points: 80
 - **Area covered:** 15 km²
 
-![Map of Features](../img/culinaryfacilities-collection.png)
+![bg right](../img/culinaryfacilities-collection.png)
 
 ---
 
 ## ❓ Analysis Problem
 
-- How can we determine culinary facilities that are reachable within a specific travel time from a central point?
+- How can we determine culinary facilities that are reachable within a specific travel time from a starting point?
 - Which culinary facilities that can be reached within 8 minutes and offer the best combination of **low price**, **high ratings**, specific **facilities** like Wi-Fi and indoor seating, and specific **category** like Cafe/Bakery?
 
 ---
 
 ## ⚙️ Methodology
 
-- A custom QGIS Model Designer diagram used for repeatable spatial processing.
+![QGIS Model-culinaryfacilities](../img/culinaryfacilities-model2.png)
 
-![QGIS Model](../img/culinaryfacilities-model.png)
+---
+
+![QGIS Model-culinaryfacilities](../img/culinaryfacilities-model.png)
 
 ---
 
 ## 📊 Results
 
-- Isochrones analysis output
-- Features within specific travel time and given parameters.
-![Results](../img/culinaryfacilities-results.png)
+![Results-culinaryfacilities](../img/culinaryfacilities-results.png)
+
+---
+
+![Results-culinaryfacilities](../img/culinaryfacilities-results2.png)
 
 ---
 
 ## 💡 Insights
 
-- Average Price Range by Category
-- Rating Distribution
-- Top Categories with High Ratings
-- Most common facility
-- Most common category
-- Facilities Coverage
-- Facilities by Category
+- Top categories with high ratings
+
+| fid | category name           | average rating        |
+|-----|-------------------------|-------------------|
+| 1   | Desserts/Sweets         | 4.61              |
+| 2   | International Cuisine   | 4.58              |
+| 3   | Buffet                  | 4.55              |
+
+- Most common facility: Parking Area (69)
+- Most common category: Traditional (27)
 
 ---
 
@@ -99,7 +121,7 @@ If I had more time, I would:
 
 - Develop a specific travel mode for motorcycles to better represent real conditions, possibly using custom routing technology.
 - Improve the model so users can select facilities and categories using dropdowns connected to the lookup table, ensuring updates are reflected automatically.
-- Increase the study area and collect more data to improve the analysis
+- Increase the study area and collect more data to improve the analysis.
 
 ---
 
