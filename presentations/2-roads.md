@@ -3,17 +3,16 @@ marp: true
 theme: infrastructure
 class: _lead
 header: 'Infrastructure Mapper'
-footer: 'Kartoza (Pty) Ltd. 2025'
+footer: 'Kartoza ❤️ 2025'
+title: Infrastructure Mapper
 ---
+![bg left](../img/roads.png)
 
-<!-- Title Slide -->
-<!-- _class: lead -->
+## Infrastructure Mapper - Roads
 
-# *Infrastructure Mapper - Roads*
+Lindie Strijdom
 
-## *Lindie Strijdom*
-
-📅 *04/07/2025*
+<span class="presentation-date">📅 July 2025</span>
 
 ---
 
