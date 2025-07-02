@@ -18,12 +18,16 @@ Hefni Rae R. A.
 
 ## 👩‍💻 About Me
 
+<small>
+
 ![bg  left](../img/interns/hefni-raera.png)
 
 * Intern at **Kartoza**
 * Bachelor of Engineering, majored in Geodetic Engineering
 * Currently exploring GIS with a growing interest in open-source GIS. Passionate about GIS and map styling.
-  
+
+</small>
+
 ---
 
 ## ⚙️ Tools Used
@@ -41,7 +45,7 @@ Hefni Rae R. A.
 
 ---
 
-![bg](../img/culinaryfacilities-erd.png)
+![bg contain](../img/culinaryfacilities-erd.png)
 
 ---
 
@@ -67,9 +71,13 @@ Hefni Rae R. A.
 
 ## 🗺️ Collection Results
 
+<small>
+
 * **Total features collected:**
   * Points: 80
 * **Area covered:** 15 km²
+
+</small>
 
 ![bg right](../img/culinaryfacilities-collection.png)
 
@@ -77,8 +85,12 @@ Hefni Rae R. A.
 
 ## ❓ Analysis Problem
 
+<small>
+
 * How can we determine culinary facilities that are reachable within a specific travel time from a starting point?
 * Which culinary facilities that can be reached within 8 minutes and offer the best combination of **low price**, **high ratings**, specific **facilities** like Wi-Fi and indoor seating, and specific **category** like Cafe/Bakery?
+
+</small>
 
 ---
 
@@ -106,11 +118,15 @@ Isochrones showing location of culinary spots relative to travel time from the c
 
 ## 📊 Results - 2
 
-* **Price Range:** 1.000–50.000  
+<small>
+
+* **Price Range:** 1.000–60.000  
 * **Rating:** above 4.5  
 * **Facilities:** Indoor Seating, Wi-Fi  
 * **Category:** Cafe/Bakery  
 * **Travel Time:** 8 minutes
+
+</small>
 
 ---
 
@@ -121,6 +137,8 @@ Isochrones showing location of culinary spots relative to travel time from the c
 ---
 
 ## 💡 Insights
+
+<small>
 
 * Top categories with high ratings
 
@@ -133,9 +151,13 @@ Isochrones showing location of culinary spots relative to travel time from the c
 * Most common facility: Parking Area (69)
 * Most common category: Traditional (27)
 
+</small>
+
 ---
 
 ## 🔬 Further Research
+
+<small>
 
 If I had more time, I would:
 
@@ -143,7 +165,11 @@ If I had more time, I would:
 * Improve the model so users can select facilities and categories using dropdowns connected to the lookup table, ensuring updates are reflected automatically.
 * Increase the study area and collect more data to improve the analysis.
 
+</small>
+
 ---
+
+<small>
 
 ## 🧳 My Internship Experience
 
@@ -155,6 +181,8 @@ If I had more time, I would:
 * ⏰ Enhanced time management while balancing multiple tasks and responsibilities
 * 🌍 Improved English communication skills through professional and collaborative engagements
 
+</small>
+
 ---
 
 ## 📧 Contact Me
@@ -162,4 +190,9 @@ If I had more time, I would:
 |        |                                  |
 |--------|----------------------------------|
 | 👤   Hefni Rae R. A.       |    💼     [github.com/hefniraera](https://github.com/hefniraera)           |
-| 📧  [hefniraera17@gmail.com](mailto:hefniraera17@gmail.com)    |  🔗 LinkedIn  [linkedin.com/in/hefniraera](https://www.linkedin.com/in/hefniraera/) |
+| 📧  [hefniraera17@gmail.com](mailto:hefniraera17@gmail.com)    |  🔗   [linkedin.com/in/hefniraera](https://www.linkedin.com/in/hefniraera/) |
+
+---
+
+> 🤖 **Prompt:** Create a GIS related image for the Analysis Problem slide
+> 
