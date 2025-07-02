@@ -3,7 +3,7 @@ marp: true
 theme: infrastructure
 class: _lead
 header: 'Infrastructure Mapper'
-footer: 'Kartoza (Pty) Ltd. 2025'
+footer: 'Kartoza ❤️ 2025'
 title: Infrastructure Mapper
 ---
 ![bg left](../img/roads.png)
