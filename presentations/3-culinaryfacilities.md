@@ -26,6 +26,15 @@ Hefni Rae R. A.
 
 ---
 
+## 🍽️ Why Culinary Mapping?
+
+* Food = lifestyle
+* Many spots still unmapped
+* GIS shows access with isochrones
+* Support better choices
+
+---
+
 ## ❓ Analysis Problem
 
 * Which places can be reached within 1 to 10 mins?
@@ -103,13 +112,13 @@ Hefni Rae R. A.
 
 ## 📊 Results - 1
 
-![bg left](../img/culinaryfacilities-results1.png)
-
 Isochrones show culinary spots that can be reached within 1 to 10 minutes from the starting point.
 
 ---
 
-![bg right](../img/culinaryfacilities-results2.png)
+![bg contain](../img/culinaryfacilities-results1.png)
+
+---
 
 ## 📊 Results - 2
 
@@ -118,6 +127,10 @@ Isochrones show culinary spots that can be reached within 1 to 10 minutes from t
 * **Facilities:** Indoor Seating, Wi-Fi  
 * **Category:** Cafe/Bakery  
 * **Travel Time:** 8 mins
+
+---
+
+![bg contain](../img/culinaryfacilities-results2.png)
 
 ---
 
@@ -160,6 +173,22 @@ If I had more time, I would:
 * 🔍 Impactful projects
 * 🌟 Problem-solving, adaptability, and critical thinking  
 * ⏰ Time management
+
+---
+
+## 🌟 Bonus Creations: What Else I Made
+
+---
+
+![bg contain](../img/hefni-simpleafricamap.png)
+
+---
+
+![bg contain](../img/hefni-bobross.png)
+
+---
+
+![bg contain](../img/hefni-scratchmit.png)
 
 ---
 
