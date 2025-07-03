@@ -21,7 +21,7 @@ Hefni Rae R. A.
 ![bg  left](../img/interns/hefni-raera.png)
 
 * Intern at **Kartoza**
-* Bachelor of Engineering, majored in Geodetic Engineering
+* B. Eng (Geodetic Engineering)
 * Exploring (open source) GIS
 
 ---
@@ -115,6 +115,10 @@ Hefni Rae R. A.
 ---
 
 ![bg contain](../img/culinaryfacilities-model3.png)
+
+---
+
+![bg contain](../img/culinaryfacilities-expression.png)
 
 ---
 
