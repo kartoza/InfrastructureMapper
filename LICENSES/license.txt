@@ -1,0 +1,52 @@
+# Project Icon Licenses
+
+This project uses the following icons:
+
+1. **Traditional Food Icon**
+   - Source: [www.freepik.com](https://www.freepik.com/icon/kao-neow-moo-yang_5559718#fromView=search&page=1&position=21&uuid=9d4308bb-f2c5-4d31-aa40-efbea4185409?log-in=google)
+   - License: Free PNG
+   - Author: Unknown
+
+2. **International Cuisine Icon**
+   - Source: [www.flaticon.com](https://www.flaticon.com/free-icon/globe_11371078)
+   - License: Free for personal and commercial purpose with attribution
+   - Author: Paul J. Others
+
+3. **Seafood Icon**
+   - Source: [www.svgrepo.com](https://www.svgrepo.com/svg/406100/lobster)
+   - COLLECTION: Twemoji Emojis
+   - LICENSE: MIT License
+   - AUTHOR: Twitter
+
+4. **Fast Food Icon**
+   - Source: [www.svgrepo.com](https://www.svgrepo.com/svg/434208/pizza)
+   - COLLECTION: Sensa Emoji Vectors
+   - LICENSE: PD License
+   - AUTHOR: Sensa
+
+5. **Street Food Icon**
+   - Source: [www.svgrepo.com](https://www.svgrepo.com/svg/277244/hot-dog-street)
+   - COLLECTION: City 15
+   - LICENSE: CC0 License
+   - UPLOADER: SVG Repo
+
+6. **Buffet Icon**
+   - Source: [www.svgrepo.com](https://www.svgrepo.com/svg/251535/catering-buffet)
+   - COLLECTION: Restaurant 8
+   - LICENSE: CC0 License
+   - UPLOADER: SVG Repo
+
+7. **Desserts/Sweets Icon**
+   - Source: [www.svgrepo.com](https://www.svgrepo.com/svg/418391/dessert-donut-doughnut)
+   - COLLECTION: Fastfood And Drink Vectors
+   - LICENSE: CC Attribution License
+   - AUTHOR: konkapp
+
+8. **Cafe/Bakery Icon**
+   - Source: [www.svgrepo.com](https://www.svgrepo.com/svg/94070/espresso)
+   - COLLECTION: Coffee Shop 3
+   - LICENSE: CC0 License
+   - UPLOADER: SVG Repo
+
+
+For more details, visit the respective sources.
