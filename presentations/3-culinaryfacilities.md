@@ -42,6 +42,12 @@ Hefni Rae R. A.
 
 ---
 
+## 🧭 Project Workflow
+
+![bg contain left](../img/culinaryfacilities-flowchart.png)
+
+---
+
 ## 🧱 The Model
 
 ---
@@ -90,7 +96,9 @@ Hefni Rae R. A.
 * **Features collected:** 80 points
 * **Area covered:** 15 km²
 
-![bg right](../img/culinaryfacilities-collection.png)
+---
+
+![bg contain](../img/culinaryfacilities-collection.png)
 
 ---
 
@@ -143,13 +151,9 @@ Isochrones show culinary spots that can be reached within 1 to 10 minutes from t
 ## 💡 Insights
 
 * Top categories with high ratings
-
-| Category Name           | Avg. Rating     |
-|-------------------------|-----------------|
-| Desserts/Sweets         | ★★★★☆ (4.6)     |
-| International Cuisine   | ★★★★☆ (4.6)     |
-| Buffet                  | ★★★★☆ (4.5)     |
-
+  * Desserts/Sweets
+  * International Cuisine
+  * Buffet
 * Most common facility: Parking Area (69)
 * Most common category: Traditional (27)
 
@@ -185,10 +189,6 @@ If I had more time, I would:
 ---
 
 ![bg contain](../img/hefni-bobross.png)
-
----
-
-![bg contain](../img/hefni-scratchmit.png)
 
 ---
 
