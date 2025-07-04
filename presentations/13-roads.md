@@ -114,7 +114,10 @@ Data collected in the field using the QFieldCloud mobile app
 
 ## Results - 1
 
-Shortest distance analysis
+### Shortest distance analysis
+
+* ~1,2 km travel distance
+* ~2 min travel time
 
 ![bg right](../img/roads-results-1.png)
 
@@ -122,7 +125,9 @@ Shortest distance analysis
 
 ## Results - 2
 
-Road condition
+### Road condition
+
+* 24% in need of repair 
 
 ![bg left](../img/roads-results-2.png)
 
