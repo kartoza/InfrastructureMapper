@@ -177,7 +177,7 @@ If I had more time, I would:
 
 ### Highlights
 
-* ✅ Learned QGIS and GIS tools 
+* ✅ Learned QGIS and GIS tools
 * 🔍 Impactful projects
 * 🌟 Problem-solving, adaptability, and critical thinking  
 * ⏰ Time management
