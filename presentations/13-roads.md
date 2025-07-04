@@ -127,7 +127,7 @@ Data collected in the field using the QFieldCloud mobile app
 
 ### Road condition
 
-* 24% in need of repair 
+* 24% in need of repair
 
 ![bg left](../img/roads-results-2.png)
 
