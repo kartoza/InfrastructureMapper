@@ -1,3 +1,5 @@
+<!-- SPDX-FileCopyrightText: Tim Sutton -->
+<!-- SPDX-License-Identifier: MIT -->
 # 🚪 Gates
 
 ![Gates](../img/gates.png)

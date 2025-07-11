@@ -1,3 +1,5 @@
+<!-- SPDX-FileCopyrightText: Tim Sutton -->
+<!-- SPDX-License-Identifier: MIT -->
 # 🏗️ Infrastructure
 
 ![Infrastructure](../img/infrastructure.png)

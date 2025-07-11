@@ -1,3 +1,5 @@
+-- SPDX-FileCopyrightText: Tim Sutton
+-- SPDX-License-Identifier: MIT
 -- --------------------------------------ROADS--------------------------------------------
 -- SEGMENT TYPE
 CREATE TABLE IF NOT EXISTS segment_type (

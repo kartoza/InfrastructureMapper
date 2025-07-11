@@ -1,3 +1,5 @@
+-- SPDX-FileCopyrightText: Tim Sutton
+-- SPDX-License-Identifier: MIT
 -- --------------------------------------VEGETATION-------------------------------------
 -- PLANT GROWTH ACTIVITY TYPE
 CREATE TABLE

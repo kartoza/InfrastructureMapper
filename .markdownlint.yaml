@@ -1,2 +1,4 @@
+# SPDX-FileCopyrightText: 
+# SPDX-License-Identifier: 
 MD013: false # allow long lines    1 
 MD033: false # allow inline HTML 

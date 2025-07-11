@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: Tim Sutton
+# SPDX-License-Identifier: MIT
 #!/usr/bin/env bash
 
 # 🤖 Add a shell hook that ensures that each file (sql, shell script, python module)

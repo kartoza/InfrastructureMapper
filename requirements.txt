@@ -1,1 +1,3 @@
+# SPDX-FileCopyrightText: Tim Sutton
+# SPDX-License-Identifier: MIT
 darglint==1.8.1

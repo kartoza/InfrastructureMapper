@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: Tim Sutton
+# SPDX-License-Identifier: MIT
 #!/usr/bin/env bash
 
 # 🤖 Add a hook that calculates the number of lines change and gives

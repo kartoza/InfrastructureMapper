@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: Tim Sutton
+# SPDX-License-Identifier: MIT
 {
   description = "NixOS developer environment for QGIS plugins.";
 

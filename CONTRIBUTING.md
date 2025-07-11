@@ -1,3 +1,5 @@
+<!-- SPDX-FileCopyrightText: Tim Sutton -->
+<!-- SPDX-License-Identifier: MIT -->
 # ✨ Contributing to Infrastructure Mapper
 
 Thank you for considering contributing to **Infrastructure Mapper**!  

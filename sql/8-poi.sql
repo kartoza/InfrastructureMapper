@@ -1,3 +1,5 @@
+-- SPDX-FileCopyrightText: Tim Sutton
+-- SPDX-License-Identifier: MIT
 -- POINT OF INTEREST TYPE
 CREATE TABLE
 IF NOT EXISTS point_of_interest_type (
