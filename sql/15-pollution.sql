@@ -1,5 +1,28 @@
 -- --------------------------------------Pollution--------------------------------------------
 
+-- PROPERTY USE TYPE
+CREATE TABLE IF NOT EXISTS property_use_type (
+    id SERIAL NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    notes TEXT,
+    last_update TIMESTAMP DEFAULT now() NOT NULL,
+    last_update_by TEXT NOT NULL,
+    uuid UUID UNIQUE NOT NULL DEFAULT gen_random_uuid()
+);
+COMMENT ON TABLE property_use_type IS 'Lookup table for property use type, e.g. "Factory", "Storage".';
+
+COMMENT ON COLUMN property_use_type.id IS 'The unique property use type ID. This is the Primary Key.';
+
+COMMENT ON COLUMN property_use_type.name IS 'The use for the property.';
+
+COMMENT ON COLUMN property_use_type.notes IS 'Additional information of the property use type.';
+
+COMMENT ON COLUMN property_use_type.last_update IS 'The date that the last update was made (yyyy-mm-dd hh:mm:ss).';
+
+COMMENT ON COLUMN property_use_type.last_update_by IS 'The name of the user responsible for the latest update.';
+
+COMMENT ON COLUMN property_use_type.uuid IS 'Global Unique Identifier.';
+
 -- POLLUTION SOURCE
 CREATE TABLE IF NOT EXISTS pollution_source (
     id SERIAL NOT NULL PRIMARY KEY,
@@ -25,6 +48,29 @@ COMMENT ON COLUMN pollution_source.last_update_by IS 'The name of the user respo
 COMMENT ON COLUMN pollution_source.uuid IS 'Global Unique Identifier.';
 
 COMMENT ON COLUMN pollution_source.property_use_type_id IS 'The foreign key which references the id from the property_use_type table.';
+
+-- POLLUTANT
+CREATE TABLE IF NOT EXISTS pollutant (
+    id SERIAL NOT NULL PRIMARY KEY,
+    type TEXT NOT NULL,
+    notes TEXT,
+    last_update TIMESTAMP DEFAULT now() NOT NULL,
+    last_update_by TEXT NOT NULL,
+    uuid UUID UNIQUE NOT NULL DEFAULT gen_random_uuid()
+);
+COMMENT ON TABLE pollutant IS 'Lookup table for pollutants, e.g. "Chemicals", "Fertilizers".';
+
+COMMENT ON COLUMN pollutant.id IS 'The unique pollutant ID. This is the Primary Key.';
+
+COMMENT ON COLUMN pollutant.type IS 'The type of pollutant.';
+
+COMMENT ON COLUMN pollutant.notes IS 'Additional information of the pollutant.';
+
+COMMENT ON COLUMN pollutant.last_update IS 'The date that the last update was made (yyyy-mm-dd hh:mm:ss).';
+
+COMMENT ON COLUMN pollutant.last_update_by IS 'The name of the user responsible for the latest update.';
+
+COMMENT ON COLUMN pollutant.uuid IS 'Global Unique Identifier.';
 
 -- SOURCE POLLUTANT
 CREATE TABLE IF NOT EXISTS source_pollutant (
@@ -57,52 +103,6 @@ COMMENT ON COLUMN source_pollutant.uuid IS 'Global Unique Identifier.';
 COMMENT ON COLUMN source_pollutant.pollution_source_id IS 'The foreign key which references the id from the pollution_source table.';
 
 COMMENT ON COLUMN source_pollutant.pollutant_id IS 'The foreign key which references the id from the pollutant table.';
-
--- PROPERTY USE TYPE
-CREATE TABLE IF NOT EXISTS property_use_type (
-    id SERIAL NOT NULL PRIMARY KEY,
-    name TEXT NOT NULL,
-    notes TEXT,
-    last_update TIMESTAMP DEFAULT now() NOT NULL,
-    last_update_by TEXT NOT NULL,
-    uuid UUID UNIQUE NOT NULL DEFAULT gen_random_uuid()
-);
-COMMENT ON TABLE property_use_type IS 'Lookup table for property use type, e.g. "Factory", "Storage".';
-
-COMMENT ON COLUMN property_use_type.id IS 'The unique property use type ID. This is the Primary Key.';
-
-COMMENT ON COLUMN property_use_type.name IS 'The use for the property.';
-
-COMMENT ON COLUMN property_use_type.notes IS 'Additional information of the property use type.';
-
-COMMENT ON COLUMN property_use_type.last_update IS 'The date that the last update was made (yyyy-mm-dd hh:mm:ss).';
-
-COMMENT ON COLUMN property_use_type.last_update_by IS 'The name of the user responsible for the latest update.';
-
-COMMENT ON COLUMN property_use_type.uuid IS 'Global Unique Identifier.';
-
--- POLLUTANT
-CREATE TABLE IF NOT EXISTS pollutant (
-    id SERIAL NOT NULL PRIMARY KEY,
-    type TEXT NOT NULL,
-    notes TEXT,
-    last_update TIMESTAMP DEFAULT now() NOT NULL,
-    last_update_by TEXT NOT NULL,
-    uuid UUID UNIQUE NOT NULL DEFAULT gen_random_uuid()
-);
-COMMENT ON TABLE pollutant IS 'Lookup table for pollutants, e.g. "Chemicals", "Fertilizers".';
-
-COMMENT ON COLUMN pollutant.id IS 'The unique pollutant ID. This is the Primary Key.';
-
-COMMENT ON COLUMN pollutant.type IS 'The type of pollutant.';
-
-COMMENT ON COLUMN pollutant.notes IS 'Additional information of the pollutant.';
-
-COMMENT ON COLUMN pollutant.last_update IS 'The date that the last update was made (yyyy-mm-dd hh:mm:ss).';
-
-COMMENT ON COLUMN pollutant.last_update_by IS 'The name of the user responsible for the latest update.';
-
-COMMENT ON COLUMN pollutant.uuid IS 'Global Unique Identifier.';
 
 -- IMPACT SEVERITY
 CREATE TABLE IF NOT EXISTS impact_severity (
