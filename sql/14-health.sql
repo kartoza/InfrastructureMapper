@@ -59,7 +59,7 @@ CREATE TABLE healthcare_facility (
     contact_number VARCHAR(20),
     capacity INTEGER,
     emergency_services BOOLEAN,
-    location GEOMETRY(POINT, 4326), 
+    location GEOMETRY (POINT, 4326), 
     last_update TIMESTAMP DEFAULT now() NOT NULL,
     last_update_by TEXT NOT NULL,
     uuid UUID UNIQUE NOT NULL DEFAULT gen_random_uuid(),
