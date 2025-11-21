@@ -212,7 +212,7 @@ CREATE TABLE IF NOT EXISTS pollution_impact (
     last_update_by TEXT NOT NULL,
     uuid UUID UNIQUE NOT NULL DEFAULT gen_random_uuid(),
     pollution_source_id  INTEGER NOT NULL REFERENCES pollution_source (id),
-    waterbody_id INTEGER NOT NULL REFERENCES waterbody_type (id),
+    waterbody_id INTEGER NOT NULL REFERENCES waterbody (id),
     pollutant_id INTEGER NOT NULL REFERENCES pollutant (id),
     impact_severity_id INTEGER NOT NULL REFERENCES impact_severity (id)  
 );
