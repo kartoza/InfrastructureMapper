@@ -502,9 +502,9 @@ INSERT INTO waterbody_type (last_update_by, name, notes) VALUES (
 INSERT INTO waterbody_quality_status (last_update_by, name, notes) VALUES (
     'Francois', 'Good', 'Waterbody contains healthy clear water '
 );
-INSERT INTO waterbody_type_status (last_update_by, name, notes) VALUES (
-    'Francois', 'Moderate', 'Waterbody contains merky water and signs of pollution'
+INSERT INTO waterbody_quality_status (last_update_by, name, notes) VALUES (
+    'Francois', 'Moderate', 'Waterbody contains merky water and moderate signs of pollution'
 );
-INSERT INTO waterbody_type_status (last_update_by, name, notes) VALUES (
-    'Francois', 'Poor', 'waterbody is clearly pollutaed with observable pollution consequences'
+INSERT INTO waterbody_quality_status (last_update_by, name, notes) VALUES (
+    'Francois', 'Poor', 'Waterbody is clearly polluted with observable pollution consequences'
 );
