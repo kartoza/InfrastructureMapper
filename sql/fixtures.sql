@@ -464,53 +464,53 @@ INSERT INTO building_condition (last_update_by, condition_type, notes) VALUES (
     'Nikita', 'Bad', 'Poor building condition, needs major work.'
 );
 
--- facility_type
-INSERT INTO facility_type (last_update_by, type, notes) VALUES (
+-- healthcare_facility_type
+INSERT INTO healthcare_facility_type (last_update_by, type, notes) VALUES (
     'Nikita', 'Hospital', 'General medical and surgical facility.'
 );
-INSERT INTO facility_type (last_update_by, type, notes) VALUES (
+INSERT INTO healthcare_facility_type (last_update_by, type, notes) VALUES (
     'Nikita', 'Doctors practice', 'General practitioner services.'
 );
-INSERT INTO facility_type (last_update_by, type, notes) VALUES (
+INSERT INTO healthcare_facility_type (last_update_by, type, notes) VALUES (
     'Nikita', 'Pharmacy', 'Dispenses medicine and medical supplies.'
 );
-INSERT INTO facility_type (last_update_by, type, notes) VALUES (
+INSERT INTO healthcare_facility_type (last_update_by, type, notes) VALUES (
     'Nikita', 'Diagnostic Imaging Centers', 'Radiology and imaging services.'
 );
-INSERT INTO facility_type (last_update_by, type, notes) VALUES (
+INSERT INTO healthcare_facility_type (last_update_by, type, notes) VALUES (
     'Nikita', 'Optometrist', 'Eye examinations and vision care.'
 );
-INSERT INTO facility_type (last_update_by, type, notes) VALUES (
+INSERT INTO healthcare_facility_type (last_update_by, type, notes) VALUES (
     'Nikita', 'Dental Office', 'Dentistry and oral care.'
 );
-INSERT INTO facility_type (last_update_by, type, notes) VALUES (
+INSERT INTO healthcare_facility_type (last_update_by, type, notes) VALUES (
     'Nikita', 'Community Healthcare Centres', 'Community-level primary healthcare.'
 );
-INSERT INTO facility_type (last_update_by, type, notes) VALUES (
+INSERT INTO healthcare_facility_type (last_update_by, type, notes) VALUES (
     'Nikita', 'Hospice', 'Pain management.'
 );
-INSERT INTO facility_type (last_update_by, type, notes) VALUES (
+INSERT INTO healthcare_facility_type (last_update_by, type, notes) VALUES (
     'Nikita', 'Womens Health', 'Women-specific healthcare services.'
 );
-INSERT INTO facility_type (last_update_by, type, notes) VALUES (
+INSERT INTO healthcare_facility_type (last_update_by, type, notes) VALUES (
     'Nikita', 'Dialysis Centre', 'Kidney dialysis treatment facility.'
 );
-INSERT INTO facility_type (last_update_by, type, notes) VALUES (
+INSERT INTO healthcare_facility_type (last_update_by, type, notes) VALUES (
     'Nikita', 'Physiotherapist', 'Rehabilitation and physical therapy.'
 );
-INSERT INTO facility_type (last_update_by, type, notes) VALUES (
+INSERT INTO healthcare_facility_type (last_update_by, type, notes) VALUES (
     'Nikita', 'Medical centre', 'General outpatient medical care.'
 );
-INSERT INTO facility_type (last_update_by, type, notes) VALUES (
+INSERT INTO healthcare_facility_type (last_update_by, type, notes) VALUES (
     'Nikita', 'Occupational therapist', 'Functional rehabilitation therapy.'
 );
-INSERT INTO facility_type (last_update_by, type, notes) VALUES (
+INSERT INTO healthcare_facility_type (last_update_by, type, notes) VALUES (
     'Nikita', 'Clinic', 'Primary healthcare clinic.'
 );
-INSERT INTO facility_type (last_update_by, type, notes) VALUES (
+INSERT INTO healthcare_facility_type (last_update_by, type, notes) VALUES (
     'Nikita', 'Optometry', 'Vision care services.'
 );
-INSERT INTO facility_type (last_update_by, type, notes) VALUES (
+INSERT INTO healthcare_facility_type (last_update_by, type, notes) VALUES (
     'Nikita', 'Chiropractor', 'Musculoskeletal adjustments and therapy.'
 );
 
