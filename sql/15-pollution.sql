@@ -27,7 +27,7 @@ COMMENT ON COLUMN property_use_type.uuid IS 'Global Unique Identifier.';
 CREATE TABLE IF NOT EXISTS pollution_source (
     id SERIAL NOT NULL PRIMARY KEY,
     name TEXT NOT NULL,
-    geometry GEOMETRY (Point, 32734),
+    geometry GEOMETRY (Point, 32735),
     last_update TIMESTAMP DEFAULT now() NOT NULL,
     last_update_by TEXT NOT NULL,
     uuid UUID UNIQUE NOT NULL DEFAULT gen_random_uuid(),
@@ -39,7 +39,7 @@ COMMENT ON COLUMN pollution_source.id IS 'The unique pollution source ID. This i
 
 COMMENT ON COLUMN pollution_source.name IS 'Name of the pollution source.';
 
-COMMENT ON COLUMN pollution_source.geometry IS 'The location of pollution sources. EPSG: 32734 (WGS 84/UTM Zone 34S).';
+COMMENT ON COLUMN pollution_source.geometry IS 'The location of pollution sources. EPSG: 32735 (WGS 84/UTM Zone 35S).';
 
 COMMENT ON COLUMN pollution_source.last_update IS 'The date that the last update was made (yyyy-mm-dd hh:mm:ss).';
 
@@ -177,7 +177,7 @@ COMMENT ON COLUMN water_quality_status.uuid IS 'Global Unique Identifier.';
 CREATE TABLE IF NOT EXISTS waterbody (
     id SERIAL NOT NULL PRIMARY KEY,
     name TEXT NOT NULL,
-    geometry geometry (Geometry, 32734),
+    geometry geometry (MULTIPOLYGON, 32735),
     last_update TIMESTAMP DEFAULT now() NOT NULL,
     last_update_by TEXT NOT NULL,
     uuid UUID UNIQUE NOT NULL DEFAULT gen_random_uuid(),
@@ -190,7 +190,7 @@ COMMENT ON COLUMN waterbody.id IS 'The unique waterbody ID. This is the Primary 
 
 COMMENT ON COLUMN waterbody.name IS 'Name of waterbody.';
 
-COMMENT ON COLUMN waterbody.geometry IS 'The different geometries of waterbodies. EPSG: 32734 (WGS 84/UTM Zone 34S)';
+COMMENT ON COLUMN waterbody.geometry IS 'The different geometries of waterbodies. EPSG: 32735 (WGS 84/UTM Zone 35S)';
 
 COMMENT ON COLUMN waterbody.last_update IS 'The date that the last update was made (yyyy-mm-dd hh:mm:ss).';
 
