@@ -5,7 +5,7 @@
 -- healthcare Facility Type Lookup Table
 CREATE TABLE healthcare_facility_type (
     id SERIAL PRIMARY KEY,
-    name TEXT UNIQUE NOT NULL,
+    name VARCHAR UNIQUE NOT NULL,
     description TEXT,
     last_update TIMESTAMP NOT NULL DEFAULT now(),
     last_update_by TEXT NOT NULL,
@@ -30,7 +30,7 @@ COMMENT ON COLUMN healthcare_facility_type.uuid IS 'A globally unique identifier
 -- Building Condition Lookup Table
 CREATE TABLE building_condition (
     id SERIAL PRIMARY KEY,
-    condition_type TEXT NOT NULL,
+    condition_type VARCHAR NOT NULL,
     notes TEXT,
     last_update TIMESTAMP NOT NULL DEFAULT now(),
     last_update_by TEXT NOT NULL,
@@ -55,7 +55,7 @@ COMMENT ON COLUMN building_condition.uuid IS 'A globally unique identifier for t
 -- Ownership Type Lookup Table
 CREATE TABLE ownership_type (
     id SERIAL PRIMARY KEY,
-    ownership_type TEXT NOT NULL,
+    ownership_type VARCHAR NOT NULL,
     notes TEXT,
     last_update TIMESTAMP NOT NULL DEFAULT now(),
     last_update_by TEXT NOT NULL,
@@ -80,7 +80,7 @@ COMMENT ON COLUMN ownership_type.uuid IS 'A globally unique identifier for the o
 -- Service Type Lookup Table (list of possible services)
 CREATE TABLE facility_services (
     id SERIAL PRIMARY KEY,
-    service TEXT UNIQUE NOT NULL,
+    service VARCHAR UNIQUE NOT NULL,
     notes TEXT,
     last_update TIMESTAMP NOT NULL DEFAULT now(),
     last_update_by TEXT NOT NULL,
