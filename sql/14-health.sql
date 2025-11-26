@@ -118,6 +118,7 @@ CREATE TABLE healthcare_facility (
     healthcare_facility_type_id INTEGER NOT NULL REFERENCES healthcare_facility_type(id),
     ownership_type_id          INTEGER NOT NULL REFERENCES ownership_type(id),
     building_condition_id      INTEGER NOT NULL REFERENCES building_condition(id)
+    facility_services_id       INTEGER NOT NULL REFERENCES facility_services(id),
 );
 
 COMMENT ON TABLE healthcare_facility IS 'Table storing healthcare facilities like hospitals, clinics, etc.';
