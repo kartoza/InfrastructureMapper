@@ -1,5 +1,5 @@
-# SPDX-FileCopyrightText: 
-# SPDX-License-Identifier: 
+# SPDX-FileCopyrightText:
+# SPDX-License-Identifier:
 # Precommit configuration file for managing code quality checks and formatting tools.
 # This file defines various hooks for linting, formatting, security checks, and more.
 # For more information, see https://pre-commit.com
@@ -32,6 +32,14 @@ repos:
         entry: sqlfluff fix --force
         language: python
         types: [sql]
+  - repo: local
+    hooks:
+      - id: schema-immutability
+        name: "🔒 Schema immutability + Issue-NNN annotation"
+        entry: bash scripts/check_schema_immutability.sh
+        language: system
+        pass_filenames: false
+        stages: [pre-commit]
   - repo: local
     hooks:
       - id: remove-core-file
@@ -194,7 +202,7 @@ repos:
   #       language: system
   #       types: [json, yaml]
   #       stages: [pre-commit]
-  
+
   # This must run before reuse license compliance check
   - repo: local
     hooks:
@@ -237,3 +245,21 @@ repos:
         language: system
         types: [python]
         stages: [pre-commit]
+  # Fix end of files
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+        args:
+          - '--fix=lf'
+  # Remove unused imports/variables
+  - repo: https://github.com/myint/autoflake
+    rev: v2.3.1
+    hooks:
+      - id: autoflake
+        args:
+          - "--in-place"
+          - "--remove-unused-variables"
+          - "--remove-all-unused-imports"

@@ -1,0 +1,16 @@
+-- SPDX-FileCopyrightText: Tim Sutton
+-- SPDX-License-Identifier: MIT
+-- --------------------------------------UNRELEASED-GPKG-MIGRATIONS----------------------
+-- Append SQLite/GeoPackage schema changes for the next release here. Paired with the PG
+-- equivalent in sql/migrations/pg/UNRELEASED.sql.
+--
+-- Required format for every appended block:
+--
+--   -- Issue #NNN: short description
+--   <SQL statements>
+--
+-- Notes on GPKG dialect:
+--   * SQLite ALTER TABLE is limited; for constraint changes use the SQLite 12-step
+--     recreate pattern (CREATE new table, INSERT … SELECT, DROP old, RENAME).
+--   * If a migration adds, renames, or drops a spatial table, also update
+--     gpkg_contents and gpkg_geometry_columns and (re)build the rtree index.

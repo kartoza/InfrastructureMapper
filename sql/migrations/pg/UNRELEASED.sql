@@ -1,0 +1,13 @@
+-- SPDX-FileCopyrightText: Tim Sutton
+-- SPDX-License-Identifier: MIT
+-- --------------------------------------UNRELEASED-PG-MIGRATIONS------------------------
+-- Append schema changes for the next release here. At release time this file is renamed
+-- to vX.Y.Z.sql by scripts/release.sh and becomes immutable.
+--
+-- Required format for every appended block:
+--
+--   -- Issue #NNN: short description
+--   <SQL statements>
+--
+-- Pre-commit hook (and the matching CI job) rejects any statement that is not preceded by
+-- an `-- Issue #NNN:` header line.

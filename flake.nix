@@ -45,6 +45,7 @@
 
       devShells.${system}.default = pkgs.mkShell {
         packages = [
+          pkgs.autoflake
           pkgs.chafa
           pkgs.ffmpeg
           pkgs.gdb
@@ -79,6 +80,7 @@
           pkgs.yamlfmt
           pkgs.actionlint # for checking gh actions
           pkgs.bearer
+          pkgs.reuse # SPDX/REUSE license compliance checker
           postgresWithPostGIS
           pkgs.nodePackages.cspell
           (pkgs.python3.withPackages (ps: [
