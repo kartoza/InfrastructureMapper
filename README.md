@@ -281,8 +281,47 @@ The `scripts/` folder contains utility scripts to assist with database setup, da
 | `scripts/docstrings_check.sh` | Precommit hook for checking that docstrings were used when creating new python code. |
 | `scripts/encoding_check.sh` | Precommit hook for checking python modules have their encoding set. |
 | `scripts/license_check.sh` | Precommit hook for license and copyright in source files. |
+| `scripts/build_gpkg.sh` | Build a fresh GeoPackage from the canonical PG schema (`--crs EPSG:NNNN` to reproject). |
+| `scripts/migrate_pg.sh` | Apply pending `vX.Y.Z` migrations to a target PostgreSQL database, in strict semver order. |
+| `scripts/migrate_gpkg.py` | Same, against a target GeoPackage file. |
+| `scripts/generate_schema_docs.py` | Regenerate the auto-managed `## Schema Reference` block in each `sql/N-*.md`. |
+| `scripts/release.sh` | Cut a release: rename `UNRELEASED.sql` → `vX.Y.Z.sql`, bump `VERSION`, tag. |
+| `scripts/check_schema_immutability.sh` | Pre-commit / CI gate enforcing baseline immutability + Issue-NNN convention. |
 
-> ✏️ **Note:** Run each script from the project root. Some scripts may require environment variables or configuration—see comments within each script for usage details.
+> ✏️ **Note:** Run each script from the project root. Some scripts may require environment variables or configuration—see comments within each script for usage details. Most of the schema-lifecycle scripts have a matching `nix run .#<name>` convenience entry — see the cheat sheet below.
+
+### Common tasks cheat sheet
+
+The fastest way to drive the schema lifecycle is via the `nix run .#…` apps the flake exposes:
+
+```bash
+# Build the canonical GeoPackage (UTM 35S example)
+nix run .#build-gpkg -- --crs EPSG:32735
+
+# Apply pending PG migrations
+nix run .#migrate-pg -- gis
+
+# Apply pending GPKG migrations
+nix run .#migrate-gpkg -- gpkg/KartozaInfrastructureMapper.gpkg
+
+# Regenerate the Schema Reference section in every sql/N-*.md
+nix run .#docs
+
+# Cut a release (patch bump → renames UNRELEASED.sql + tags)
+nix run .#release -- --bump patch --commit
+```
+
+Or, inside `nix develop`, invoke the scripts directly — they're on `PATH`-via-relative-path:
+
+```bash
+scripts/build_gpkg.sh --crs EPSG:32735
+scripts/migrate_pg.sh gis
+scripts/migrate_gpkg.py gpkg/KartozaInfrastructureMapper.gpkg
+scripts/generate_schema_docs.py
+scripts/release.sh --bump patch --commit
+```
+
+If you use Neovim, the bundled `.exrc` puts the same operations behind `<leader>p…` WhichKey shortcuts: `<leader>pb` build, `<leader>pm` migrate-pg, `<leader>pg` migrate-gpkg, `<leader>pd` docs, `<leader>pr` release, `<leader>pl` lint, `<leader>ps` open `SPECIFICATION.md`.
 
 ---
 
