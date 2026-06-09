@@ -1,3 +1,5 @@
+-- SPDX-FileCopyrightText: Tim Sutton
+-- SPDX-License-Identifier: MIT
 --create database farming;
 -- add connect statement here
 DO $$

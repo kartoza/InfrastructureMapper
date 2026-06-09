@@ -1,0 +1,57 @@
+# SPDX-FileCopyrightText: Tim Sutton
+# SPDX-License-Identifier: MIT
+#
+# cspell configuration. Lives as YAML so the SPDX header can be a comment
+# (JSON does not allow comments, which broke the previous cspell.json).
+version: '0.2'
+words:
+  - aluminuim
+  - behaviours
+  - celcius
+  - Centreline
+  - colour
+  - colours
+  - culinaryfacilities
+  - dbname
+  - docstrings
+  - EPSG
+  - exrc
+  - fkey
+  - geolocated
+  - geospatial
+  - gource
+  - gpkg
+  - GPKG
+  - Hefni
+  - hefniraera
+  - Isochrones
+  - kartoza
+  - Kartoza
+  - Lindie
+  - linstrijdom
+  - marp
+  - Marp
+  - Mergin
+  - nextval
+  - oversaturatin
+  - penetrometers
+  - pgdata
+  - pkey
+  - pytest
+  - qgis
+  - QGIS
+  - QNEAT
+  - QNEAT3
+  - Quercus
+  - regclass
+  - reproject
+  - reprojects
+  - reprojection
+  - sandboxed
+  - Spatia
+  - srid
+  - Strijdom
+  - timlinux
+  - upated
+  - visualising
+  - Visualise

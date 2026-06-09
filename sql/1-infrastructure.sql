@@ -1,3 +1,5 @@
+-- SPDX-FileCopyrightText: Tim Sutton
+-- SPDX-License-Identifier: MIT
 -- --------------------------------------INFRASTRUCTURE-------------------------------------
 -- INFRASTRUCTURE TYPE
 CREATE TABLE

@@ -1,3 +1,5 @@
+-- SPDX-FileCopyrightText: Tim Sutton
+-- SPDX-License-Identifier: MIT
 -- --------------------------------------ELECTRICITY-------------------------------------
 -- ELECTRICITY LINE TYPE
 CREATE TABLE

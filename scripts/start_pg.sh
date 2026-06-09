@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: Tim Sutton
+# SPDX-License-Identifier: MIT
 export PATH=${postgresWithPostGIS}/bin:$PATH
 export PGDATA="$PWD/pgdata"
 export PGHOST="$PGDATA"

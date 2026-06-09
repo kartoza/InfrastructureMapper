@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: Tim Sutton
+# SPDX-License-Identifier: MIT
 #!/usr/bin/env bash
 
 PRESENTATION_DIR="./presentations"

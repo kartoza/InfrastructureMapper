@@ -1,3 +1,5 @@
+-- SPDX-FileCopyrightText: Tim Sutton
+-- SPDX-License-Identifier: MIT
 -- -------------------------------------- LAND USE BUILDINGS
 -- -------------------------------------
 -- BUILDING TYPE --

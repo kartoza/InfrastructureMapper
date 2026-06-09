@@ -1,3 +1,5 @@
+<!-- SPDX-FileCopyrightText: Tim Sutton -->
+<!-- SPDX-License-Identifier: MIT -->
 # 🌐 Infrastructure Mapper
 <!-- cspell:ignore landuse -->
 
@@ -19,6 +21,7 @@ Welcome to **Infrastructure Mapper**! This repository contains guidelines and co
   - [🌿 Design Aesthetic](#-design-aesthetic)
   - [Data Model](#data-model)
   - [⚒️ Using](#️-using)
+  - [🧬 Schema Evolution](#-schema-evolution)
   - [🛠️ Scripts Overview](#️-scripts-overview)
   - [🧊 Using the Nix Flake](#-using-the-nix-flake)
   - [✨ Contributing](#-contributing)
@@ -147,7 +150,116 @@ This section describes each component of the infrastructure mapper data model. Y
 
 ## ⚒️ Using
 
-Simply take the sql files in the sql folder and load them into postgres.
+For a fresh PostgreSQL database, run the load script (or apply
+`sql/extensions.sql` then `sql/0-meta.sql` then `sql/1-*.sql` ... `sql/13-*.sql`
+then `sql/fixtures.sql`, in that order).
+
+For a GeoPackage snapshot — built by loading the canonical PG schema and then
+dumping it via `ogr2ogr` — use:
+
+```bash
+scripts/build_gpkg.sh [--crs EPSG:NNNN]
+```
+
+The script drops and recreates a throwaway PG database, applies the baseline
+schema plus any frozen PG migrations, optionally reprojects every spatial
+column to `--crs`, then exports the result to
+`gpkg/KartozaInfrastructureMapper.gpkg`. Open that file in QGIS to get every
+layer pre-registered with the right SRS.
+
+A geographic CRS such as EPSG:4326 is only accurate to ~2&nbsp;m; for field
+work that needs precise distances or areas, pass an appropriate metric CRS
+(UTM zone, EPSG:3857, etc.).
+
+---
+
+## 🧬 Schema Evolution
+
+The schema is versioned. `VERSION` at the repo root holds the current
+semver; every PG and GPKG database carries a `schema_migrations` table and a
+`current_schema_version` view:
+
+```sql
+SELECT version FROM current_schema_version;
+-- → v0.1.0
+```
+
+### Editing the schema
+
+The top-level files in `sql/` (`0-meta.sql`, `1-infrastructure.sql`, ...,
+`fixtures.sql`, `extensions.sql`) are the **baseline**. They are **immutable**
+once committed — both the pre-commit hook and the
+`SchemaImmutability` GitHub Action reject in-place edits. To change the
+schema after baseline, append the change to:
+
+- `sql/migrations/pg/UNRELEASED.sql` (PostgreSQL syntax)
+- `sql/migrations/gpkg/UNRELEASED.sql` (SQLite/GeoPackage syntax — often needs
+  the SQLite 12-step recreate for constraint changes)
+
+Every appended block must start with an annotation line referencing the
+GitHub issue tracking the change:
+
+```sql
+-- Issue #142: Add solar_panel table for grid solar installations
+CREATE TABLE solar_panel ( ... );
+```
+
+A new top-level numbered `sql/N-<domain>.sql` file may be added for a
+brand-new capture domain (e.g. `sql/14-solar.sql`); it becomes immutable
+from its first commit.
+
+### Cutting a release
+
+```bash
+scripts/release.sh --bump patch|minor|major [--commit]
+```
+
+This renames `UNRELEASED.sql` → `vX.Y.Z.sql` in both `pg/` and `gpkg/`,
+creates new empty `UNRELEASED.sql` stubs, bumps `VERSION`, regenerates
+the per-component schema reference docs, and (with `--commit`) creates
+the release commit and `vX.Y.Z` tag. Pushing the tag triggers the
+`Release` GitHub Action, which publishes:
+
+| Artifact | Use |
+|---|---|
+| `pg-schema-vX.Y.Z.sql` | Fresh PG install |
+| `pg-fixtures-vX.Y.Z.sql` | Lookup data |
+| `KartozaInfrastructureMapper-vX.Y.Z.gpkg` | Open in QGIS / take to the field |
+| `pg-migrations-vX.Y.Z.tar.gz` | Upgrade an existing prod PG to vX.Y.Z |
+| `gpkg-migrations-vX.Y.Z.tar.gz` | Upgrade an existing prod GPKG to vX.Y.Z |
+| `RELEASE_NOTES.md` | Auto-generated from migration filenames |
+
+### Applying migrations to a live database
+
+```bash
+# Postgres
+scripts/migrate_pg.sh <dbname>
+
+# GeoPackage
+scripts/migrate_gpkg.py path/to/file.gpkg
+```
+
+Both runners read the target's `current_schema_version`, apply every
+unapplied `vX.Y.Z.sql` migration in semver order, each in its own
+transaction, recording success in `schema_migrations`. Re-running is a
+no-op once up to date. `--dry-run` shows the plan; `--target vX.Y.Z`
+stops at a specific version.
+
+### Field workflow
+
+`gpkg/KartozaInfrastructureMapper.gpkg` is a snapshot of the PG schema for
+offline use with QField or Mergin Maps. Every table carries a `uuid` column
+(stable across PG ↔ GPKG) and a `last_update` timestamp, which together make
+the snapshot reconcilable with the source PG on return. The sync flow
+itself is not yet implemented; the schema is ready for it.
+
+### Per-component schema docs
+
+`sql/N-component.md` files hold hand-written narrative + mermaid diagrams.
+A delimited "Schema Reference" section at the bottom of each is regenerated
+by `scripts/generate_schema_docs.py` from the materialized schema (baseline +
+all applied migrations). Do not hand-edit content between the
+`<!-- SCHEMA-REFERENCE-START ... -->` markers.
 
 ---
 
@@ -169,8 +281,47 @@ The `scripts/` folder contains utility scripts to assist with database setup, da
 | `scripts/docstrings_check.sh` | Precommit hook for checking that docstrings were used when creating new python code. |
 | `scripts/encoding_check.sh` | Precommit hook for checking python modules have their encoding set. |
 | `scripts/license_check.sh` | Precommit hook for license and copyright in source files. |
+| `scripts/build_gpkg.sh` | Build a fresh GeoPackage from the canonical PG schema (`--crs EPSG:NNNN` to reproject). |
+| `scripts/migrate_pg.sh` | Apply pending `vX.Y.Z` migrations to a target PostgreSQL database, in strict semver order. |
+| `scripts/migrate_gpkg.py` | Same, against a target GeoPackage file. |
+| `scripts/generate_schema_docs.py` | Regenerate the auto-managed `## Schema Reference` block in each `sql/N-*.md`. |
+| `scripts/release.sh` | Cut a release: rename `UNRELEASED.sql` → `vX.Y.Z.sql`, bump `VERSION`, tag. |
+| `scripts/check_schema_immutability.sh` | Pre-commit / CI gate enforcing baseline immutability + Issue-NNN convention. |
 
-> ✏️ **Note:** Run each script from the project root. Some scripts may require environment variables or configuration—see comments within each script for usage details.
+> ✏️ **Note:** Run each script from the project root. Some scripts may require environment variables or configuration—see comments within each script for usage details. Most of the schema-lifecycle scripts have a matching `nix run .#<name>` convenience entry — see the cheat sheet below.
+
+### Common tasks cheat sheet
+
+The fastest way to drive the schema lifecycle is via the `nix run .#…` apps the flake exposes:
+
+```bash
+# Build the canonical GeoPackage (UTM 35S example)
+nix run .#build-gpkg -- --crs EPSG:32735
+
+# Apply pending PG migrations
+nix run .#migrate-pg -- gis
+
+# Apply pending GPKG migrations
+nix run .#migrate-gpkg -- gpkg/KartozaInfrastructureMapper.gpkg
+
+# Regenerate the Schema Reference section in every sql/N-*.md
+nix run .#docs
+
+# Cut a release (patch bump → renames UNRELEASED.sql + tags)
+nix run .#release -- --bump patch --commit
+```
+
+Or, inside `nix develop`, invoke the scripts directly — they're on `PATH`-via-relative-path:
+
+```bash
+scripts/build_gpkg.sh --crs EPSG:32735
+scripts/migrate_pg.sh gis
+scripts/migrate_gpkg.py gpkg/KartozaInfrastructureMapper.gpkg
+scripts/generate_schema_docs.py
+scripts/release.sh --bump patch --commit
+```
+
+If you use Neovim, the bundled `.exrc` puts the same operations behind `<leader>p…` WhichKey shortcuts: `<leader>pb` build, `<leader>pm` migrate-pg, `<leader>pg` migrate-gpkg, `<leader>pd` docs, `<leader>pr` release, `<leader>pl` lint, `<leader>ps` open `SPECIFICATION.md`.
 
 ---
 
@@ -199,7 +350,7 @@ Or, for the long-term release version:
 nix run .#qgis-ltr
 ```
 
-1. **VSCode users:**  
+1. **VSCode users:**
 
 You can launch a ready-to-use VSCode environment:
 
@@ -219,14 +370,14 @@ We welcome contributions! Please read the [CONTRIBUTING.md](CONTRIBUTING.md) for
 
 ## 📧 Contact
 
-Have questions or feedback? Feel free to reach out!  
-📧 Email: [info@kartoza.com](mailto:info@kartoza.com)  
+Have questions or feedback? Feel free to reach out!
+📧 Email: [info@kartoza.com](mailto:info@kartoza.com)
 🌐 Website: [kartoza.com](https://kartoza.com)
 
 ## Contributors
 
 - [Tim Sutton](https://github.com/timlinux) - project lead
--  
+-
 
 ---
 

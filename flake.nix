@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: Tim Sutton
+# SPDX-License-Identifier: MIT
 {
   description = "NixOS developer environment for QGIS plugins.";
 
@@ -43,6 +45,7 @@
 
       devShells.${system}.default = pkgs.mkShell {
         packages = [
+          pkgs.autoflake
           pkgs.chafa
           pkgs.ffmpeg
           pkgs.gdb
@@ -77,6 +80,7 @@
           pkgs.yamlfmt
           pkgs.actionlint # for checking gh actions
           pkgs.bearer
+          pkgs.reuse # SPDX/REUSE license compliance checker
           postgresWithPostGIS
           pkgs.nodePackages.cspell
           (pkgs.python3.withPackages (ps: [
@@ -130,45 +134,68 @@
 
           echo "-----------------------"
           echo "🌈 Your Dev Environment is prepared."
-          echo "To run QGIS with your profile, use one of these commands:"
           echo ""
-          echo "  nix run .#qgis"
-          echo "  nix run .#qgis-ltr"
+          echo "🗺️  QGIS:           nix run .#qgis  |  nix run .#qgis-ltr"
+          echo "💻 VSCode:         ./vscode.sh"
           echo ""
-          echo "📒 Note:"
+          echo "📦 Schema lifecycle (the migration + release workflow):"
+          echo "   nix run .#build-gpkg      Build gpkg/KartozaInfrastructureMapper.gpkg from PG"
+          echo "                             (pass --crs EPSG:NNNN for metric reprojection)"
+          echo "   nix run .#migrate-pg      Apply pending PG migrations to a target DB"
+          echo "   nix run .#migrate-gpkg    Apply pending GPKG migrations to a target file"
+          echo "   nix run .#docs            Regenerate Schema Reference in every sql/N-*.md"
+          echo "   nix run .#release         Cut a release (--bump patch|minor|major --commit)"
+          echo ""
+          echo "🐘 Postgres data dir: ./pgdata (current version: \$(cat VERSION 2>/dev/null || echo unknown))"
+          echo "   Stop with: ./stop_pg.sh   (or ${postgresWithPostGIS}/bin/pg_ctl -D ./pgdata stop -m fast)"
           echo "-----------------------"
-          echo "We provide a ready-to-use"
-          echo "VSCode environment which you"
-          echo "can start like this:"
-          echo ""
-          echo "./vscode.sh"
-          echo "-----------------------"
-          echo "Postgres should be running with its"
-          echo "data stored in ./pgdata"
-          echo "You need to stop it manually with this command"
-          echo "${postgresWithPostGIS}/bin/pg_ctl -D ./pgdata stop -m fast"
-          echo ""
-          echo "Or use ./stop_pg.sh to stop it"
         '';
       };
 
-      apps.${system} = {
-        qgis = {
-          type = "app";
-          program = "${qgisWithExtras}/bin/qgis";
-          args = [
-            "--profile"
-            "${profileName}"
-          ];
+      apps.${system} =
+        let
+          # Wrap a repo-relative script so 'nix run .#foo' runs it inside the
+          # project's nix develop shell, no matter the user's current dir.
+          mkScriptApp = scriptPath: {
+            type = "app";
+            program = "${pkgs.writeShellScript "${baseNameOf scriptPath}" ''
+              ROOT="$(git rev-parse --show-toplevel 2> /dev/null || pwd)"
+              cd "$ROOT"
+              exec nix develop --command bash "$ROOT/${scriptPath}" "$@"
+            ''}";
+          };
+          mkPythonApp = scriptPath: {
+            type = "app";
+            program = "${pkgs.writeShellScript "${baseNameOf scriptPath}" ''
+              ROOT="$(git rev-parse --show-toplevel 2> /dev/null || pwd)"
+              cd "$ROOT"
+              exec nix develop --command python "$ROOT/${scriptPath}" "$@"
+            ''}";
+          };
+        in
+        {
+          qgis = {
+            type = "app";
+            program = "${qgisWithExtras}/bin/qgis";
+            args = [
+              "--profile"
+              "${profileName}"
+            ];
+          };
+          qgis-ltr = {
+            type = "app";
+            program = "${qgisLtrWithExtras}/bin/qgis";
+            args = [
+              "--profile"
+              "${profileName}"
+            ];
+          };
+          # Schema lifecycle convenience apps.
+          build-gpkg = mkScriptApp "scripts/build_gpkg.sh";
+          migrate-pg = mkScriptApp "scripts/migrate_pg.sh";
+          migrate-gpkg = mkPythonApp "scripts/migrate_gpkg.py";
+          docs = mkPythonApp "scripts/generate_schema_docs.py";
+          release = mkScriptApp "scripts/release.sh";
         };
-        qgis-ltr = {
-          type = "app";
-          program = "${qgisLtrWithExtras}/bin/qgis";
-          args = [
-            "--profile"
-            "${profileName}"
-          ];
-        };
-      };
     };
 }

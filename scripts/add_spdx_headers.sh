@@ -47,15 +47,20 @@ add_header() {
 
 export -f add_header
 
-# Find all files except in .git, .reuse, LICENSES, etc.
+# Find all files and check against .gitignore dynamically
 find . \
   -type f \
   ! -path "./.git/*" \
   ! -path "./LICENSES/*" \
   ! -path "./.reuse/*" \
   ! -name "*.license" \
-  ! -name "*.png" \
-  ! -name "*.gif" \
-  ! -name "*.qgz" \
-  -exec bash -c 'add_header "$0"' {} \;
+  -print0 | while IFS= read -r -d '' file; do
+    # Use git check-ignore to see if file should be ignored per .gitignore
+    if git check-ignore -q "$file" 2>/dev/null; then
+      echo "🚫 Skipping ignored file: $file"
+      continue
+    fi
+    
+    add_header "$file"
+  done
 

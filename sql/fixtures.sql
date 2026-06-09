@@ -1,3 +1,5 @@
+-- SPDX-FileCopyrightText: Tim Sutton
+-- SPDX-License-Identifier: MIT
 -- vegetation
 -- months of the year
 INSERT INTO month (last_update_by, name, sort_order) VALUES (

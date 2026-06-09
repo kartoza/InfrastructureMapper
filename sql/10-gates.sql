@@ -1,3 +1,5 @@
+-- SPDX-FileCopyrightText: Tim Sutton
+-- SPDX-License-Identifier: MIT
 -- --------------------------------------GATES--------------------------------------------
 -- added by Jeremy Ferris
 -- GATE TYPE

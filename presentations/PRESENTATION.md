@@ -1,3 +1,5 @@
+<!-- SPDX-FileCopyrightText: Tim Sutton -->
+<!-- SPDX-License-Identifier: MIT -->
 # 🖼️ Presentation Format Guide (Marp)
 
 This folder contains Marp-based presentations for the **Infrastructure Mapper** project.
