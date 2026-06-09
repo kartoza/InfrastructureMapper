@@ -10,5 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: npm install -g markdownlint-cli
-      - run: markdownlint '**/*.md'
+      - uses: DeterminateSystems/nix-installer-action@v23
+      - uses: DeterminateSystems/magic-nix-cache-action@v17
+      - run: nix develop --command markdownlint '**/*.md'

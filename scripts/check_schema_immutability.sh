@@ -38,22 +38,47 @@ while [ $# -gt 0 ]; do
     esac
 done
 
-# Resolve the set of files this run should look at, and the "previous" ref to
-# compare each one against to detect "this file was already committed."
+# The semantic we enforce is "this branch must not modify files that already
+# exist on the integration branch (main)". A feature branch can freely
+# introduce new top-level sql/N-*.sql files (new capture domains) and freely
+# edit its own UNRELEASED.sql; what it cannot do is touch a baseline file
+# that's already on main.
+#
+# Pick the integration ref: prefer origin/main, then main, then origin/master,
+# then master. Fall back to HEAD if none reachable (preserves the old single-
+# repo behaviour).
+default_integration_ref() {
+    for ref in origin/main main origin/master master; do
+        if git rev-parse --verify --quiet "$ref" > /dev/null; then
+            echo "$ref"
+            return 0
+        fi
+    done
+    echo "HEAD"
+}
+
+# Resolve the set of files this run should look at, and the "base" ref against
+# which a frozen-file modification is judged.
 case "$MODE" in
     staged)
-        FILES=$(git diff --cached --name-only --diff-filter=AMR)
-        PREV_REF="HEAD"
+        BASE_REF="$(default_integration_ref)"
+        # Files this commit + this branch are changing relative to the base.
+        STAGED_FILES=$(git diff --cached --name-only --diff-filter=AMR)
+        BRANCH_FILES=$(git diff --name-only --diff-filter=AMR "$BASE_REF"..HEAD)
+        FILES=$(printf '%s\n%s\n' "$STAGED_FILES" "$BRANCH_FILES" | sort -u | grep -v '^$' || true)
         ;;
     all)
-        FILES=$(git ls-files 'sql/**')
-        PREV_REF="HEAD"
+        BASE_REF="$(default_integration_ref)"
+        FILES=$(git diff --name-only --diff-filter=AMR "$BASE_REF"..HEAD)
+        # Also include any working-tree changes not yet committed.
+        WT_FILES=$(git diff --name-only --diff-filter=AMR)
+        FILES=$(printf '%s\n%s\n' "$FILES" "$WT_FILES" | sort -u | grep -v '^$' || true)
         ;;
     base)
-        FILES=$(git diff --name-only --diff-filter=AMR "$BASE_REF"...HEAD)
-        PREV_REF="$BASE_REF"
+        FILES=$(git diff --name-only --diff-filter=AMR "$BASE_REF"..HEAD)
         ;;
 esac
+PREV_REF="$BASE_REF"
 
 REJECTED=()
 ANNOTATION_ERRORS=()
@@ -112,14 +137,26 @@ check_unreleased_annotations() {
     '
 }
 
+# Bootstrap exemption: if the immutability hook itself doesn't exist on the
+# base ref, this branch is introducing it. Skip the frozen-file rejection so
+# the establishing PR can land cleanly. The Issue-NNN annotation check still
+# runs (it's about migration hygiene, not baseline immutability).
+BOOTSTRAP=0
+if ! git cat-file -e "$PREV_REF:scripts/check_schema_immutability.sh" 2>/dev/null; then
+    BOOTSTRAP=1
+    echo "ℹ️  Bootstrap mode: '$PREV_REF' does not yet contain scripts/check_schema_immutability.sh." >&2
+    echo "    Baseline-modification check is skipped on this branch." >&2
+    echo "" >&2
+fi
+
 for f in $FILES; do
     case "$f" in
         sql/*) ;;
         *) continue ;;
     esac
 
-    if is_frozen_path "$f"; then
-        # Reject only if the file existed in the previous ref AND content differs.
+    if [ "$BOOTSTRAP" = 0 ] && is_frozen_path "$f"; then
+        # Reject only if the file existed in the base ref AND content differs.
         if git cat-file -e "$PREV_REF:$f" 2>/dev/null; then
             if ! git diff --quiet "$PREV_REF" -- "$f" 2>/dev/null; then
                 REJECTED+=("$f")

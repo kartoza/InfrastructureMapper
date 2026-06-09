@@ -99,3 +99,6 @@ PROMPT.log
 # Built GeoPackage artifacts — produced by scripts/build_gpkg.sh and the
 # Release workflow; not stored in git history.
 gpkg/*.gpkg
+claude.sh
+claude.out
+.claude-ci/

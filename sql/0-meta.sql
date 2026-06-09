@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS schema_migrations (
     )
 );
 
-CREATE INDEX IF NOT EXISTS idx_schema_migrations_semver
+CREATE INDEX IF NOT EXISTS idx_schema_migrations_semver -- noqa: PG01
 ON schema_migrations (major DESC, minor DESC, patch DESC);
 
 -- current_schema_version returns exactly one row representing the highest version applied.

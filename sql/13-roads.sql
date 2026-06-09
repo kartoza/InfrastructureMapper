@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS intersection (
     uuid UUID UNIQUE NOT NULL DEFAULT gen_random_uuid(),
     last_update TIMESTAMP DEFAULT now() NOT NULL,
     last_update_by TEXT NOT NULL,
-    geom GEOMETRY (POINT, 4326) NOT NULL
+    geom GEOMETRY (POINT, 32734) NOT NULL
 );
 COMMENT ON TABLE intersection IS 'Points between road segments.';
 
@@ -111,7 +111,7 @@ COMMENT ON COLUMN intersection.last_update IS 'The date that the last update was
 
 COMMENT ON COLUMN intersection.last_update_by IS 'The name of the user responsible for the latest update.';
 
-COMMENT ON COLUMN intersection.geom IS 'The location of the nodes between road segments. EPSG: 4326 (WGS 84). Use --crs at build time to reproject for accurate distance measurements.';
+COMMENT ON COLUMN intersection.geom IS 'The location of the nodes between road segments. EPSG: 32734 (WGS 84/UTM Zone 34S)';
 
 -- ROADS
 CREATE TABLE IF NOT EXISTS road (
@@ -144,7 +144,7 @@ CREATE TABLE IF NOT EXISTS road_segment (
     length_m FLOAT CHECK (length_m > 0),
     speed_limit_kmh INT CHECK (speed_limit_kmh > 0),
     one_way BOOLEAN,
-    geom GEOMETRY (LINESTRING, 4326) NOT NULL,
+    geom GEOMETRY (LINESTRING, 32734) NOT NULL,
     road_uuid UUID REFERENCES road (uuid),
     type_uuid UUID NOT NULL REFERENCES segment_type (uuid),
     status_uuid UUID NOT NULL REFERENCES segment_status (uuid),
@@ -173,7 +173,7 @@ COMMENT ON COLUMN road_segment.speed_limit_kmh IS 'The speed limit of the road s
 
 COMMENT ON COLUMN road_segment.one_way IS 'True if the segment is a one-way road.';
 
-COMMENT ON COLUMN road_segment.geom IS 'Centreline location of the road segment. EPSG: 4326 (WGS 84). Use --crs at build time to reproject into a metric CRS for accurate length measurements.';
+COMMENT ON COLUMN road_segment.geom IS 'Centreline location of the road segment. PCR for distance measurements, EPSG: 32734 (WGS 84/UTM Zone 34S)';
 
 COMMENT ON COLUMN road_segment.road_uuid IS 'The foreign key which references the uuid from the roads table.';
 
