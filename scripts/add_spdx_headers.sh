@@ -1,8 +1,18 @@
 #!/usr/bin/env bash
+# SPDX-FileCopyrightText: Tim Sutton
+# SPDX-License-Identifier: MIT
 set -euo pipefail
 
 AUTHOR="Tim Sutton"
 LICENSE="MIT"
+
+# REUSE-IgnoreStart
+# The strings below contain literal SPDX prefixes that this script emits into
+# other files. They are not declarations about THIS file's licensing — REUSE
+# is told to ignore them via the IgnoreStart/IgnoreEnd markers.
+COPY_TAG="SPDX-FileCopyrightText"
+LIC_TAG="SPDX-License-Identifier"
+# REUSE-IgnoreEnd
 
 add_header() {
   local file="$1"
@@ -19,7 +29,7 @@ add_header() {
     esac
 
     # Skip if already tagged
-    if grep -q "SPDX-License-Identifier:" "$file"; then
+    if grep -q "${LIC_TAG}:" "$file"; then
       echo "✅ $file already tagged"
       return
     fi
@@ -29,14 +39,14 @@ add_header() {
     # Add correct syntax (special case for block comments like HTML)
     if [[ "$comment" == "<!--" ]]; then
       {
-        echo "<!-- SPDX-FileCopyrightText: $AUTHOR -->"
-        echo "<!-- SPDX-License-Identifier: $LICENSE -->"
+        echo "<!-- ${COPY_TAG}: $AUTHOR -->"
+        echo "<!-- ${LIC_TAG}: $LICENSE -->"
         cat "$file"
       } > "$file.new"
     else
       {
-        echo "$comment SPDX-FileCopyrightText: $AUTHOR"
-        echo "$comment SPDX-License-Identifier: $LICENSE"
+        echo "$comment ${COPY_TAG}: $AUTHOR"
+        echo "$comment ${LIC_TAG}: $LICENSE"
         cat "$file"
       } > "$file.new"
     fi
@@ -60,7 +70,6 @@ find . \
       echo "🚫 Skipping ignored file: $file"
       continue
     fi
-    
+
     add_header "$file"
   done
-

@@ -1,0 +1,23 @@
+# SPDX-FileCopyrightText: Tim Sutton
+# SPDX-License-Identifier: MIT
+#
+# Pylint configuration. Project-level overrides; pylint's defaults handle the
+# rest. We use this primarily to keep .venv/ and other vendored trees off the
+# lint path.
+[MAIN]
+ignore-paths=
+    ^\.venv/.*$,
+    ^\.claude/.*$,
+    ^\.claude-ci/.*$,
+    ^pgdata/.*$,
+    ^site/.*$,
+    ^gpkg/.*$
+recursive=yes
+
+[MESSAGES CONTROL]
+# Allow subprocess imports and exec patterns — used intentionally by the
+# schema-generation and migration tooling, audited per call site.
+disable=
+    missing-module-docstring,
+    too-few-public-methods,
+    duplicate-code

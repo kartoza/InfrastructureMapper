@@ -159,7 +159,7 @@ def main() -> int:
     Returns:
         0 on success, 2 on bad arguments.
     """
-    ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
+    ap = argparse.ArgumentParser(description=__doc__.split("\n\n", maxsplit=1)[0])
     ap.add_argument("gpkg", type=pathlib.Path, help="Path to target .gpkg file")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--target", metavar="vX.Y.Z", default=None)

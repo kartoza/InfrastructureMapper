@@ -1,0 +1,274 @@
+/* SPDX-FileCopyrightText: Tim Sutton
+   SPDX-License-Identifier: MIT
+
+   Kartoza nature palette for Material for MkDocs.
+   - Forest Green       #2F5D50  dominant vegetation
+   - Moss Green         #7C9C75  soft background greenery
+   - Earth Brown        #A9825A  soil, tree bark
+   - Sandstone Beige    #E0D2B2  pathways, terrain shading
+   - Sky Blue           #A4DDED  sky, water elements
+   - Deep Teal          #2B7A78  shadows, water depth
+   - Leaf Yellow-Green  #C1E1C1  highlights on foliage
+   - Rock Gray          #9FA8A3  mountains, stones
+*/
+
+:root {
+  --kz-forest: #2F5D50;
+  --kz-moss: #7C9C75;
+  --kz-earth: #A9825A;
+  --kz-sandstone: #E0D2B2;
+  --kz-sky: #A4DDED;
+  --kz-teal: #2B7A78;
+  --kz-leaf: #C1E1C1;
+  --kz-rock: #9FA8A3;
+}
+
+[data-md-color-primary="custom"] {
+  --md-primary-fg-color:           var(--kz-forest);
+  --md-primary-fg-color--light:    var(--kz-moss);
+  --md-primary-fg-color--dark:     #1F4538;
+  --md-primary-bg-color:           #FFFFFF;
+  --md-primary-bg-color--light:    rgba(255, 255, 255, 0.7);
+}
+
+[data-md-color-accent="custom"] {
+  --md-accent-fg-color:            var(--kz-teal);
+  --md-accent-fg-color--transparent: rgba(43, 122, 120, 0.10);
+  --md-accent-bg-color:            #FFFFFF;
+  --md-accent-bg-color--light:     rgba(255, 255, 255, 0.7);
+}
+
+/* Light scheme — sandstone gentle warmth on the body. */
+[data-md-color-scheme="default"] {
+  --md-default-bg-color:           #FDFBF6;
+  --md-default-fg-color:           #1f1f1f;
+  --md-typeset-a-color:            var(--kz-teal);
+  --md-code-bg-color:              #F4EFE3;
+  --md-code-hl-color:              rgba(193, 225, 193, 0.4);
+  --md-typeset-mark-color:         rgba(164, 221, 237, 0.5);
+}
+
+[data-md-color-scheme="default"] .md-header {
+  background: linear-gradient(135deg, var(--kz-forest) 0%, var(--kz-teal) 100%);
+  color: #fff;
+}
+
+[data-md-color-scheme="default"] .md-tabs {
+  background: var(--kz-forest);
+}
+
+/* Dark scheme — deep teal field, leafy accents. */
+[data-md-color-scheme="slate"] {
+  --md-default-bg-color:           #14201E;
+  --md-default-fg-color:           #ECF3EE;
+  --md-typeset-a-color:            var(--kz-leaf);
+  --md-code-bg-color:              #1B2A28;
+  --md-typeset-mark-color:         rgba(43, 122, 120, 0.4);
+}
+
+[data-md-color-scheme="slate"] .md-header,
+[data-md-color-scheme="slate"] .md-tabs {
+  background: linear-gradient(135deg, #1F4538 0%, var(--kz-teal) 100%);
+}
+
+/* -------------------------------------------------------------------------
+   Hero block used on the landing page (docs/index.md).
+   ------------------------------------------------------------------------- */
+.kz-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 2.5rem;
+  align-items: center;
+  padding: 3rem 2.5rem;
+  margin: -1.5rem -.75rem 2.5rem -.75rem;
+  border-radius: 1rem;
+  background: radial-gradient(circle at 80% 20%, var(--kz-moss) 0%, var(--kz-forest) 50%, var(--kz-teal) 100%);
+  color: #fff;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.kz-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 10% 110%, rgba(224, 210, 178, 0.18) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.kz-hero__text { z-index: 1; }
+.kz-hero__visual { z-index: 1; text-align: center; }
+.kz-hero__visual img { max-width: 100%; border-radius: .75rem; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3); }
+
+.kz-hero h1 {
+  margin: 0 0 .5rem;
+  font-size: 2.6rem;
+  line-height: 1.05;
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.kz-hero p {
+  margin: 0 0 1.5rem;
+  font-size: 1.1rem;
+  line-height: 1.5;
+  color: var(--kz-leaf);
+  max-width: 540px;
+}
+
+.kz-cta { display: flex; flex-wrap: wrap; gap: .75rem; }
+.kz-cta a {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .75rem 1.25rem;
+  border-radius: .5rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.kz-cta a:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2); }
+.kz-cta__primary {
+  background: var(--kz-sandstone);
+  color: var(--kz-forest);
+}
+.kz-cta__primary:hover { background: #f1e7cf; color: var(--kz-forest); }
+.kz-cta__secondary {
+  background: transparent;
+  color: #fff;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+.kz-cta__secondary:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+
+@media (max-width: 768px) {
+  .kz-hero { grid-template-columns: 1fr; padding: 2rem 1.5rem; }
+  .kz-hero h1 { font-size: 2rem; }
+}
+
+/* -------------------------------------------------------------------------
+   Material grid-card tweaks: brand-coloured hover + icon ring.
+   The .grid.cards container is built into mkdocs-material; we only add
+   nicer borders, a brand-tinted hover, and a forest-coloured icon.
+   ------------------------------------------------------------------------- */
+.md-typeset .grid.cards > ul > li,
+.md-typeset .grid.cards > ol > li {
+  border: 1px solid rgba(47, 93, 80, 0.12);
+  border-radius: .75rem;
+  transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+
+.md-typeset .grid.cards > ul > li:hover,
+.md-typeset .grid.cards > ol > li:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(47, 93, 80, 0.15);
+  border-color: var(--kz-teal);
+}
+
+.md-typeset .grid.cards .twemoji.lg svg,
+.md-typeset .grid.cards .twemoji.lg {
+  color: var(--kz-teal);
+}
+
+[data-md-color-scheme="slate"] .md-typeset .grid.cards .twemoji.lg,
+[data-md-color-scheme="slate"] .md-typeset .grid.cards .twemoji.lg svg {
+  color: var(--kz-leaf);
+}
+
+/* -------------------------------------------------------------------------
+   Data Model component card grid (index page).
+   Material grid cards with our own big image header.
+   ------------------------------------------------------------------------- */
+.kz-domain-grid.grid.cards > ul,
+.kz-domain-grid.grid.cards > ol {
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.kz-domain-grid img.kz-domain-img {
+  display: block;
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  margin: 0 auto .5rem;
+}
+
+.kz-domain-grid .grid.cards > ul > li,
+.kz-domain-grid > ul > li,
+.kz-domain-grid > ol > li {
+  text-align: center;
+}
+
+.kz-domain-grid strong {
+  color: var(--kz-forest);
+  display: block;
+  margin-top: .25rem;
+}
+
+[data-md-color-scheme="slate"] .kz-domain-grid strong { color: var(--kz-leaf); }
+
+/* -------------------------------------------------------------------------
+   Palette swatches on docs/about/design.md.
+   ------------------------------------------------------------------------- */
+.kz-swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0 2rem;
+}
+
+.kz-swatch {
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+  padding: 1.25rem 1rem 1rem;
+  border-radius: .75rem;
+  color: #1f1f1f;
+  min-height: 120px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.kz-swatch strong {
+  font-size: 1rem;
+  letter-spacing: .01em;
+}
+
+.kz-swatch code {
+  background: rgba(255, 255, 255, 0.55);
+  color: #1f1f1f;
+  padding: .1rem .4rem;
+  border-radius: .25rem;
+  font-size: .8rem;
+  width: max-content;
+}
+
+.kz-swatch span {
+  font-size: .85rem;
+  opacity: .9;
+}
+
+/* When the swatch sets color:white inline, lift the chip too. */
+.kz-swatch[style*="color:white"] code,
+.kz-swatch[style*="color: white"] code {
+  background: rgba(0, 0, 0, 0.25);
+  color: #fff;
+}
+
+/* -------------------------------------------------------------------------
+   Footer badge row (Made with 💗 by Kartoza).
+   ------------------------------------------------------------------------- */
+.kz-footer-credits {
+  text-align: center;
+  margin: 3rem 0 1rem;
+  font-size: .95rem;
+  opacity: .8;
+}
+
+.kz-footer-credits a { font-weight: 600; }
+
+/* Tighten code-tables generated by the Schema Reference auto-doc */
+.md-typeset table code { font-size: .85em; }
+
+/* Mermaid: ensure consistent rendering above superfences background. */
+.mermaid { background: transparent !important; }

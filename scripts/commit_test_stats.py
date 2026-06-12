@@ -67,7 +67,7 @@ def load_previous_stats():
         dict or None: The loaded statistics as a dictionary if the file exists, otherwise None.
     """
     if STATS_FILE.exists():
-        with open(STATS_FILE, "r") as f:
+        with open(STATS_FILE, "r", encoding="utf-8") as f:
             return json.load(f)
     return None
 
@@ -79,20 +79,21 @@ def save_stats(stats):
     Args:
         stats (dict): A dictionary containing statistics to be saved.
     """
-    with open(STATS_FILE, "w") as f:
+    with open(STATS_FILE, "w", encoding="utf-8") as f:
         json.dump(stats, f)
 
 
 def compare_stats(old, new):
     """
-    Compares the number of test modules, classes, and methods between two sets of statistics and prints a summary.
+    Compares test module / class / method counts and prints a summary.
 
     Args:
-        old (dict): A dictionary containing the previous counts for 'modules', 'classes', and 'methods'.
-        new (dict): A dictionary containing the current counts for 'modules', 'classes', and 'methods'.
+        old (dict): Previous counts for 'modules', 'classes', and 'methods'.
+        new (dict): Current counts for 'modules', 'classes', and 'methods'.
 
     Prints:
-        A summary indicating whether the number of test modules, classes, or methods has increased, decreased, or remained unchanged.
+        A summary indicating whether the number of test modules, classes, or
+        methods has increased, decreased, or remained unchanged.
     """
     verdict = []
     praise = False
@@ -124,7 +125,8 @@ def main():
     1. Counts the current test statistics.
     2. Loads previously saved test statistics, if available.
     3. Compares the old and new statistics if previous stats exist.
-    4. Prints a message if no previous stats are found and saves the current stats for future comparison.
+    4. Prints a message if no previous stats are found and saves the current
+       stats for future comparison.
     5. Saves the current test statistics.
     Returns:
         None

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # SPDX-FileCopyrightText: Tim Sutton
 # SPDX-License-Identifier: MIT
-"""Regenerate per-component schema reference sections in sql/N-component.md.
+"""Regenerate per-component schema reference sections in docs/data-model/NN-component.md.
 
 The hand-written narrative, mermaid diagrams, and prompts at the top of each
 .md file are left untouched. This script manages only a delimited "Schema
@@ -179,6 +179,8 @@ def build_reference_db() -> None:
     # Stamp baseline so current_schema_version works.
     version = (ROOT / "VERSION").read_text().strip()
     maj, minor, patch = version.split(".")
+    # nosec B608: VERSION + maj/minor/patch are read from a repo-controlled
+    # file and validated by split('.'); not user input.
     psql(
         f"""
         INSERT INTO schema_migrations
@@ -186,7 +188,7 @@ def build_reference_db() -> None:
         VALUES ('v{version}', {maj}, {minor}, {patch}, 'generate_schema_docs',
                 'doc-gen', TRUE, 'Reference build')
         ON CONFLICT DO NOTHING;
-        """
+        """  # nosec B608
     )
 
     # Apply frozen migrations on top.
@@ -219,6 +221,21 @@ def _component_files() -> List[pathlib.Path]:
     return files
 
 
+def _docs_target(sql_path: pathlib.Path) -> pathlib.Path:
+    """Map a baseline SQL file to its docs/data-model page.
+
+    Example: ``sql/2-electricity.sql`` -> ``docs/data-model/02-electricity.md``.
+
+    Args:
+        sql_path: A path under ``sql/`` like ``N-domain.sql``.
+
+    Returns:
+        The corresponding zero-padded markdown path under ``docs/data-model``.
+    """
+    num, rest = sql_path.stem.split("-", 1)
+    return ROOT / "docs" / "data-model" / f"{int(num):02d}-{rest}.md"
+
+
 def extract_table_names(sql_path: pathlib.Path) -> List[str]:
     """Extract table names declared by ``CREATE TABLE`` statements.
 
@@ -242,8 +259,12 @@ def introspect_table(name: str) -> Dict:
         A dictionary with keys ``name``, ``comment``, ``columns`` and
         ``constraints`` describing the table's current shape.
     """
+    # nosec B608: `name` comes from CREATE TABLE statements in repo-owned SQL
+    # files; the regex CREATE_TABLE_RE only matches identifier characters.
     table_comment = psql(
-        f"SELECT COALESCE(obj_description('public.{name}'::regclass, 'pg_class'), '');"
+        f"SELECT COALESCE("
+        f"obj_description('public.{name}'::regclass, 'pg_class'), ''"
+        f");"  # nosec B608
     ).strip()
 
     cols_raw = psql(
@@ -253,7 +274,7 @@ def introspect_table(name: str) -> Dict:
         FROM information_schema.columns
         WHERE table_schema='public' AND table_name='{name}'
         ORDER BY ordinal_position;
-    """
+    """  # nosec B608
     )
     columns = []
     for line in cols_raw.strip().split("\n"):
@@ -280,7 +301,7 @@ def introspect_table(name: str) -> Dict:
         WHERE conrelid = 'public.{name}'::regclass
         ORDER BY CASE contype WHEN 'p' THEN 0 WHEN 'u' THEN 1 WHEN 'f' THEN 2 WHEN 'c' THEN 3 ELSE 9 END,
                  conname;
-    """
+    """  # nosec B608
     )
     constraints = []
     for line in cons_raw.strip().split("\n"):
@@ -392,7 +413,7 @@ def main() -> int:
     Returns:
         0 on success, 2 if required tooling is missing.
     """
-    ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
+    ap = argparse.ArgumentParser(description=__doc__.split("\n\n", maxsplit=1)[0])
     ap.add_argument(
         "--keep-db",
         action="store_true",
@@ -401,9 +422,16 @@ def main() -> int:
     args = ap.parse_args()
 
     for cmd in ("psql", "createdb", "dropdb"):
-        if subprocess.run(["which", cmd], capture_output=True).returncode != 0:
+        result = subprocess.run(["which", cmd], capture_output=True, check=False)
+        if result.returncode != 0:
             print(f"ERROR: '{cmd}' not on PATH (need nix develop).", file=sys.stderr)
             return 2
+
+    # Bring up the project-local cluster if it isn't already serving.
+    subprocess.run(
+        ["bash", str(ROOT / "scripts" / "ensure_pg.sh")],
+        check=True,
+    )
 
     print(">> Building reference Postgres DB...")
     build_reference_db()
@@ -412,12 +440,15 @@ def main() -> int:
         print(f">> Reference DB at {version}")
 
         for sql_file in _component_files():
-            md_file = sql_file.with_suffix(".md")
+            md_file = _docs_target(sql_file)
+            if not md_file.parent.exists():
+                md_file.parent.mkdir(parents=True, exist_ok=True)
             changed = upsert_section(
                 md_file, render_component_section(sql_file, version)
             )
             status = "updated" if changed else "no change"
-            print(f">> {md_file.name}: {status}")
+            rel = md_file.relative_to(ROOT)
+            print(f">> {rel}: {status}")
     finally:
         if not args.keep_db:
             drop_reference_db()

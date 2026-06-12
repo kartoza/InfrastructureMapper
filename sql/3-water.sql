@@ -126,7 +126,7 @@ COMMENT ON COLUMN water_point_type.notes IS 'Additional information of the water
 
 COMMENT ON COLUMN water_point_type.image IS 'Image of the water point type.';
 
--- WATER POINT 
+-- WATER POINT
 CREATE TABLE
 water_point (
     id SERIAL NOT NULL PRIMARY KEY,

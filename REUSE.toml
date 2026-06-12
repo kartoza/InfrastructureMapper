@@ -1,0 +1,18 @@
+# SPDX-FileCopyrightText: Tim Sutton
+# SPDX-License-Identifier: MIT
+version = 1
+SPDX-PackageName = "Infrastructure Mapper"
+SPDX-PackageSupplier = "Tim Sutton <tim@kartoza.com>"
+SPDX-PackageDownloadLocation = "https://github.com/kartoza/InfrastructureMapper"
+
+[[annotations]]
+path = [".envrc", ".gitignore", ".pre-commit-config.yaml", ".sqlfluff", ".yamllint", "VERSION", "flake.lock", "cspell.config.yaml", "diagrams/**", "docs/assets/**", "img/**", "img/interns/**", "presentations/**", "qgis_projects/**", "qml/**"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Tim Sutton"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = ["img/food-services.png", "docs/assets/food-services.png"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Various (see docs/about/icon-licenses.md)"
+SPDX-License-Identifier = "MIT"
