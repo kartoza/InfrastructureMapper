@@ -1,40 +1,39 @@
-<!-- SPDX-FileCopyrightText: Tim Sutton -->
-<!-- SPDX-License-Identifier: MIT -->
 ---
 hide:
   - navigation
   - toc
 ---
+<!-- SPDX-FileCopyrightText: Tim Sutton -->
+<!-- SPDX-License-Identifier: MIT -->
 
 <div class="kz-hero" markdown>
-<div class="kz-hero__text" markdown>
 
 <span class="kz-eyebrow">KARTOZA · INFRASTRUCTURE MAPPER</span>
 
-# A versioned spatial schema for every piece of infrastructure on your site
+# A versioned spatial schema for site infrastructure
+
+Capture in Postgres, snapshot to GeoPackage, sync from the field &mdash; one source of truth.
+
+<div class="kz-cta" markdown>
+[:material-rocket-launch: Get Started](getting-started/index.md){ .kz-cta__primary }
+[:material-database-eye: Data model](data-model/index.md){ .kz-cta__secondary }
+[:simple-github: GitHub](https://github.com/kartoza/InfrastructureMapper){ .kz-cta__secondary }
+</div>
+
+</div>
+
+![Infrastructure Mapper in action](assets/infrastructure-mapper.gif){ .kz-figure }
+
+## What it is
 
 Infrastructure Mapper is an opinionated PostgreSQL/PostGIS data model for capturing
-buildings, roads, water, electricity, fences, vegetation, monitoring, points of interest,
-land use, gates, poles, and culinary facilities &mdash; together with every condition,
-material, and reading observed against them over time.
+buildings, roads, water, electricity, fences, vegetation, monitoring, points of
+interest, land use, gates, poles, and culinary facilities &mdash; together with
+every condition, material, and reading observed against them over time.
 
 Ship the schema as a Postgres database. Snapshot it as a GeoPackage. Take it to the
 field in QField or Mergin Maps. Migrate it forward with `vX.Y.Z` migrations. All from
 the same source of truth.
-
-<div class="kz-cta" markdown>
-[:material-rocket-launch: Get Started](getting-started/index.md){ .kz-cta__primary }
-[:material-database-eye: Explore the data model](data-model/index.md){ .kz-cta__secondary }
-[:simple-github: View on GitHub](https://github.com/kartoza/InfrastructureMapper){ .kz-cta__secondary }
-</div>
-
-</div>
-<div class="kz-hero__visual">
-
-![Infrastructure Mapper in action](assets/infrastructure-mapper.gif)
-
-</div>
-</div>
 
 ## What's in the box
 

@@ -146,19 +146,19 @@ body,
 }
 
 /* -----------------------------------------------------------------------
-   Hero block on the landing page.
-   Slant-title motif sits behind a flat Cloud surface — depth from the
-   motif (FR-030/031), not from gradients or shadows.
+   Hero block on the landing page — slim horizontal banner.
+   Slant-title motif sits behind a flat Cloud surface so type stays
+   legible (FR-031). Flat: no gradients (linear-gradient is used only
+   as a lightening tint over the motif, not as a decorative fill).
+   Long prose belongs in normal markdown blocks below the hero, not in
+   it.
    ----------------------------------------------------------------------- */
 
 .kz-hero {
     position: relative;
-    display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: 2.5rem;
-    align-items: center;
-    padding: 3rem 2.5rem;
-    margin: -1.5rem -0.75rem 2.5rem -0.75rem;
+    text-align: center;
+    padding: 2.5rem 1.75rem;
+    margin: -1.5rem -0.75rem 2rem -0.75rem;
     border-radius: 0.75rem;
     background-color: var(--surface-cloud);
     background-image: linear-gradient(
@@ -181,36 +181,39 @@ body,
     color: var(--surface-cloud);
 }
 
-.kz-hero__text { z-index: 1; }
-.kz-hero__visual {
-    z-index: 1;
-    text-align: center;
-}
-.kz-hero__visual img {
-    max-width: 100%;
-    border-radius: 0.5rem;
-    /* Flat — no box-shadow. The "clearing" container is provided via the
-       white panel under the lockup, not via drop shadow (FR-033/FR-034). */
-}
-
 .kz-hero h1 {
-    margin: 0 0 0.5rem;
-    font-size: 2.4rem;
+    margin: 0.25rem auto 0.5rem;
+    max-width: 24ch;
+    font-size: 2.2rem;
     line-height: 1.1;
     font-weight: 800;
     letter-spacing: -0.01em;
 }
 
 .kz-hero p {
-    margin: 0 0 1.5rem;
-    font-size: 1.05rem;
+    margin: 0 auto 1.5rem;
+    max-width: 50ch;
+    font-size: 1rem;
     line-height: 1.5;
     color: var(--text-default);
-    max-width: 560px;
+}
+
+.kz-hero .kz-eyebrow {
+    margin-bottom: 0.5rem;
 }
 
 [data-md-color-scheme="slate"] .kz-hero p {
     color: var(--surface-cloud);
+}
+
+/* The product GIF lives below the hero as a centred figure, not inside
+   it. This class wraps the standalone image. */
+.kz-figure {
+    display: block;
+    margin: 0 auto 2rem;
+    max-width: 720px;
+    border-radius: 0.5rem;
+    border: 1px solid var(--rule-line);
 }
 
 /* Hero CTA buttons — flat, no shadow, Blue primary, Cloud secondary.
@@ -223,6 +226,7 @@ body,
     flex-wrap: wrap;
     gap: 0.75rem;
     margin: 0;
+    justify-content: center;
 }
 .kz-cta a {
     display: inline-flex;

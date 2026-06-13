@@ -1,11 +1,22 @@
 <!-- SPDX-FileCopyrightText: Tim Sutton -->
 <!-- SPDX-License-Identifier: MIT -->
+<!-- Picket fence with pointed tops and two horizontal rails.
+     Alternating Charcoal and Blue pickets; rails behind. -->
 <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Fencing">
-  <!-- Picket fence: Charcoal rails, alternating Charcoal/Blue pickets. -->
-  <line x1="6" y1="34" x2="58" y2="34" stroke="#383939" stroke-width="3" stroke-linecap="round"/>
-  <line x1="6" y1="46" x2="58" y2="46" stroke="#383939" stroke-width="3" stroke-linecap="round"/>
-  <line x1="12" y1="22" x2="12" y2="56" stroke="#383939" stroke-width="3" stroke-linecap="round"/>
-  <line x1="24" y1="18" x2="24" y2="56" stroke="#54A2CC" stroke-width="3" stroke-linecap="round"/>
-  <line x1="36" y1="22" x2="36" y2="56" stroke="#383939" stroke-width="3" stroke-linecap="round"/>
-  <line x1="48" y1="18" x2="48" y2="56" stroke="#54A2CC" stroke-width="3" stroke-linecap="round"/>
+  <line x1="6"  y1="30" x2="58" y2="30"
+        stroke="#383939" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="6"  y1="46" x2="58" y2="46"
+        stroke="#383939" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M10 22 L 14 16 L 18 22 V 56 H 10 Z"
+        fill="#383939" stroke="#383939" stroke-width="2.5"
+        stroke-linejoin="round"/>
+  <path d="M22 20 L 26 14 L 30 20 V 56 H 22 Z"
+        fill="#54A2CC" stroke="#383939" stroke-width="2.5"
+        stroke-linejoin="round"/>
+  <path d="M34 22 L 38 16 L 42 22 V 56 H 34 Z"
+        fill="#383939" stroke="#383939" stroke-width="2.5"
+        stroke-linejoin="round"/>
+  <path d="M46 20 L 50 14 L 54 20 V 56 H 46 Z"
+        fill="#54A2CC" stroke="#383939" stroke-width="2.5"
+        stroke-linejoin="round"/>
 </svg>

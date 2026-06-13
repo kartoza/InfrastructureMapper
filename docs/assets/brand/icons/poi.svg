@@ -1,12 +1,19 @@
 <!-- SPDX-FileCopyrightText: Tim Sutton -->
 <!-- SPDX-License-Identifier: MIT -->
+<!-- Map pin with five-point star cutout. Blue pin, white star, Charcoal
+     outline. Small Light-Grey ground ellipse anchors the pin. -->
 <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Points of Interest">
-  <!-- Map pin: Kartoza Blue body, white cut-out. -->
+  <ellipse cx="32" cy="56" rx="11" ry="2" fill="#D1D1D1"/>
   <path d="M32 6
-           C 20 6, 12 14, 12 26
-           C 12 38, 32 58, 32 58
-           C 32 58, 52 38, 52 26
-           C 52 14, 44 6, 32 6 Z"
-        fill="#54A2CC" stroke="#383939" stroke-width="3" stroke-linejoin="round"/>
-  <circle cx="32" cy="26" r="6" fill="#FFFFFF" stroke="#383939" stroke-width="3"/>
+           C 21 6, 13 14, 13 25
+           C 13 37, 32 52, 32 52
+           C 32 52, 51 37, 51 25
+           C 51 14, 43 6, 32 6 Z"
+        fill="#54A2CC" stroke="#383939" stroke-width="2.5"
+        stroke-linejoin="round"/>
+  <path d="M32 14
+           L 35 22 L 43 22 L 36.5 27 L 39 35
+           L 32 30 L 25 35 L 27.5 27 L 21 22 L 29 22 Z"
+        fill="#FFFFFF" stroke="#383939" stroke-width="1.5"
+        stroke-linejoin="round"/>
 </svg>
