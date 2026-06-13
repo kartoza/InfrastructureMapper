@@ -1,0 +1,11 @@
+<!-- SPDX-FileCopyrightText: Tim Sutton -->
+<!-- SPDX-License-Identifier: MIT -->
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Gates">
+  <!-- Gate: Charcoal posts + horizontals, Kartoza Blue diagonal brace. -->
+  <line x1="8"  y1="12" x2="8"  y2="58" stroke="#383939" stroke-width="3" stroke-linecap="round"/>
+  <line x1="56" y1="12" x2="56" y2="58" stroke="#383939" stroke-width="3" stroke-linecap="round"/>
+  <line x1="12" y1="20" x2="52" y2="20" stroke="#383939" stroke-width="3" stroke-linecap="round"/>
+  <line x1="12" y1="34" x2="52" y2="34" stroke="#383939" stroke-width="3" stroke-linecap="round"/>
+  <line x1="12" y1="48" x2="52" y2="48" stroke="#383939" stroke-width="3" stroke-linecap="round"/>
+  <line x1="14" y1="20" x2="50" y2="48" stroke="#54A2CC" stroke-width="3" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,18 @@
+<!-- SPDX-FileCopyrightText: Tim Sutton -->
+<!-- SPDX-License-Identifier: MIT -->
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Culinary Facilities">
+  <!-- Fork + knife. Knife blade in Kartoza Amber (warmth / hospitality
+       cue), everything else Charcoal. -->
+  <!-- fork -->
+  <path d="M16 8 V20 Q16 26 22 26 Q28 26 28 20 V8"
+        fill="none" stroke="#383939" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="22" y1="26" x2="22" y2="56" stroke="#383939" stroke-width="3" stroke-linecap="round"/>
+  <line x1="22" y1="14" x2="22" y2="20" stroke="#383939" stroke-width="3" stroke-linecap="round"/>
+  <!-- knife -->
+  <path d="M44 8
+           C 40 8, 38 14, 38 22
+           V34 H46 V22
+           C 46 14, 46 8, 44 8 Z"
+        fill="#EEB348" stroke="#383939" stroke-width="3" stroke-linejoin="round"/>
+  <line x1="42" y1="34" x2="42" y2="56" stroke="#383939" stroke-width="3" stroke-linecap="round"/>
+</svg>

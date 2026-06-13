@@ -31,8 +31,6 @@ the same source of truth.
 </div>
 <div class="kz-hero__visual">
 
-![Kartoza · Open Source Geospatial Solutions](assets/brand/kartoza-logo-horizontal-color.png)
-
 ![Infrastructure Mapper in action](assets/infrastructure-mapper.gif)
 
 </div>

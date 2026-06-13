@@ -1,0 +1,10 @@
+<!-- SPDX-FileCopyrightText: Tim Sutton -->
+<!-- SPDX-License-Identifier: MIT -->
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Vegetation">
+  <!-- Leaf with central vein: Kartoza Blue fill, Charcoal stroke + vein. -->
+  <path d="M52 10
+           C 24 10, 10 28, 10 54
+           C 38 54, 52 36, 52 10 Z"
+        fill="#54A2CC" stroke="#383939" stroke-width="3" stroke-linejoin="round"/>
+  <line x1="14" y1="50" x2="46" y2="18" stroke="#383939" stroke-width="3" stroke-linecap="round"/>
+</svg>

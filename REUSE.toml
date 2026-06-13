@@ -20,7 +20,7 @@ SPDX-FileCopyrightText = "Kartoza (Pty) Ltd"
 SPDX-License-Identifier = "MIT"
 
 [[annotations]]
-path = ["img/food-services.png", "docs/assets/food-services.png"]
+path = ["img/food-services.png"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "Various (see docs/about/icon-licenses.md)"
 SPDX-License-Identifier = "MIT"

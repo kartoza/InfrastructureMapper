@@ -1,0 +1,10 @@
+<!-- SPDX-FileCopyrightText: Tim Sutton -->
+<!-- SPDX-License-Identifier: MIT -->
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Buildings">
+  <!-- House outline: Charcoal frame, Kartoza Blue door. -->
+  <path d="M10 28 L32 12 L54 28 V54 H10 Z"
+        fill="none" stroke="#383939" stroke-width="3" stroke-linejoin="round"/>
+  <rect x="26" y="34" width="12" height="20" fill="#54A2CC" stroke="#383939" stroke-width="3" stroke-linejoin="round"/>
+  <rect x="14" y="34" width="8" height="8" fill="none" stroke="#383939" stroke-width="3"/>
+  <rect x="42" y="34" width="8" height="8" fill="none" stroke="#383939" stroke-width="3"/>
+</svg>

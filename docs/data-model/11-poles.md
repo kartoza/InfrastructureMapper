@@ -2,7 +2,7 @@
 <!-- SPDX-License-Identifier: MIT -->
 # 🪧 Poles
 
-![Poles](../assets/poles.png)
+![Poles](../assets/brand/icons/poles.svg)
 
 The **Poles** component models standalone poles used for various infrastructure purposes, such as lighting, signage, or utility support. This schema allows for categorizing pole types and recording individual pole features with their spatial locations and relevant attributes.
 

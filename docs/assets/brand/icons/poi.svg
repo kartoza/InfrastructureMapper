@@ -1,0 +1,12 @@
+<!-- SPDX-FileCopyrightText: Tim Sutton -->
+<!-- SPDX-License-Identifier: MIT -->
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Points of Interest">
+  <!-- Map pin: Kartoza Blue body, white cut-out. -->
+  <path d="M32 6
+           C 20 6, 12 14, 12 26
+           C 12 38, 32 58, 32 58
+           C 32 58, 52 38, 52 26
+           C 52 14, 44 6, 32 6 Z"
+        fill="#54A2CC" stroke="#383939" stroke-width="3" stroke-linejoin="round"/>
+  <circle cx="32" cy="26" r="6" fill="#FFFFFF" stroke="#383939" stroke-width="3"/>
+</svg>

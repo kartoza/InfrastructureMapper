@@ -1,0 +1,9 @@
+<!-- SPDX-FileCopyrightText: Tim Sutton -->
+<!-- SPDX-License-Identifier: MIT -->
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Land Use">
+  <!-- Polygon parcel: Light Grey fill, Charcoal outline, Kartoza Blue
+       boundary divider. -->
+  <path d="M10 22 L30 8 L54 18 L52 50 L20 56 Z"
+        fill="#D1D1D1" stroke="#383939" stroke-width="3" stroke-linejoin="round"/>
+  <line x1="30" y1="8" x2="30" y2="56" stroke="#54A2CC" stroke-width="3" stroke-dasharray="4 4"/>
+</svg>

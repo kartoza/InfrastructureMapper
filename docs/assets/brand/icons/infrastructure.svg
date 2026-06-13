@@ -1,0 +1,10 @@
+<!-- SPDX-FileCopyrightText: Tim Sutton -->
+<!-- SPDX-License-Identifier: MIT -->
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Infrastructure">
+  <!-- Signal tower: charcoal frame, Kartoza Blue light at the apex.
+       Flat, two-weight, no gradients. -->
+  <path d="M32 8 L48 56 H16 Z" fill="none" stroke="#383939" stroke-width="3" stroke-linejoin="round"/>
+  <line x1="22" y1="40" x2="42" y2="40" stroke="#383939" stroke-width="3" stroke-linecap="round"/>
+  <line x1="26" y1="28" x2="38" y2="28" stroke="#383939" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="32" cy="14" r="4" fill="#54A2CC"/>
+</svg>

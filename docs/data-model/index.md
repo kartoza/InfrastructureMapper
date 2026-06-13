@@ -14,7 +14,7 @@ mkdocs page below. Every page has three parts:
 
 <div class="grid cards kz-domain-grid" markdown>
 
--   ![Infrastructure](../assets/infrastructure.png){ .no-lightbox .kz-domain-img }
+-   ![Infrastructure](../assets/brand/icons/infrastructure.svg){ .no-lightbox .kz-domain-img }
 
     __Infrastructure__
 
@@ -22,7 +22,7 @@ mkdocs page below. Every page has three parts:
 
     [:octicons-arrow-right-24: Open](01-infrastructure.md)
 
--   ![Electricity](../assets/electricity.png){ .no-lightbox .kz-domain-img }
+-   ![Electricity](../assets/brand/icons/electricity.svg){ .no-lightbox .kz-domain-img }
 
     __Electricity__
 
@@ -30,7 +30,7 @@ mkdocs page below. Every page has three parts:
 
     [:octicons-arrow-right-24: Open](02-electricity.md)
 
--   ![Water](../assets/water.png){ .no-lightbox .kz-domain-img }
+-   ![Water](../assets/brand/icons/water.svg){ .no-lightbox .kz-domain-img }
 
     __Water__
 
@@ -38,7 +38,7 @@ mkdocs page below. Every page has three parts:
 
     [:octicons-arrow-right-24: Open](03-water.md)
 
--   ![Vegetation](../assets/vegetation.png){ .no-lightbox .kz-domain-img }
+-   ![Vegetation](../assets/brand/icons/vegetation.svg){ .no-lightbox .kz-domain-img }
 
     __Vegetation__
 
@@ -46,7 +46,7 @@ mkdocs page below. Every page has three parts:
 
     [:octicons-arrow-right-24: Open](04-vegetation.md)
 
--   ![Monitoring](../assets/monitoring.png){ .no-lightbox .kz-domain-img }
+-   ![Monitoring](../assets/brand/icons/monitoring.svg){ .no-lightbox .kz-domain-img }
 
     __Monitoring__
 
@@ -54,7 +54,7 @@ mkdocs page below. Every page has three parts:
 
     [:octicons-arrow-right-24: Open](05-monitoring.md)
 
--   ![Buildings](../assets/buildings.png){ .no-lightbox .kz-domain-img }
+-   ![Buildings](../assets/brand/icons/buildings.svg){ .no-lightbox .kz-domain-img }
 
     __Buildings__
 
@@ -62,7 +62,7 @@ mkdocs page below. Every page has three parts:
 
     [:octicons-arrow-right-24: Open](06-buildings.md)
 
--   ![Fencing](../assets/fencing.png){ .no-lightbox .kz-domain-img }
+-   ![Fencing](../assets/brand/icons/fencing.svg){ .no-lightbox .kz-domain-img }
 
     __Fencing__
 
@@ -70,7 +70,7 @@ mkdocs page below. Every page has three parts:
 
     [:octicons-arrow-right-24: Open](07-fencing.md)
 
--   ![Points of Interest](../assets/point-of-interest.png){ .no-lightbox .kz-domain-img }
+-   ![Points of Interest](../assets/brand/icons/poi.svg){ .no-lightbox .kz-domain-img }
 
     __Points of Interest__
 
@@ -78,7 +78,7 @@ mkdocs page below. Every page has three parts:
 
     [:octicons-arrow-right-24: Open](08-poi.md)
 
--   ![Land Use](../assets/landuse-areas.png){ .no-lightbox .kz-domain-img }
+-   ![Land Use](../assets/brand/icons/landuse.svg){ .no-lightbox .kz-domain-img }
 
     __Land Use__
 
@@ -86,7 +86,7 @@ mkdocs page below. Every page has three parts:
 
     [:octicons-arrow-right-24: Open](09-landuse.md)
 
--   ![Gates](../assets/gates.png){ .no-lightbox .kz-domain-img }
+-   ![Gates](../assets/brand/icons/gates.svg){ .no-lightbox .kz-domain-img }
 
     __Gates__
 
@@ -94,7 +94,7 @@ mkdocs page below. Every page has three parts:
 
     [:octicons-arrow-right-24: Open](10-gates.md)
 
--   ![Poles](../assets/poles.png){ .no-lightbox .kz-domain-img }
+-   ![Poles](../assets/brand/icons/poles.svg){ .no-lightbox .kz-domain-img }
 
     __Poles__
 
@@ -102,7 +102,7 @@ mkdocs page below. Every page has three parts:
 
     [:octicons-arrow-right-24: Open](11-poles.md)
 
--   ![Culinary Facilities](../assets/food-services.png){ .no-lightbox .kz-domain-img }
+-   ![Culinary Facilities](../assets/brand/icons/culinary.svg){ .no-lightbox .kz-domain-img }
 
     __Culinary Facilities__
 
@@ -110,7 +110,7 @@ mkdocs page below. Every page has three parts:
 
     [:octicons-arrow-right-24: Open](12-culinary.md)
 
--   ![Roads](../assets/roads.png){ .no-lightbox .kz-domain-img }
+-   ![Roads](../assets/brand/icons/roads.svg){ .no-lightbox .kz-domain-img }
 
     __Roads__
 

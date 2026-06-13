@@ -2,7 +2,7 @@
 <!-- SPDX-License-Identifier: MIT -->
 # 🚪 Gates
 
-![Gates](../assets/gates.png)
+![Gates](../assets/brand/icons/gates.svg)
 
 The **Gates** component models access points within the infrastructure, such as entry or exit gates for properties, facilities, or enclosures. This schema supports different gate types, their spatial locations, and attributes like access control or association with fences or buildings.
 

@@ -1,0 +1,10 @@
+<!-- SPDX-FileCopyrightText: Tim Sutton -->
+<!-- SPDX-License-Identifier: MIT -->
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Roads">
+  <!-- Receding road segment with a dashed centre line in Kartoza Blue. -->
+  <path d="M14 8 L24 56 H40 L50 8 Z"
+        fill="#D1D1D1" stroke="#383939" stroke-width="3" stroke-linejoin="round"/>
+  <line x1="32" y1="12" x2="32" y2="20" stroke="#54A2CC" stroke-width="3" stroke-linecap="round"/>
+  <line x1="32" y1="28" x2="32" y2="36" stroke="#54A2CC" stroke-width="3" stroke-linecap="round"/>
+  <line x1="32" y1="44" x2="32" y2="52" stroke="#54A2CC" stroke-width="3" stroke-linecap="round"/>
+</svg>

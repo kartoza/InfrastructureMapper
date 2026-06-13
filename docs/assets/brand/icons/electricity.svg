@@ -1,0 +1,7 @@
+<!-- SPDX-FileCopyrightText: Tim Sutton -->
+<!-- SPDX-License-Identifier: MIT -->
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Electricity">
+  <!-- Lightning bolt: Kartoza Blue fill, Charcoal stroke. -->
+  <path d="M36 4 L18 36 H30 L24 60 L46 28 H34 Z"
+        fill="#54A2CC" stroke="#383939" stroke-width="3" stroke-linejoin="round"/>
+</svg>

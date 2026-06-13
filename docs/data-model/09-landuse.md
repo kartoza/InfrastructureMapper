@@ -3,7 +3,7 @@
 # 🗺️ Land use
 <!-- cspell:ignore landuse -->
 
-![Land use](../assets/landuse-areas.png)
+![Land use](../assets/brand/icons/landuse.svg)
 
 The **Land use** component models how land parcels are utilized or designated, such as agricultural, residential, commercial, or conservation areas. This schema enables the representation of land use types and individual land use polygons, supporting spatial analysis and planning.
 
