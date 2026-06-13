@@ -1,274 +1,530 @@
 /* SPDX-FileCopyrightText: Tim Sutton
    SPDX-License-Identifier: MIT
 
-   Kartoza nature palette for Material for MkDocs.
-   - Forest Green       #2F5D50  dominant vegetation
-   - Moss Green         #7C9C75  soft background greenery
-   - Earth Brown        #A9825A  soil, tree bark
-   - Sandstone Beige    #E0D2B2  pathways, terrain shading
-   - Sky Blue           #A4DDED  sky, water elements
-   - Deep Teal          #2B7A78  shadows, water depth
-   - Leaf Yellow-Green  #C1E1C1  highlights on foliage
-   - Rock Gray          #9FA8A3  mountains, stones
-*/
+   Kartoza Brand Pack v0.1 — Material for MkDocs adapter.
+   Consumes kartoza-tokens.css as the single source of truth for colour
+   and type (per FR-016 / NFR-020 — one token source, no hardcoded hexes).
 
-:root {
-  --kz-forest: #2F5D50;
-  --kz-moss: #7C9C75;
-  --kz-earth: #A9825A;
-  --kz-sandstone: #E0D2B2;
-  --kz-sky: #A4DDED;
-  --kz-teal: #2B7A78;
-  --kz-leaf: #C1E1C1;
-  --kz-rock: #9FA8A3;
-}
+   The previous "nature & environment" palette (Forest / Moss / Earth /
+   Sandstone / Leaf / Teal …) is retired in full (SRS §1.5). Anything
+   referencing it has been removed.
+
+   Brand rules enforced here:
+     · Flat — no shadows, bevels, glows or gradients on UI elements
+       (FR-033). Depth comes from the map motif only.
+     · Charcoal carries body text (FR-011, NFR-001). Blue is the primary
+       accent; Amber is the secondary/highlight accent.
+     · Blue + Amber are never body text — they fail WCAG AA on white.
+     · Nunito for everything; JetBrains Mono for code (FR-020/021). */
+
+/* -----------------------------------------------------------------------
+   mkdocs-material primary/accent mapping.
+   `theme.palette.primary: custom` activates [data-md-color-primary="custom"];
+   `theme.palette.accent: custom` activates [data-md-color-accent="custom"].
+   ----------------------------------------------------------------------- */
 
 [data-md-color-primary="custom"] {
-  --md-primary-fg-color:           var(--kz-forest);
-  --md-primary-fg-color--light:    var(--kz-moss);
-  --md-primary-fg-color--dark:     #1F4538;
-  --md-primary-bg-color:           #FFFFFF;
-  --md-primary-bg-color--light:    rgba(255, 255, 255, 0.7);
+    --md-primary-fg-color:            var(--text-default);   /* Charcoal */
+    --md-primary-fg-color--light:     var(--text-muted);
+    --md-primary-fg-color--dark:      #1f1f1f;
+    --md-primary-bg-color:            var(--surface-white);
+    --md-primary-bg-color--light:     rgba(255, 255, 255, 0.7);
 }
 
 [data-md-color-accent="custom"] {
-  --md-accent-fg-color:            var(--kz-teal);
-  --md-accent-fg-color--transparent: rgba(43, 122, 120, 0.10);
-  --md-accent-bg-color:            #FFFFFF;
-  --md-accent-bg-color--light:     rgba(255, 255, 255, 0.7);
+    --md-accent-fg-color:             var(--kartoza-blue);
+    --md-accent-fg-color--transparent: rgba(84, 162, 204, 0.10);
+    --md-accent-bg-color:             var(--surface-white);
+    --md-accent-bg-color--light:      rgba(255, 255, 255, 0.7);
 }
 
-/* Light scheme — sandstone gentle warmth on the body. */
+/* -----------------------------------------------------------------------
+   Light scheme — Cloud surfaces under Charcoal body text. Flat.
+   ----------------------------------------------------------------------- */
+
 [data-md-color-scheme="default"] {
-  --md-default-bg-color:           #FDFBF6;
-  --md-default-fg-color:           #1f1f1f;
-  --md-typeset-a-color:            var(--kz-teal);
-  --md-code-bg-color:              #F4EFE3;
-  --md-code-hl-color:              rgba(193, 225, 193, 0.4);
-  --md-typeset-mark-color:         rgba(164, 221, 237, 0.5);
+    --md-default-bg-color:            var(--surface-white);
+    --md-default-fg-color:            var(--text-default);
+    --md-default-fg-color--light:     var(--text-muted);
+    --md-default-fg-color--lighter:   var(--rule-line);
+    --md-default-fg-color--lightest:  var(--surface-cloud);
+    --md-typeset-a-color:             var(--kartoza-blue);
+    --md-code-bg-color:               var(--surface-cloud);
+    --md-code-fg-color:               var(--text-default);
+    --md-code-hl-color:               rgba(238, 179, 72, 0.18); /* amber tint */
+    --md-typeset-mark-color:          rgba(238, 179, 72, 0.28);
+    --md-footer-bg-color:             var(--text-default);
+    --md-footer-bg-color--dark:       #1f1f1f;
 }
 
-[data-md-color-scheme="default"] .md-header {
-  background: linear-gradient(135deg, var(--kz-forest) 0%, var(--kz-teal) 100%);
-  color: #fff;
-}
-
+[data-md-color-scheme="default"] .md-header,
 [data-md-color-scheme="default"] .md-tabs {
-  background: var(--kz-forest);
+    /* Flat Charcoal bar — no gradient. */
+    background: var(--text-default);
+    color: var(--surface-white);
 }
 
-/* Dark scheme — deep teal field, leafy accents. */
+/* -----------------------------------------------------------------------
+   Dark scheme — Charcoal field, white type. The reversed-knockout brand.
+   ----------------------------------------------------------------------- */
+
 [data-md-color-scheme="slate"] {
-  --md-default-bg-color:           #14201E;
-  --md-default-fg-color:           #ECF3EE;
-  --md-typeset-a-color:            var(--kz-leaf);
-  --md-code-bg-color:              #1B2A28;
-  --md-typeset-mark-color:         rgba(43, 122, 120, 0.4);
+    --md-default-bg-color:            #1c1d1d;            /* deeper than Charcoal */
+    --md-default-fg-color:            var(--surface-cloud);
+    --md-default-fg-color--light:     #c8c9c4;
+    --md-default-fg-color--lighter:   #6d6f6f;
+    --md-default-fg-color--lightest:  #2a2b2b;
+    --md-typeset-a-color:             var(--kartoza-blue);
+    --md-code-bg-color:               #262727;
+    --md-code-fg-color:               var(--surface-cloud);
+    --md-typeset-mark-color:          rgba(238, 179, 72, 0.32);
 }
 
 [data-md-color-scheme="slate"] .md-header,
 [data-md-color-scheme="slate"] .md-tabs {
-  background: linear-gradient(135deg, #1F4538 0%, var(--kz-teal) 100%);
+    background: var(--text-default);
+    color: var(--surface-white);
 }
 
-/* -------------------------------------------------------------------------
-   Hero block used on the landing page (docs/index.md).
-   ------------------------------------------------------------------------- */
+/* -----------------------------------------------------------------------
+   Typography — Nunito everywhere, JetBrains Mono for code.
+   ----------------------------------------------------------------------- */
+
+body,
+.md-typeset,
+.md-header,
+.md-tabs {
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "ss02";
+}
+
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3,
+.md-typeset h4 {
+    font-family: var(--font-sans);
+    color: var(--md-default-fg-color);
+    font-weight: 700;
+    letter-spacing: -0.005em;
+    line-height: 1.2;
+}
+
+.md-typeset h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 0.4em;
+}
+
+.md-typeset h2 {
+    font-size: 1.4rem;
+    margin-top: 2.2em;
+}
+
+.md-typeset h3 {
+    font-size: 1.1rem;
+}
+
+.md-typeset code,
+.md-typeset pre {
+    font-family: var(--font-mono);
+}
+
+.md-typeset code {
+    border-radius: 0.25rem;
+    padding: 0.05em 0.35em;
+}
+
+/* Eyebrows — KARTOZA · X style (Secondary Grey, spaced uppercase, per FR-024). */
+.md-typeset .kz-eyebrow {
+    display: inline-block;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+}
+
+/* -----------------------------------------------------------------------
+   Hero block on the landing page.
+   Slant-title motif sits behind a flat Cloud surface — depth from the
+   motif (FR-030/031), not from gradients or shadows.
+   ----------------------------------------------------------------------- */
+
 .kz-hero {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  gap: 2.5rem;
-  align-items: center;
-  padding: 3rem 2.5rem;
-  margin: -1.5rem -.75rem 2.5rem -.75rem;
-  border-radius: 1rem;
-  background: radial-gradient(circle at 80% 20%, var(--kz-moss) 0%, var(--kz-forest) 50%, var(--kz-teal) 100%);
-  color: #fff;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-  overflow: hidden;
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 2.5rem;
+    align-items: center;
+    padding: 3rem 2.5rem;
+    margin: -1.5rem -0.75rem 2.5rem -0.75rem;
+    border-radius: 0.75rem;
+    background-color: var(--surface-cloud);
+    background-image: linear-gradient(
+            rgba(245, 245, 242, 0.88),
+            rgba(245, 245, 242, 0.92)
+        ),
+        url("../assets/brand/slant-title-background.png");
+    background-size: cover;
+    background-position: center;
+    color: var(--text-default);
+    overflow: hidden;
 }
 
-.kz-hero::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at 10% 110%, rgba(224, 210, 178, 0.18) 0%, transparent 50%);
-  pointer-events: none;
+[data-md-color-scheme="slate"] .kz-hero {
+    background-image: linear-gradient(
+            rgba(28, 29, 29, 0.82),
+            rgba(28, 29, 29, 0.88)
+        ),
+        url("../assets/brand/slant-title-background.png");
+    color: var(--surface-cloud);
 }
 
 .kz-hero__text { z-index: 1; }
-.kz-hero__visual { z-index: 1; text-align: center; }
-.kz-hero__visual img { max-width: 100%; border-radius: .75rem; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3); }
+.kz-hero__visual {
+    z-index: 1;
+    text-align: center;
+}
+.kz-hero__visual img {
+    max-width: 100%;
+    border-radius: 0.5rem;
+    /* Flat — no box-shadow. The "clearing" container is provided via the
+       white panel under the lockup, not via drop shadow (FR-033/FR-034). */
+}
 
 .kz-hero h1 {
-  margin: 0 0 .5rem;
-  font-size: 2.6rem;
-  line-height: 1.05;
-  color: #fff;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+    margin: 0 0 0.5rem;
+    font-size: 2.4rem;
+    line-height: 1.1;
+    font-weight: 800;
+    letter-spacing: -0.01em;
 }
 
 .kz-hero p {
-  margin: 0 0 1.5rem;
-  font-size: 1.1rem;
-  line-height: 1.5;
-  color: var(--kz-leaf);
-  max-width: 540px;
+    margin: 0 0 1.5rem;
+    font-size: 1.05rem;
+    line-height: 1.5;
+    color: var(--text-default);
+    max-width: 560px;
 }
 
-.kz-cta { display: flex; flex-wrap: wrap; gap: .75rem; }
+[data-md-color-scheme="slate"] .kz-hero p {
+    color: var(--surface-cloud);
+}
+
+/* Hero CTA buttons — flat, no shadow, Blue primary, Cloud secondary. */
+.kz-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
 .kz-cta a {
-  display: inline-flex;
-  align-items: center;
-  gap: .5rem;
-  padding: .75rem 1.25rem;
-  border-radius: .5rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: transform .15s ease, box-shadow .15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.25rem;
+    border-radius: 0.375rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
-.kz-cta a:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2); }
 .kz-cta__primary {
-  background: var(--kz-sandstone);
-  color: var(--kz-forest);
+    background: var(--kartoza-blue);
+    color: var(--surface-white);
+    border: 2px solid var(--kartoza-blue);
 }
-.kz-cta__primary:hover { background: #f1e7cf; color: var(--kz-forest); }
+.kz-cta__primary:hover {
+    background: #4790b8;
+    border-color: #4790b8;
+    color: var(--surface-white);
+}
 .kz-cta__secondary {
-  background: transparent;
-  color: #fff;
-  border: 2px solid rgba(255, 255, 255, 0.5);
+    background: var(--surface-white);
+    color: var(--text-default);
+    border: 2px solid var(--text-default);
 }
-.kz-cta__secondary:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+.kz-cta__secondary:hover {
+    background: var(--text-default);
+    color: var(--surface-white);
+}
+[data-md-color-scheme="slate"] .kz-cta__secondary {
+    background: transparent;
+    color: var(--surface-cloud);
+    border-color: var(--surface-cloud);
+}
+[data-md-color-scheme="slate"] .kz-cta__secondary:hover {
+    background: var(--surface-cloud);
+    color: var(--text-default);
+}
 
 @media (max-width: 768px) {
-  .kz-hero { grid-template-columns: 1fr; padding: 2rem 1.5rem; }
-  .kz-hero h1 { font-size: 2rem; }
+    .kz-hero {
+        grid-template-columns: 1fr;
+        padding: 2rem 1.5rem;
+    }
+    .kz-hero h1 { font-size: 1.8rem; }
 }
 
-/* -------------------------------------------------------------------------
-   Material grid-card tweaks: brand-coloured hover + icon ring.
-   The .grid.cards container is built into mkdocs-material; we only add
-   nicer borders, a brand-tinted hover, and a forest-coloured icon.
-   ------------------------------------------------------------------------- */
+/* -----------------------------------------------------------------------
+   Material's built-in grid cards — restyle flat with Light Grey hairline,
+   Blue hover border. No box-shadow.
+   ----------------------------------------------------------------------- */
+
 .md-typeset .grid.cards > ul > li,
 .md-typeset .grid.cards > ol > li {
-  border: 1px solid rgba(47, 93, 80, 0.12);
-  border-radius: .75rem;
-  transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+    background: var(--surface-white);
+    border: 1px solid var(--rule-line);
+    border-radius: 0.5rem;
+    box-shadow: none;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
 .md-typeset .grid.cards > ul > li:hover,
 .md-typeset .grid.cards > ol > li:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(47, 93, 80, 0.15);
-  border-color: var(--kz-teal);
+    border-color: var(--kartoza-blue);
+    background: var(--surface-cloud);
+    box-shadow: none;
+    transform: none;  /* flat — no lift */
 }
 
-.md-typeset .grid.cards .twemoji.lg svg,
-.md-typeset .grid.cards .twemoji.lg {
-  color: var(--kz-teal);
+[data-md-color-scheme="slate"] .md-typeset .grid.cards > ul > li,
+[data-md-color-scheme="slate"] .md-typeset .grid.cards > ol > li {
+    background: #232525;
+    border-color: #3a3b3b;
 }
 
-[data-md-color-scheme="slate"] .md-typeset .grid.cards .twemoji.lg,
-[data-md-color-scheme="slate"] .md-typeset .grid.cards .twemoji.lg svg {
-  color: var(--kz-leaf);
+[data-md-color-scheme="slate"] .md-typeset .grid.cards > ul > li:hover,
+[data-md-color-scheme="slate"] .md-typeset .grid.cards > ol > li:hover {
+    border-color: var(--kartoza-blue);
+    background: #2a2c2c;
 }
 
-/* -------------------------------------------------------------------------
-   Data Model component card grid (index page).
-   Material grid cards with our own big image header.
-   ------------------------------------------------------------------------- */
+/* Card leading icon coloured to Kartoza Blue (primary accent). */
+.md-typeset .grid.cards .twemoji.lg,
+.md-typeset .grid.cards .twemoji.lg svg {
+    color: var(--kartoza-blue);
+}
+
+/* -----------------------------------------------------------------------
+   Data Model component card grid — same Material grid cards with our
+   own image header on each card.
+   ----------------------------------------------------------------------- */
+
 .kz-domain-grid.grid.cards > ul,
 .kz-domain-grid.grid.cards > ol {
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
 }
 
 .kz-domain-grid img.kz-domain-img {
-  display: block;
-  width: 80px;
-  height: 80px;
-  object-fit: contain;
-  margin: 0 auto .5rem;
+    display: block;
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin: 0 auto 0.5rem;
 }
 
-.kz-domain-grid .grid.cards > ul > li,
 .kz-domain-grid > ul > li,
 .kz-domain-grid > ol > li {
-  text-align: center;
+    text-align: center;
 }
 
 .kz-domain-grid strong {
-  color: var(--kz-forest);
-  display: block;
-  margin-top: .25rem;
+    color: var(--text-default);
+    display: block;
+    margin-top: 0.25rem;
 }
 
-[data-md-color-scheme="slate"] .kz-domain-grid strong { color: var(--kz-leaf); }
+[data-md-color-scheme="slate"] .kz-domain-grid strong {
+    color: var(--surface-cloud);
+}
 
-/* -------------------------------------------------------------------------
+/* -----------------------------------------------------------------------
+   Admonitions — brand-coloured per FR-054 / FR-080.
+     · note      → grey (Note)
+     · info/tip  → blue (Why this matters)
+     · warning   → amber (Highlight / Caution)
+     · success   → success green
+     · danger    → error red
+   Flat fills with a 4px brand-coloured left rule, no shadow.
+   ----------------------------------------------------------------------- */
+
+.md-typeset .admonition,
+.md-typeset details {
+    border: 0;
+    border-left: 4px solid var(--rule-line);
+    border-radius: 0.25rem;
+    background: var(--surface-cloud);
+    box-shadow: none;
+    font-size: 0.78rem;
+}
+
+.md-typeset .admonition-title,
+.md-typeset summary {
+    background: transparent;
+    color: var(--text-default);
+    font-weight: 700;
+}
+
+/* Info / tip — Blue */
+.md-typeset .admonition.info,
+.md-typeset details.info,
+.md-typeset .admonition.tip,
+.md-typeset details.tip {
+    border-left-color: var(--kartoza-blue);
+    background: rgba(84, 162, 204, 0.08);
+}
+.md-typeset .info > .admonition-title::before,
+.md-typeset .tip  > .admonition-title::before { background-color: var(--kartoza-blue); }
+
+/* Warning — Amber */
+.md-typeset .admonition.warning,
+.md-typeset details.warning {
+    border-left-color: var(--status-warn);
+    background: var(--status-warn-tint);
+}
+.md-typeset .warning > .admonition-title::before { background-color: var(--status-warn); }
+
+/* Note — Grey */
+.md-typeset .admonition.note,
+.md-typeset details.note {
+    border-left-color: var(--kartoza-grey);
+    background: var(--surface-cloud);
+}
+.md-typeset .note > .admonition-title::before { background-color: var(--kartoza-grey); }
+
+/* Success */
+.md-typeset .admonition.success,
+.md-typeset details.success {
+    border-left-color: var(--status-success);
+    background: var(--status-success-tint);
+}
+.md-typeset .success > .admonition-title::before { background-color: var(--status-success); }
+
+/* Danger / Error */
+.md-typeset .admonition.danger,
+.md-typeset details.danger,
+.md-typeset .admonition.failure,
+.md-typeset details.failure {
+    border-left-color: var(--status-error);
+    background: var(--status-error-tint);
+}
+.md-typeset .danger  > .admonition-title::before,
+.md-typeset .failure > .admonition-title::before { background-color: var(--status-error); }
+
+[data-md-color-scheme="slate"] .md-typeset .admonition,
+[data-md-color-scheme="slate"] .md-typeset details {
+    background: #2a2b2b;
+}
+[data-md-color-scheme="slate"] .md-typeset .admonition.info,
+[data-md-color-scheme="slate"] .md-typeset details.info,
+[data-md-color-scheme="slate"] .md-typeset .admonition.tip,
+[data-md-color-scheme="slate"] .md-typeset details.tip {
+    background: rgba(84, 162, 204, 0.16);
+}
+
+/* -----------------------------------------------------------------------
    Palette swatches on docs/about/design.md.
-   ------------------------------------------------------------------------- */
+   ----------------------------------------------------------------------- */
+
 .kz-swatches {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1rem;
-  margin: 1.5rem 0 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0 2rem;
 }
 
 .kz-swatch {
-  display: flex;
-  flex-direction: column;
-  gap: .25rem;
-  padding: 1.25rem 1rem 1rem;
-  border-radius: .75rem;
-  color: #1f1f1f;
-  min-height: 120px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1.25rem 1rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--rule-line);
+    color: var(--text-default);
+    min-height: 120px;
+    box-shadow: none;
 }
 
-.kz-swatch strong {
-  font-size: 1rem;
-  letter-spacing: .01em;
-}
-
+.kz-swatch strong { font-size: 1rem; }
 .kz-swatch code {
-  background: rgba(255, 255, 255, 0.55);
-  color: #1f1f1f;
-  padding: .1rem .4rem;
-  border-radius: .25rem;
-  font-size: .8rem;
-  width: max-content;
+    background: rgba(255, 255, 255, 0.55);
+    color: inherit;
+    padding: 0.1rem 0.4rem;
+    border-radius: 0.25rem;
+    font-size: 0.8rem;
+    width: max-content;
 }
-
 .kz-swatch span {
-  font-size: .85rem;
-  opacity: .9;
+    font-size: 0.85rem;
+    opacity: 0.9;
 }
-
-/* When the swatch sets color:white inline, lift the chip too. */
 .kz-swatch[style*="color:white"] code,
 .kz-swatch[style*="color: white"] code {
-  background: rgba(0, 0, 0, 0.25);
-  color: #fff;
+    background: rgba(0, 0, 0, 0.28);
+    color: var(--surface-white);
 }
 
-/* -------------------------------------------------------------------------
-   Footer badge row (Made with 💗 by Kartoza).
-   ------------------------------------------------------------------------- */
+/* -----------------------------------------------------------------------
+   Footer credits + tables + misc.
+   ----------------------------------------------------------------------- */
+
 .kz-footer-credits {
-  text-align: center;
-  margin: 3rem 0 1rem;
-  font-size: .95rem;
-  opacity: .8;
+    text-align: center;
+    margin: 3rem 0 1rem;
+    font-size: 0.95rem;
+    color: var(--text-muted);
 }
 
-.kz-footer-credits a { font-weight: 600; }
+.kz-footer-credits a {
+    font-weight: 700;
+    color: var(--kartoza-blue);
+}
 
-/* Tighten code-tables generated by the Schema Reference auto-doc */
-.md-typeset table code { font-size: .85em; }
+/* Tables — Kartoza Table style (charcoal header, Light Grey rules,
+   Cloud zebra) per FR-053. */
+.md-typeset table:not([class]) {
+    box-shadow: none;
+    border: 1px solid var(--rule-line);
+    border-radius: 0.25rem;
+}
 
-/* Mermaid: ensure consistent rendering above superfences background. */
-.mermaid { background: transparent !important; }
+.md-typeset table:not([class]) th {
+    background: var(--text-default);
+    color: var(--surface-white);
+    font-weight: 700;
+}
+
+.md-typeset table:not([class]) tr:nth-child(even) {
+    background: var(--surface-cloud);
+}
+
+[data-md-color-scheme="slate"] .md-typeset table:not([class]) tr:nth-child(even) {
+    background: #2a2b2b;
+}
+
+.md-typeset table:not([class]) code {
+    font-size: 0.85em;
+}
+
+/* AI-assistance disclosure badge (FR-095 — used inline next to AI-drafted
+   content). Place a `class="kz-ai"` span before AI-generated artefacts. */
+.kz-ai {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.05em 0.5em;
+    border-radius: 0.25rem;
+    background: rgba(238, 179, 72, 0.18);
+    color: var(--text-default);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+/* Mermaid — flat, transparent background; brand body text colour. */
+.mermaid {
+    background: transparent !important;
+    color: var(--text-default);
+}

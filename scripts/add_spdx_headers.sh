@@ -20,11 +20,14 @@ add_header() {
 
   # Skip binary files
   if grep -qIl . "$file"; then
-    # Choose comment syntax
+    # Choose comment syntax. JSON has no comment grammar at all and is
+    # covered by REUSE.toml instead. CSS uses /* */, not <!-- -->.
     case "$file" in
-      *.py|*.sh|*.yaml|*.yml|*.txt|*.conf|*.toml|*.nix|*.env|*.json) comment="#" ;;
+      *.json) echo "ℹ️  Skipping $file — JSON has no comment syntax; covered by REUSE.toml." >&2; return ;;
+      *.py|*.sh|*.yaml|*.yml|*.txt|*.conf|*.toml|*.nix|*.env) comment="#" ;;
       *.sql) comment="--" ;;
-      *.md|*.css|*.html) comment="<!--" ;;
+      *.css) comment="/*" ;;
+      *.md|*.html) comment="<!--" ;;
       *) echo "⚠️  Unknown comment style for $file. Skipping." >&2; return ;;
     esac
 
@@ -36,20 +39,27 @@ add_header() {
 
     echo "➕ Adding header to $file"
 
-    # Add correct syntax (special case for block comments like HTML)
-    if [[ "$comment" == "<!--" ]]; then
-      {
-        echo "<!-- ${COPY_TAG}: $AUTHOR -->"
-        echo "<!-- ${LIC_TAG}: $LICENSE -->"
-        cat "$file"
-      } > "$file.new"
-    else
-      {
-        echo "$comment ${COPY_TAG}: $AUTHOR"
-        echo "$comment ${LIC_TAG}: $LICENSE"
-        cat "$file"
-      } > "$file.new"
-    fi
+    # Add header in the comment grammar for this file type.
+    case "$comment" in
+      "<!--")
+        { echo "<!-- ${COPY_TAG}: $AUTHOR -->"
+          echo "<!-- ${LIC_TAG}: $LICENSE -->"
+          cat "$file"
+        } > "$file.new"
+        ;;
+      "/*")
+        { echo "/* ${COPY_TAG}: $AUTHOR */"
+          echo "/* ${LIC_TAG}: $LICENSE */"
+          cat "$file"
+        } > "$file.new"
+        ;;
+      *)
+        { echo "$comment ${COPY_TAG}: $AUTHOR"
+          echo "$comment ${LIC_TAG}: $LICENSE"
+          cat "$file"
+        } > "$file.new"
+        ;;
+    esac
 
     mv "$file.new" "$file"
   fi

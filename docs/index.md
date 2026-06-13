@@ -9,16 +9,18 @@ hide:
 <div class="kz-hero" markdown>
 <div class="kz-hero__text" markdown>
 
+<span class="kz-eyebrow">KARTOZA · INFRASTRUCTURE MAPPER</span>
+
 # A versioned spatial schema for every piece of infrastructure on your site
 
 Infrastructure Mapper is an opinionated PostgreSQL/PostGIS data model for capturing
 buildings, roads, water, electricity, fences, vegetation, monitoring, points of interest,
-land use, gates, poles, and culinary facilities — together with every condition, material,
-and reading observed against them over time.
+land use, gates, poles, and culinary facilities &mdash; together with every condition,
+material, and reading observed against them over time.
 
-Ship the schema as a Postgres database. Snapshot it as a GeoPackage. Take it to the field
-in QField or Mergin Maps. Migrate it forward with `vX.Y.Z` migrations. All from the same
-source of truth.
+Ship the schema as a Postgres database. Snapshot it as a GeoPackage. Take it to the
+field in QField or Mergin Maps. Migrate it forward with `vX.Y.Z` migrations. All from
+the same source of truth.
 
 <div class="kz-cta" markdown>
 [:material-rocket-launch: Get Started](getting-started/index.md){ .kz-cta__primary }
@@ -28,6 +30,8 @@ source of truth.
 
 </div>
 <div class="kz-hero__visual">
+
+![Kartoza · Open Source Geospatial Solutions](assets/brand/kartoza-logo-horizontal-color.png)
 
 ![Infrastructure Mapper in action](assets/infrastructure-mapper.gif)
 

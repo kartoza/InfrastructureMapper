@@ -102,3 +102,7 @@ gpkg/*.gpkg
 claude.sh
 claude.out
 .claude-ci/
+
+# Kartoza Brand Asset Pack — versioned by Kartoza, copied into docs/assets
+# on demand. The folder itself is not part of this project's history.
+Kartoza_Brand_Assets_v0_1/

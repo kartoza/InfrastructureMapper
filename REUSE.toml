@@ -6,9 +6,17 @@ SPDX-PackageSupplier = "Tim Sutton <tim@kartoza.com>"
 SPDX-PackageDownloadLocation = "https://github.com/kartoza/InfrastructureMapper"
 
 [[annotations]]
-path = [".envrc", ".gitignore", ".pre-commit-config.yaml", ".sqlfluff", ".yamllint", "VERSION", "flake.lock", "cspell.config.yaml", "diagrams/**", "docs/assets/**", "img/**", "img/interns/**", "presentations/**", "qgis_projects/**", "qml/**"]
+path = [".envrc", ".gitignore", ".pre-commit-config.yaml", ".pylintrc", ".sqlfluff", ".yamllint", "VERSION", "flake.lock", "cspell.config.yaml", "diagrams/**", "docs/assets/**", "img/**", "img/interns/**", "presentations/**", "qgis_projects/**", "qml/**"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "Tim Sutton"
+SPDX-License-Identifier = "MIT"
+
+# Kartoza Brand Pack assets — copied in from the brand repo, owned and
+# licensed by Kartoza. Used here under the project's MIT umbrella.
+[[annotations]]
+path = ["docs/assets/brand/**", "docs/stylesheets/kartoza-tokens.css"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Kartoza (Pty) Ltd"
 SPDX-License-Identifier = "MIT"
 
 [[annotations]]

@@ -10,12 +10,17 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=scripts/lib/pg_env.sh
 source "$SCRIPT_DIR/lib/pg_env.sh"
 
-# Kartoza palette (hex; mapped to ANSI 24-bit by gum/terminal).
-KZ_FOREST="#2F5D50"
-KZ_MOSS="#7C9C75"
-KZ_TEAL="#2B7A78"
-KZ_SAND="#E0D2B2"
-KZ_LEAF="#C1E1C1"
+# Kartoza Brand Pack palette (hex; mapped to ANSI 24-bit by gum/terminal).
+# Source: docs/stylesheets/kartoza-tokens.css.
+KZ_BLUE="#54A2CC"        # primary accent (chrome, borders, headings)
+KZ_AMBER="#EEB348"       # highlight accent (banner subtitle, eyebrows)
+KZ_GREY="#8A8B8B"        # structural mid-grey
+KZ_CHARCOAL="#383939"    # body text on light surfaces (used sparingly here)
+KZ_CLOUD="#F5F5F2"       # near-white default text on dark terminals
+# Status palette (FR-014 / Appendix A).
+KZ_SUCCESS="#3C7D54"
+KZ_WARN="#EEB348"
+KZ_ERROR="#B0473C"
 
 VERSION="$(tr -d '[:space:]' < "$PG_REPO_ROOT/VERSION" 2>/dev/null || echo unknown)"
 
@@ -23,21 +28,21 @@ pg_status_chip() {
     case "$(pg_state)" in
         running)
             if command -v gum >/dev/null 2>&1; then
-                gum style --foreground "$KZ_LEAF" --bold "● RUNNING"
+                gum style --foreground "$KZ_SUCCESS" --bold "● RUNNING"
             else
                 printf '%s● RUNNING%s' "$PG_C_GREEN" "$PG_C_RESET"
             fi
             ;;
         stopped)
             if command -v gum >/dev/null 2>&1; then
-                gum style --foreground "$KZ_SAND" --bold "● STOPPED"
+                gum style --foreground "$KZ_WARN" --bold "● STOPPED"
             else
                 printf '%s● STOPPED%s' "$PG_C_YELLOW" "$PG_C_RESET"
             fi
             ;;
         uninitialized)
             if command -v gum >/dev/null 2>&1; then
-                gum style --foreground "#D87171" --bold "● NOT INITIALIZED"
+                gum style --foreground "$KZ_ERROR" --bold "● NOT INITIALIZED"
             else
                 printf '%s● NOT INITIALIZED%s' "$PG_C_RED" "$PG_C_RESET"
             fi
@@ -46,20 +51,22 @@ pg_status_chip() {
 }
 
 print_banner_gum() {
+    # Flat panel: Blue border, Cloud title on the terminal's own background
+    # (no fill), Amber accent line. No gradient (FR-033).
     gum style \
         --border rounded \
-        --border-foreground "$KZ_TEAL" \
-        --foreground "$KZ_FOREST" \
+        --border-foreground "$KZ_BLUE" \
+        --foreground "$KZ_CLOUD" \
         --padding "1 3" --margin "1 0" \
         --bold \
-        "🌐  Infrastructure Mapper  v$VERSION" \
-        "$(gum style --faint --foreground "$KZ_MOSS" "Spatial schema + GeoPackage pipeline · Kartoza")"
+        "KARTOZA · INFRASTRUCTURE MAPPER  v$VERSION" \
+        "$(gum style --foreground "$KZ_AMBER" "Open Source Geospatial Solutions")"
 }
 
 print_banner_plain() {
-    printf '\n%s═══ Infrastructure Mapper · v%s ═══%s\n' \
+    printf '\n%sKARTOZA · INFRASTRUCTURE MAPPER  v%s%s\n' \
         "$PG_C_BOLD" "$VERSION" "$PG_C_RESET"
-    printf '%sSpatial schema + GeoPackage pipeline · Kartoza%s\n\n' \
+    printf '%sOpen Source Geospatial Solutions%s\n\n' \
         "$PG_C_DIM" "$PG_C_RESET"
 }
 

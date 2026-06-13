@@ -19,10 +19,13 @@ site_dir: site
 
 theme:
   name: material
-  logo: assets/logo-mark.png
-  favicon: assets/favicon.png
+  # Kartoza Brand Pack v0.1 — logo + favicon (see kartoza-tokens.css for
+  # palette / type tokens; the swatch sheet lives in design.md).
+  logo: assets/brand/kartoza-symbol-color.svg
+  favicon: assets/brand/favicon.png
   font:
-    text: Inter
+    # FR-020 — Nunito for everything; FR-021 — JetBrains Mono for code.
+    text: Nunito
     code: JetBrains Mono
   language: en
   palette:
@@ -81,6 +84,9 @@ extra:
   generator: false
 
 extra_css:
+  # Single source of truth for the Kartoza palette + type stack (NFR-020).
+  # extra.css consumes the tokens it defines.
+  - stylesheets/kartoza-tokens.css
   - stylesheets/extra.css
 
 extra_javascript:

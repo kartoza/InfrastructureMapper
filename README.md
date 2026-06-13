@@ -4,7 +4,7 @@
 
 # 🌐 Infrastructure Mapper
 
-![Logo](./img/logo-horizontal.png)
+![Kartoza · Open Source Geospatial Solutions](./docs/assets/brand/kartoza-logo-horizontal-color.png)
 
 A versioned PostgreSQL/PostGIS schema (and matching GeoPackage build pipeline)
 for capturing physical infrastructure &mdash; buildings, fences, roads, water,
