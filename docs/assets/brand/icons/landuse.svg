@@ -1,0 +1,20 @@
+<!-- SPDX-FileCopyrightText: Tim Sutton -->
+<!-- SPDX-License-Identifier: MIT -->
+<!-- Two adjacent cadastral parcels. Cloud + Light Grey fills with a
+     Charcoal outline; the boundary between them is a dashed Kartoza
+     Blue line. Amber survey marker pins the foreground parcel. -->
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Land Use">
+  <path d="M6 12 L 58 6 L 60 52 L 8 58 Z"
+        fill="#D1D1D1" stroke="#383939" stroke-width="2.5"
+        stroke-linejoin="round"/>
+  <path d="M32 9 L 58 6 L 60 52 L 32 55 Z"
+        fill="#F5F5F2" stroke="#383939" stroke-width="2.5"
+        stroke-linejoin="round"/>
+  <path d="M32 9 L 32 55"
+        stroke="#54A2CC" stroke-width="2.5" stroke-dasharray="4 4"
+        stroke-linecap="round"/>
+  <g transform="translate(43 32) rotate(45)">
+    <rect x="-4" y="-4" width="8" height="8"
+          fill="#EEB348" stroke="#383939" stroke-width="2"/>
+  </g>
+</svg>

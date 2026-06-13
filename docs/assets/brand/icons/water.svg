@@ -1,0 +1,20 @@
+<!-- SPDX-FileCopyrightText: Tim Sutton -->
+<!-- SPDX-License-Identifier: MIT -->
+<!-- Composed droplet: large primary drop + small offset secondary drop.
+     Charcoal outlines, Blue fills, white catchlight. -->
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Water">
+  <path d="M52 12
+           C 52 12, 46 22, 46 27
+           A 6 6 0 1 0 58 27
+           C 58 22, 52 12, 52 12 Z"
+        fill="#D1D1D1" stroke="#383939" stroke-width="2"
+        stroke-linejoin="round"/>
+  <path d="M28 6
+           C 28 6, 10 30, 10 42
+           A 18 18 0 1 0 46 42
+           C 46 30, 28 6, 28 6 Z"
+        fill="#54A2CC" stroke="#383939" stroke-width="2.5"
+        stroke-linejoin="round"/>
+  <path d="M18 38 A 10 10 0 0 0 20 50"
+        fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+</svg>

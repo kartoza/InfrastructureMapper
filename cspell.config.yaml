@@ -55,3 +55,77 @@ words:
   - upated
   - visualising
   - Visualise
+  # Added for the mkdocs migration + pg lifecycle scripts:
+  - aspatial
+  - behaviour
+  - cachix
+  - chafa
+  - cutover
+  - debugpy
+  - devshell
+  - GDAL
+  - glightbox
+  - Hardscape
+  - imincik
+  - initdb
+  - initialise
+  - kofi
+  - landuse
+  - lightbox
+  - Lutra
+  - materialised
+  - mkdocs
+  - nixfmt
+  - nixos
+  - nixpkgs
+  - ogrinfo
+  - organisation
+  - organisations
+  - PGSQL
+  - pkgs
+  - postgis
+  - prunings
+  - psql
+  - psutil
+  - pymdown
+  - pyqtwebengine
+  - recolour
+  - reinitialise
+  - reinitialises
+  - reprojected
+  - Sexualised
+  - shellcheck
+  - shfmt
+  - sqlfluff
+  - stabilised
+  - venv
+  - virtualenv
+  - visualisation
+  - Visualisation
+  - yamlfmt
+  # Kartoza Brand Pack v0.1 terms
+  - Charcoal
+  - eyebrows
+  - GSH
+  - Knockout
+  - Lockup
+  - lockups
+  - Mermaid
+  - mkdocs
+  - Nunito
+  - Sandstone
+  - signoff
+  - artefacts
+  - createdb
+  - Neue
+  - organised
+  - Trefoil
+  - WCAG
+  - wordmark
+  # icon attribution sources
+  - Fastfood
+  - flaticon
+  - freepik
+  - konkapp
+  - Sensa
+  - svgrepo

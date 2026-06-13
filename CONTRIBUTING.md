@@ -2,9 +2,9 @@
 <!-- SPDX-License-Identifier: MIT -->
 # ✨ Contributing to Infrastructure Mapper
 
-Thank you for considering contributing to **Infrastructure Mapper**!  
-We welcome contributions of all kinds, including bug fixes, feature requests,  
-documentation improvements, and more. Please follow the guidelines below to  
+Thank you for considering contributing to **Infrastructure Mapper**!
+We welcome contributions of all kinds, including bug fixes, feature requests,
+documentation improvements, and more. Please follow the guidelines below to
 ensure a smooth contribution process.
 
 ---
@@ -13,7 +13,7 @@ ensure a smooth contribution process.
 
 ### 1. Fork the Repository
 
-- Click the **Fork** button at the top-right corner of this repository to create  
+- Click the **Fork** button at the top-right corner of this repository to create
   your own copy.
 
 ### 2. Clone Your Fork
@@ -72,7 +72,7 @@ ensure a smooth contribution process.
 
 ## 🧹 Code of Conduct
 
-Please adhere to our [Code of Conduct](CODE_OF_CONDUCT.md) to ensure a  
+Please adhere to our [Code of Conduct](CODE_OF_CONDUCT.md) to ensure a
 welcoming and inclusive environment for everyone.
 
 ---
@@ -81,7 +81,7 @@ welcoming and inclusive environment for everyone.
 
 ### Coding Standards
 
-- Follow the naming conventions and SQL standards outlined in the  
+- Follow the naming conventions and SQL standards outlined in the
   [README.md](README.md).
 - Write clean, readable, and well-documented code.
 
@@ -106,8 +106,8 @@ welcoming and inclusive environment for everyone.
 
 ### 🗄️ SQL Standards
 
-- **Keywords and statements** must be written in **UPPER CASE**.  
-  Example:  
+- **Keywords and statements** must be written in **UPPER CASE**.
+  Example:
 
   ```sql
   SELECT * FROM electricity_line;
@@ -115,17 +115,17 @@ welcoming and inclusive environment for everyone.
 
 ### 🏷️ Entity Names
 
-- Use **singular** names.  
-  Example:  
+- Use **singular** names.
+  Example:
   ```electricity_line_type``` not ```electricity_line_types```
-- Use **lowercase** with **underscores (_)** to separate words.  
-  Example:  
+- Use **lowercase** with **underscores (_)** to separate words.
+  Example:
   ```water_point``` not ```WaterPoint```
 
 ### 📊 Lookup Tables
 
-- Names must be in **lowercase**.  
-  Example:  
+- Names must be in **lowercase**.
+  Example:
   ```electricity_line_condition``` not ```ElectricityLineCondition```
 
 ---
@@ -134,18 +134,18 @@ welcoming and inclusive environment for everyone.
 
 ### 🎨 Attribute Colors
 
-- **Grey**: `uuid`, `last_update`, `last_update_by`  
-- **Black**: `geometry` fields (positioned above grey attributes)  
-- **Green**: Foreign key fields (always positioned last)  
-- **Blue**: Constraints, associated fields, and association (junction) tables  
+- **Grey**: `uuid`, `last_update`, `last_update_by`
+- **Black**: `geometry` fields (positioned above grey attributes)
+- **Green**: Foreign key fields (always positioned last)
+- **Blue**: Constraints, associated fields, and association (junction) tables
 
 ### 🏗️ Table Structure
 
-1. Start with `name(s)`, `type`, `notes` (in that order).  
-2. Explicitly include units for length and depth fields (default: meters).  
-   Example:  
+1. Start with `name(s)`, `type`, `notes` (in that order).
+2. Explicitly include units for length and depth fields (default: meters).
+   Example:
    ```crown_radius_m``` not ```crown_radius```
-3. Use **amperes** for current and **volts** for voltage.  
+3. Use **amperes** for current and **volts** for voltage.
 4. For the `image` field, insert the file path as text.
 
 ---
@@ -154,7 +154,7 @@ welcoming and inclusive environment for everyone.
 
 ## 💡 Need Help?
 
-If you have any questions or need assistance, feel free to reach out via  
+If you have any questions or need assistance, feel free to reach out via
 [info@kartoza.com](mailto:info@kartoza.com).
 
 ---

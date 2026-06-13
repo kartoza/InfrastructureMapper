@@ -136,10 +136,10 @@ Isochrones show culinary spots that can be reached within 1 to 10 minutes from t
 
 ## 📊 Results - 2
 
-* **Price Range:** 1.000–60.000  
-* **Rating:** above 4.5  
-* **Facilities:** Indoor Seating, Wi-Fi  
-* **Category:** Cafe/Bakery  
+* **Price Range:** 1.000–60.000
+* **Rating:** above 4.5
+* **Facilities:** Indoor Seating, Wi-Fi
+* **Category:** Cafe/Bakery
 * **Travel Time:** 8 mins
 
 ---
@@ -181,7 +181,7 @@ If I had more time, I would:
 
 * ✅ Learned QGIS and GIS tools
 * 🔍 Impactful projects
-* 🌟 Problem-solving, adaptability, and critical thinking  
+* 🌟 Problem-solving, adaptability, and critical thinking
 * ⏰ Time management
 
 ---

@@ -360,7 +360,7 @@ cat <<EOF >.vscode/launch.json
                     "remoteRoot": "${env:HOME}/.local/share/QGIS/QGIS3/profiles/GEEST2/python/plugins/geest" // Uses $HOME instead of hardcoding username
                 }
             ]
-        }               
+        }
     ]
 }
 EOF

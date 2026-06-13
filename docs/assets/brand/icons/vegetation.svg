@@ -1,0 +1,25 @@
+<!-- SPDX-FileCopyrightText: Tim Sutton -->
+<!-- SPDX-License-Identifier: MIT -->
+<!-- Sprout / seedling. Charcoal stem, two Blue leaves and an Amber bud
+     on top — trefoil-echo of the Kartoza mark. Ground line for context. -->
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Vegetation">
+  <path d="M32 56 Q 32 38 32 18" fill="none"
+        stroke="#383939" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M32 36
+           C 22 30, 14 32, 10 42
+           C 20 46, 30 42, 32 36 Z"
+        fill="#54A2CC" stroke="#383939" stroke-width="2.5"
+        stroke-linejoin="round"/>
+  <path d="M32 28
+           C 42 22, 50 24, 54 34
+           C 44 38, 34 34, 32 28 Z"
+        fill="#54A2CC" stroke="#383939" stroke-width="2.5"
+        stroke-linejoin="round"/>
+  <path d="M32 18
+           C 28 14, 28 8, 32 6
+           C 36 8, 36 14, 32 18 Z"
+        fill="#EEB348" stroke="#383939" stroke-width="2.5"
+        stroke-linejoin="round"/>
+  <line x1="14" y1="58" x2="50" y2="58"
+        stroke="#383939" stroke-width="2.5" stroke-linecap="round"/>
+</svg>

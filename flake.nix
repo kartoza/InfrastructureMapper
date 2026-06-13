@@ -81,6 +81,10 @@
           pkgs.actionlint # for checking gh actions
           pkgs.bearer
           pkgs.reuse # SPDX/REUSE license compliance checker
+          # Python security / quality tools used by pre-commit hooks.
+          pkgs.python3Packages.bandit
+          pkgs.python3Packages.pylint
+          pkgs.semgrep
           postgresWithPostGIS
           pkgs.nodePackages.cspell
           (pkgs.python3.withPackages (ps: [
@@ -110,11 +114,24 @@
             ps.snakeviz # For visualising cprofiler outputs
             # Add these for SQL linting/formatting:
             ps.sqlfmt
+            # MkDocs documentation site (Material theme + plugins).
+            ps.mkdocs
+            ps.mkdocs-material
+            ps.mkdocs-material-extensions
+            ps.mkdocs-glightbox
+            ps.mkdocs-git-revision-date-localized-plugin
+            ps.mkdocs-mermaid2-plugin
+            ps.pymdown-extensions
           ]))
         ];
         shellHook = ''
-          export PGHOST="$PWD/pgdata"
-          export PGPORT=5432
+          # Respect any PGHOST/PGPORT/PGDATABASE already set by the caller
+          # (CI sets PGHOST=localhost so we hit the service-container PG);
+          # only fall back to the project-local cluster when unset.
+          : "''${PGHOST:=$PWD/pgdata}"
+          : "''${PGPORT:=5432}"
+          : "''${PGDATABASE:=gis}"
+          export PGHOST PGPORT PGDATABASE
 
           if [ ! -d ".venv" ]; then
             python -m venv .venv
@@ -132,23 +149,16 @@
             echo "No requirements.txt found, skipping pip install."
           fi
 
-          echo "-----------------------"
-          echo "🌈 Your Dev Environment is prepared."
-          echo ""
-          echo "🗺️  QGIS:           nix run .#qgis  |  nix run .#qgis-ltr"
-          echo "💻 VSCode:         ./vscode.sh"
-          echo ""
-          echo "📦 Schema lifecycle (the migration + release workflow):"
-          echo "   nix run .#build-gpkg      Build gpkg/KartozaInfrastructureMapper.gpkg from PG"
-          echo "                             (pass --crs EPSG:NNNN for metric reprojection)"
-          echo "   nix run .#migrate-pg      Apply pending PG migrations to a target DB"
-          echo "   nix run .#migrate-gpkg    Apply pending GPKG migrations to a target file"
-          echo "   nix run .#docs            Regenerate Schema Reference in every sql/N-*.md"
-          echo "   nix run .#release         Cut a release (--bump patch|minor|major --commit)"
-          echo ""
-          echo "🐘 Postgres data dir: ./pgdata (current version: \$(cat VERSION 2>/dev/null || echo unknown))"
-          echo "   Stop with: ./stop_pg.sh   (or ${postgresWithPostGIS}/bin/pg_ctl -D ./pgdata stop -m fast)"
-          echo "-----------------------"
+          # Install the pre-commit + pre-push git hooks (idempotent).
+          # pre-push is what mirrors CI's docs + immutability checks.
+          if command -v pre-commit >/dev/null && [ -d .git ]; then
+            pre-commit install --install-hooks >/dev/null 2>&1 || true
+          fi
+
+          # Pretty welcome with live Postgres status.
+          if [ -x scripts/welcome.sh ]; then
+            bash scripts/welcome.sh || true
+          fi
         '';
       };
 
@@ -190,12 +200,23 @@
               "${profileName}"
             ];
           };
+          # Postgres lifecycle apps (act on the project-local ./pgdata cluster).
+          pg-start = mkScriptApp "scripts/start_pg.sh";
+          pg-stop = mkScriptApp "scripts/stop_pg.sh";
+          pg-status = mkScriptApp "scripts/status_pg.sh";
+          pg-restart = mkScriptApp "scripts/restart_pg.sh";
+          pg-psql = mkScriptApp "scripts/psql_pg.sh";
+          pg-logs = mkScriptApp "scripts/logs_pg.sh";
+          pg-reset = mkScriptApp "scripts/reset_pg.sh";
           # Schema lifecycle convenience apps.
           build-gpkg = mkScriptApp "scripts/build_gpkg.sh";
           migrate-pg = mkScriptApp "scripts/migrate_pg.sh";
           migrate-gpkg = mkPythonApp "scripts/migrate_gpkg.py";
           docs = mkPythonApp "scripts/generate_schema_docs.py";
           release = mkScriptApp "scripts/release.sh";
+          # MkDocs convenience apps.
+          docs-serve = mkScriptApp "scripts/docs_serve.sh";
+          docs-build = mkScriptApp "scripts/docs_build.sh";
         };
     };
 }

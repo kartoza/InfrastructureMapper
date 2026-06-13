@@ -1,384 +1,97 @@
 <!-- SPDX-FileCopyrightText: Tim Sutton -->
 <!-- SPDX-License-Identifier: MIT -->
+<!-- cspell:ignore landuse mkdocs ogr2ogr -->
+
 # 🌐 Infrastructure Mapper
-<!-- cspell:ignore landuse -->
 
-![Logo](./img/logo-horizontal.png)
+![Kartoza · Open Source Geospatial Solutions](./docs/assets/brand/kartoza-logo-horizontal-color.png)
 
-Welcome to **Infrastructure Mapper**! This repository contains guidelines and conventions for a spatial database intended to be used managing infrastructure-related data.
+A versioned PostgreSQL/PostGIS schema (and matching GeoPackage build pipeline)
+for capturing physical infrastructure &mdash; buildings, fences, roads, water,
+electricity, gates, poles, points of interest, vegetation, monitoring
+stations, culinary facilities, and land-use areas &mdash; plus their conditions
+over time.
 
----
-
-## 📖 Table of Contents
-
-- [🌐 Infrastructure Mapper](#-infrastructure-mapper)
-  - [📖 Table of Contents](#-table-of-contents)
-  - [🚀 Project Overview](#-project-overview)
-  - [QA Status](#qa-status)
-  - [📜 License](#-license)
-  - [📂 Folder Structure](#-folder-structure)
-  - [🤖 Using 'AI' (Large Language Models)](#-using-ai-large-language-models)
-  - [🌿 Design Aesthetic](#-design-aesthetic)
-  - [Data Model](#data-model)
-  - [⚒️ Using](#️-using)
-  - [🧬 Schema Evolution](#-schema-evolution)
-  - [🛠️ Scripts Overview](#️-scripts-overview)
-  - [🧊 Using the Nix Flake](#-using-the-nix-flake)
-  - [✨ Contributing](#-contributing)
-  - [📧 Contact](#-contact)
-  - [Contributors](#contributors)
-
----
-
-## 🚀 Project Overview
+📚 **[Read the docs](https://timlinux.github.io/InfrastructureMapper/)** &mdash;
+quick start, data model, schema lifecycle, contributor guide.
 
 ![Animation](./img/infrastructure-mapper.gif)
 
----
-
-## QA Status
-
-| Test | Description |
-|-----------|-------------|
-| [![📃 License Checks.....](https://github.com/kartoza/InfrastructureMapper/actions/workflows/LicenseChecks.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/LicenseChecks.yml)          | Check all files have license, copyright and attribution.            |
-|[![🏋🏽 PostGIS Load Test...](https://github.com/kartoza/InfrastructureMapper/actions/workflows/LoadSchema.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/LoadSchema.yml)           | Check that PostgreSQL / PostGIS fixtures load.             |
-|[![✏️ Markdown Checks.....](https://github.com/kartoza/InfrastructureMapper/actions/workflows/MarkdownChecks.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/MarkdownChecks.yml)           | Check that all markdown files are well formed.            |
-|[![🐍 Python Checks.......](https://github.com/kartoza/InfrastructureMapper/actions/workflows/PythonChecks.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/PythonChecks.yml)           | Python code QA checks.             |
-|[![⚒️ QA Checks...........](https://github.com/kartoza/InfrastructureMapper/actions/workflows/QAChecks.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/QAChecks.yml)           | General codebase QA checks.            |
-|[![👁️ Spelling Checks.....](https://github.com/kartoza/InfrastructureMapper/actions/workflows/SpellCheck.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/SpellCheck.yml)           | Check spelling in all files containing text.  |
-|[![👨🏽 SQL Checks..........](https://github.com/kartoza/InfrastructureMapper/actions/workflows/SQLChecks.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/SQLChecks.yml)           | Check that all SQL files             |
-|[![🗜️ Yaml Checks.........](https://github.com/kartoza/InfrastructureMapper/actions/workflows/YamlChecks.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/YamlChecks.yml)           | Check that all yaml files are well formed. |
-
-This project consists of:
-
-1. a [SQL Schema](sql/schema.README.md) for PostgreSQL,
-2. a set of fixtures to load that schema with default values (particularly for lookup tables)
-3. a set of QGIS forms and layer styles for visualising the data
-
----
-
-## 📜 License
-
-This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
-
----
-
-## 📂 Folder Structure
-
-```plaintext
-InfrastructureMapper/
-├── img/               # Images and media resources used in this documentation
-├── qml/               # QGIS layer style and form definitions
-├── diagrams/          # Documentation and ERD diagrams
-├── presentations/     # Presentations for this project and each model created using Marp
-├── sql/               # Schema and fixtures to load into postgres
-├── scripts/           # Helper scripts
-└── README.md          # Project overview and conventions
-```
-
----
-
-## 🤖 Using 'AI' (Large Language Models)
-
-We are fine with using LLM's and Generative Machine Learning to act as general assistants, but the following three guidelines should be followed:
-
-1. **Repeatability:** Although we understand that repeatability is not possible generally, whenever you are verbatim using LLM or Generative Machine Learning outputs in this project, you **must** also provide the prompt that you used to generate the resource.
-2. **Declaration:** Sharing the prompt above is implicit declaration that a machine learning assistant was used. If it is not obvious that a piece of work was generated, include the robot (🤖) icon next to a code snippet or text snippet.
-3. **Validation:** Outputs generated by a virtual assistant should always be validated by a human and you, as contributor, take ultimate responsibility for the correct functionality of any code and the correct expression in any text or media you submit to this project.
-
----
-
-## 🌿 Design Aesthetic
-
-![Collage](./img/design-collage.png)
-
-Our design aesthetic is an isometric style with a nature and environment inspired palette. We use an the color palette in the table below. The design approach can be personified by:
-
-- Clean vector isometric projection
-- Layered terrain with shadows
-- Gentle color blending without gradients
-- Minimal outlines for clarity
-- Selective use of texture (like grass patterns or water ripples)
-
-You can use the notes above and the table below if you are prompt engineering additional graphics for this project using tools like ChatGPT.
-
-Our colour swatch looks like this:
-
-<img src="./img/swatch.png" alt="Electricity" width="164" height="164">
-
-| Name               | Hex      | Use Case                  | Preview                |
-|--------------------|----------|---------------------------|------------------------|
-| Forest Green       | `#2F5D50`| Dominant vegetation tone  | <span style="display:inline-block;min-width:90px;padding:2px 8px;background:#f5f5f5;border-radius:4px;"><span style="color:#2F5D50;font-weight:bold;">#2F5D50</span></span> |
-| Moss Green         | `#7C9C75`| Soft background greenery  | <span style="display:inline-block;min-width:90px;padding:2px 8px;background:#f5f5f5;border-radius:4px;"><span style="color:#7C9C75;font-weight:bold;">#7C9C75</span></span> |
-| Earth Brown        | `#A9825A`| Soil, tree bark           | <span style="display:inline-block;min-width:90px;padding:2px 8px;background:#f5f5f5;border-radius:4px;"><span style="color:#A9825A;font-weight:bold;">#A9825A</span></span> |
-| Sandstone Beige    | `#E0D2B2`| Pathways, terrain shading | <span style="display:inline-block;min-width:90px;padding:2px 8px;background:#f5f5f5;border-radius:4px;"><span style="color:#E0D2B2;font-weight:bold;">#E0D2B2</span></span> |
-| Sky Blue           | `#A4DDED`| Sky, water elements       | <span style="display:inline-block;min-width:90px;padding:2px 8px;background:#f5f5f5;border-radius:4px;"><span style="color:#A4DDED;font-weight:bold;">#A4DDED</span></span> |
-| Deep Teal          | `#2B7A78`| Shadows, water depth      | <span style="display:inline-block;min-width:90px;padding:2px 8px;background:#f5f5f5;border-radius:4px;"><span style="color:#2B7A78;font-weight:bold;">#2B7A78</span></span> |
-| Leaf Yellow-Green  | `#C1E1C1`| Highlights on foliage     | <span style="display:inline-block;min-width:90px;padding:2px 8px;background:#f5f5f5;border-radius:4px;"><span style="color:#C1E1C1;font-weight:bold;">#C1E1C1</span></span> |
-| Rock Gray          | `#9FA8A3`| Mountains, stones         | <span style="display:inline-block;min-width:90px;padding:2px 8px;background:#f5f5f5;border-radius:4px;"><span style="color:#9FA8A3;font-weight:bold;">#9FA8A3</span></span> |
-| Cloud White        | `#F5F5F2`| Clouds, light accents     | <span style="display:inline-block;min-width:90px;padding:2px 8px;background:#f5f5f5;border-radius:4px;"><span style="color:#F5F5F2;font-weight:bold;">#F5F5F2</span></span> |
-
-> 🤖 **Prompt:** Generate me a beautiful circular swatch with these colours. Invent nice unique, human names for each colour:
->
-> #7C9C75 #A9825A #E0D2B2 #A4DDED #2B7A78 #C1E1C1 #9FA8A3 #F5F5F2
-
-These colors are soft but grounded, avoiding over-saturation while maintaining a naturalistic feel that suits isometric vector work.
-
----
-
-## Data Model
-
-This section describes each component of the infrastructure mapper data model. You can also find a complete diagram of the data model in [diagrams/Schema.drawio](./diagrams/Schema_2025.drawio) ([image render](./diagrams/Schema_2025.png)).
-
-| Icon | Description |
-|------|-------------|
-| <img src="./img/electricity.png" alt="Electricity" width="64" height="64"> | [Electricity](./sql/2-electricity.md) infrastructure such as power lines, transformers, and substations. |
-| <img src="./img/infrastructure.png" alt="Infrastructure" width="64" height="64"> | General [infrastructure](./sql/1-infrastructure.md) elements like bridges, dams, and towers. |
-| <img src="./img/water.png" alt="Water" width="64" height="64"> | [Water](./sql/3-water.md)-related infrastructure including pipes, tanks, and pumps. |
-| <img src="./img/vegetation.png" alt="Vegetation" width="64" height="64"> | [Vegetation](./sql/4-vegetation.md) features such as trees, hedges, and planted areas. |
-| <img src="./img/monitoring.png" alt="Monitoring" width="64" height="64"> | [Monitoring](./sql/5-monitoring.md) devices and their observations (e.g., sensors, cameras). |
-| <img src="./img/buildings.png" alt="Buildings" width="64" height="64"> | [Buildings](./sql/6-buildings.md) and associated structures. |
-| <img src="./img/fencing.png" alt="Fencing" width="64" height="64"> | [Fencing](./sql/7-fencing.md) and enclosure features, including standalone gates. |
-| <img src="./img/point-of-interest.png" alt="POI" width="64" height="64"> | [Points of Interest](./sql/8-poi.md) (POI) for notable locations or features. |
-| <img src="./img/landuse-areas.png" alt="Land use" width="64" height="64"> | [Land use areas](./sql/9-landuse.md) such as agricultural, residential, or conservation zones. |
-| <img src="./img/gates.png" alt="Gates" width="64" height="64"> | [Gates](./sql/10-gates.md) as access points for properties or enclosures. |
-| <img src="./img/poles.png" alt="Poles" width="64" height="64"> | [Poles](./sql/11-poles.md) for lighting, signage, or utility support. |
-| <img src="./img/food-services.png" alt="Culinary" width="64" height="64"> | [Culinary facilities](./sql/12-culinary.md) like kitchens, canteens, and food storage. |
-| <img src="./img/roads.png" alt="Roads" width="64" height="64"> | [Roads](./sql/13-roads.md), tracks, and paths for transportation infrastructure. |
-
----
-
-## ⚒️ Using
-
-For a fresh PostgreSQL database, run the load script (or apply
-`sql/extensions.sql` then `sql/0-meta.sql` then `sql/1-*.sql` ... `sql/13-*.sql`
-then `sql/fixtures.sql`, in that order).
-
-For a GeoPackage snapshot — built by loading the canonical PG schema and then
-dumping it via `ogr2ogr` — use:
-
-```bash
-scripts/build_gpkg.sh [--crs EPSG:NNNN]
-```
-
-The script drops and recreates a throwaway PG database, applies the baseline
-schema plus any frozen PG migrations, optionally reprojects every spatial
-column to `--crs`, then exports the result to
-`gpkg/KartozaInfrastructureMapper.gpkg`. Open that file in QGIS to get every
-layer pre-registered with the right SRS.
-
-A geographic CRS such as EPSG:4326 is only accurate to ~2&nbsp;m; for field
-work that needs precise distances or areas, pass an appropriate metric CRS
-(UTM zone, EPSG:3857, etc.).
-
----
-
-## 🧬 Schema Evolution
-
-The schema is versioned. `VERSION` at the repo root holds the current
-semver; every PG and GPKG database carries a `schema_migrations` table and a
-`current_schema_version` view:
-
-```sql
-SELECT version FROM current_schema_version;
--- → v0.1.0
-```
-
-### Editing the schema
-
-The top-level files in `sql/` (`0-meta.sql`, `1-infrastructure.sql`, ...,
-`fixtures.sql`, `extensions.sql`) are the **baseline**. They are **immutable**
-once committed — both the pre-commit hook and the
-`SchemaImmutability` GitHub Action reject in-place edits. To change the
-schema after baseline, append the change to:
-
-- `sql/migrations/pg/UNRELEASED.sql` (PostgreSQL syntax)
-- `sql/migrations/gpkg/UNRELEASED.sql` (SQLite/GeoPackage syntax — often needs
-  the SQLite 12-step recreate for constraint changes)
-
-Every appended block must start with an annotation line referencing the
-GitHub issue tracking the change:
-
-```sql
--- Issue #142: Add solar_panel table for grid solar installations
-CREATE TABLE solar_panel ( ... );
-```
-
-A new top-level numbered `sql/N-<domain>.sql` file may be added for a
-brand-new capture domain (e.g. `sql/14-solar.sql`); it becomes immutable
-from its first commit.
-
-### Cutting a release
-
-```bash
-scripts/release.sh --bump patch|minor|major [--commit]
-```
-
-This renames `UNRELEASED.sql` → `vX.Y.Z.sql` in both `pg/` and `gpkg/`,
-creates new empty `UNRELEASED.sql` stubs, bumps `VERSION`, regenerates
-the per-component schema reference docs, and (with `--commit`) creates
-the release commit and `vX.Y.Z` tag. Pushing the tag triggers the
-`Release` GitHub Action, which publishes:
-
-| Artifact | Use |
-|---|---|
-| `pg-schema-vX.Y.Z.sql` | Fresh PG install |
-| `pg-fixtures-vX.Y.Z.sql` | Lookup data |
-| `KartozaInfrastructureMapper-vX.Y.Z.gpkg` | Open in QGIS / take to the field |
-| `pg-migrations-vX.Y.Z.tar.gz` | Upgrade an existing prod PG to vX.Y.Z |
-| `gpkg-migrations-vX.Y.Z.tar.gz` | Upgrade an existing prod GPKG to vX.Y.Z |
-| `RELEASE_NOTES.md` | Auto-generated from migration filenames |
-
-### Applying migrations to a live database
-
-```bash
-# Postgres
-scripts/migrate_pg.sh <dbname>
-
-# GeoPackage
-scripts/migrate_gpkg.py path/to/file.gpkg
-```
-
-Both runners read the target's `current_schema_version`, apply every
-unapplied `vX.Y.Z.sql` migration in semver order, each in its own
-transaction, recording success in `schema_migrations`. Re-running is a
-no-op once up to date. `--dry-run` shows the plan; `--target vX.Y.Z`
-stops at a specific version.
-
-### Field workflow
-
-`gpkg/KartozaInfrastructureMapper.gpkg` is a snapshot of the PG schema for
-offline use with QField or Mergin Maps. Every table carries a `uuid` column
-(stable across PG ↔ GPKG) and a `last_update` timestamp, which together make
-the snapshot reconcilable with the source PG on return. The sync flow
-itself is not yet implemented; the schema is ready for it.
-
-### Per-component schema docs
-
-`sql/N-component.md` files hold hand-written narrative + mermaid diagrams.
-A delimited "Schema Reference" section at the bottom of each is regenerated
-by `scripts/generate_schema_docs.py` from the materialized schema (baseline +
-all applied migrations). Do not hand-edit content between the
-`<!-- SCHEMA-REFERENCE-START ... -->` markers.
-
----
-
-## 🛠️ Scripts Overview
-
-The `scripts/` folder contains utility scripts to assist with database setup, data loading, and project maintenance. Below is a summary of each script:
-
-| Script Name                | Description                                                                                  |
-|----------------------------|----------------------------------------------------------------------------------------------|
-| `start_pg.sh`              | Nix specific to start a sandboxed postgresql instance with data stored in ./pgdata           |
-| `load_schema.sh`           | Loads the SQL schema files into the target database, setting up all required tables.         |
-| `stop_pg.sh`               | Nix specific script to stop the postgres database                                            |
-| `check.sh`                 | Git precommit check and format SQL files                                                     |
-| `gource.sh`                | Visualise the code history using gource                                                      |
-| `vscode.sh`                | Launch VSCode with all settings and extensions needed to productively work on this project   |
-| `create_presentations.sh`  | Generate presentations using marp.                                                           |
-| `scripts/codebase_size_check.sh` | Precommit hook for checking if the codebase has grown. |
-| `scripts/commit_test_stats.py`| Precommit hook for checking if the test suite has grown. |
-| `scripts/docstrings_check.sh` | Precommit hook for checking that docstrings were used when creating new python code. |
-| `scripts/encoding_check.sh` | Precommit hook for checking python modules have their encoding set. |
-| `scripts/license_check.sh` | Precommit hook for license and copyright in source files. |
-| `scripts/build_gpkg.sh` | Build a fresh GeoPackage from the canonical PG schema (`--crs EPSG:NNNN` to reproject). |
-| `scripts/migrate_pg.sh` | Apply pending `vX.Y.Z` migrations to a target PostgreSQL database, in strict semver order. |
-| `scripts/migrate_gpkg.py` | Same, against a target GeoPackage file. |
-| `scripts/generate_schema_docs.py` | Regenerate the auto-managed `## Schema Reference` block in each `sql/N-*.md`. |
-| `scripts/release.sh` | Cut a release: rename `UNRELEASED.sql` → `vX.Y.Z.sql`, bump `VERSION`, tag. |
-| `scripts/check_schema_immutability.sh` | Pre-commit / CI gate enforcing baseline immutability + Issue-NNN convention. |
-
-> ✏️ **Note:** Run each script from the project root. Some scripts may require environment variables or configuration—see comments within each script for usage details. Most of the schema-lifecycle scripts have a matching `nix run .#<name>` convenience entry — see the cheat sheet below.
-
-### Common tasks cheat sheet
-
-The fastest way to drive the schema lifecycle is via the `nix run .#…` apps the flake exposes:
-
-```bash
-# Build the canonical GeoPackage (UTM 35S example)
-nix run .#build-gpkg -- --crs EPSG:32735
-
-# Apply pending PG migrations
-nix run .#migrate-pg -- gis
-
-# Apply pending GPKG migrations
-nix run .#migrate-gpkg -- gpkg/KartozaInfrastructureMapper.gpkg
-
-# Regenerate the Schema Reference section in every sql/N-*.md
-nix run .#docs
-
-# Cut a release (patch bump → renames UNRELEASED.sql + tags)
-nix run .#release -- --bump patch --commit
-```
-
-Or, inside `nix develop`, invoke the scripts directly — they're on `PATH`-via-relative-path:
-
-```bash
-scripts/build_gpkg.sh --crs EPSG:32735
-scripts/migrate_pg.sh gis
-scripts/migrate_gpkg.py gpkg/KartozaInfrastructureMapper.gpkg
-scripts/generate_schema_docs.py
-scripts/release.sh --bump patch --commit
-```
-
-If you use Neovim, the bundled `.exrc` puts the same operations behind `<leader>p…` WhichKey shortcuts: `<leader>pb` build, `<leader>pm` migrate-pg, `<leader>pg` migrate-gpkg, `<leader>pd` docs, `<leader>pr` release, `<leader>pl` lint, `<leader>ps` open `SPECIFICATION.md`.
-
----
-
-## 🧊 Using the Nix Flake
-
-You can use the provided `flake.nix` to get a fully reproducible development environment and to run QGIS with the correct profile.
-
-1. **Install [Nix](https://nixos.org/download.html)** (if you haven’t already).
-2. **Enter the development shell:**
+## Quick start
 
 ```bash
 nix develop
+nix run .#pg-start
+nix run .#build-gpkg
+nix run .#qgis
 ```
 
-This gives you all the tools and dependencies you need for working on this project.
-
-1. **Run QGIS with the project profile:**
+That gives you a fresh `gpkg/KartozaInfrastructureMapper.gpkg` open in QGIS.
+For metric work, build with a UTM CRS:
 
 ```bash
-  nix run .#qgis
+nix run .#build-gpkg -- --crs EPSG:32735
 ```
 
-Or, for the long-term release version:
+Full instructions in
+[Getting Started](https://timlinux.github.io/InfrastructureMapper/getting-started/).
+
+## QA Status
+
+[![📃 License Checks](https://github.com/kartoza/InfrastructureMapper/actions/workflows/LicenseChecks.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/LicenseChecks.yml)
+[![🏋🏽 PostGIS Load Test](https://github.com/kartoza/InfrastructureMapper/actions/workflows/LoadSchema.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/LoadSchema.yml)
+[![✏️ Markdown](https://github.com/kartoza/InfrastructureMapper/actions/workflows/MarkdownChecks.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/MarkdownChecks.yml)
+[![🐍 Python](https://github.com/kartoza/InfrastructureMapper/actions/workflows/PythonChecks.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/PythonChecks.yml)
+[![⚒️ QA](https://github.com/kartoza/InfrastructureMapper/actions/workflows/QAChecks.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/QAChecks.yml)
+[![👁️ Spelling](https://github.com/kartoza/InfrastructureMapper/actions/workflows/SpellCheck.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/SpellCheck.yml)
+[![👨🏽 SQL](https://github.com/kartoza/InfrastructureMapper/actions/workflows/SQLChecks.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/SQLChecks.yml)
+[![🗜️ Yaml](https://github.com/kartoza/InfrastructureMapper/actions/workflows/YamlChecks.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/YamlChecks.yml)
+[![🔒 Schema Immutability](https://github.com/kartoza/InfrastructureMapper/actions/workflows/SchemaImmutability.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/SchemaImmutability.yml)
+[![📚 Docs](https://github.com/kartoza/InfrastructureMapper/actions/workflows/Docs.yml/badge.svg)](https://github.com/kartoza/InfrastructureMapper/actions/workflows/Docs.yml)
+
+## Documentation
+
+The full documentation lives at
+**<https://timlinux.github.io/InfrastructureMapper/>** &mdash; built with
+mkdocs-material from `docs/`, regenerated on every push to `main`.
+
+- [Getting Started](https://timlinux.github.io/InfrastructureMapper/getting-started/) &mdash; load the schema into Postgres, open the GeoPackage in QGIS, take it into the field.
+- [Data Model](https://timlinux.github.io/InfrastructureMapper/data-model/) &mdash; every capture domain with hand-written narrative and auto-generated schema references.
+- [Schema Lifecycle](https://timlinux.github.io/InfrastructureMapper/schema-lifecycle/) &mdash; versioning, migrations, releases, CI.
+- [Developer Guide](https://timlinux.github.io/InfrastructureMapper/developer-guide/) &mdash; the Nix flake, scripts, contribution flow.
+- [Specification](https://timlinux.github.io/InfrastructureMapper/about/specification/) &mdash; the canonical technical spec.
+
+Preview the docs locally:
 
 ```bash
-nix run .#qgis-ltr
+nix run .#docs-serve   # → http://127.0.0.1:8000
 ```
 
-1. **VSCode users:**
+## License
 
-You can launch a ready-to-use VSCode environment:
+MIT &mdash; see [LICENSE](LICENSE).
 
-```bash
-./scripts/vscode.sh
-```
+## Contributing
 
----
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the branch/migration/PR flow, and
+[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for community standards.
 
-This makes it easy to get started and ensures everyone is using the same environment!
+## Support this project
 
-## ✨ Contributing
+If Infrastructure Mapper is useful to you or your organisation, please
+consider supporting continued development:
 
-We welcome contributions! Please read the [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to get started.
-
----
-
-## 📧 Contact
-
-Have questions or feedback? Feel free to reach out!
-📧 Email: [info@kartoza.com](mailto:info@kartoza.com)
-🌐 Website: [kartoza.com](https://kartoza.com)
+- 💖 [GitHub Sponsors](https://github.com/sponsors/timlinux)
+- ☕ [Ko-fi](https://ko-fi.com/timlinux)
+- 🏢 [Hire Kartoza](https://kartoza.com) for custom work
 
 ## Contributors
 
-- [Tim Sutton](https://github.com/timlinux) - project lead
--
+See the [contributors page](https://github.com/timlinux/InfrastructureMapper/graphs/contributors)
+for everyone who has shipped to this project.
 
 ---
 
-Made with ❤️ by Tim Sutton (@timlinux) and Kartoza Interns.
+Made with 💗 by [Kartoza](https://kartoza.com) &middot;
+[Donate](https://github.com/sponsors/timlinux) &middot;
+[GitHub](https://github.com/timlinux/InfrastructureMapper)

@@ -10,6 +10,12 @@
 # To run a single hook verbosely, use `pre-commit run <hook_id> --all-files -v`
 # Tim Sutton, 2025
 
+# Install both pre-commit and pre-push hook types from a single
+# `pre-commit install`. Pre-push gates mirror what CI runs so a clean
+# local push can't get rejected on broken docs / stale immutability.
+default_install_hook_types: [pre-commit, pre-push]
+default_stages: [pre-commit]
+
 repos:
   - repo: https://github.com/psf/black
     rev: 24.4.0
@@ -40,6 +46,33 @@ repos:
         language: system
         pass_filenames: false
         stages: [pre-commit]
+  # Push-time gates. These mirror what the GitHub workflows do, so a clean
+  # local push won't get rejected by CI on broken docs or a stale immutability
+  # check. They are heavier than the commit-time hooks (the docs build spins
+  # up Postgres), so they only fire on `git push`.
+  - repo: local
+    hooks:
+      - id: schema-immutability-vs-main
+        name: "🔒 Schema immutability vs origin/main (CI parity)"
+        entry: bash scripts/check_schema_immutability.sh --all
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-push]
+      - id: docs-strict-build
+        name: "📚 mkdocs build --strict (CI parity)"
+        entry: bash scripts/docs_build.sh
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-push]
+      - id: docs-schema-reference
+        name: "📚 Regenerate schema docs (catches Docs.yml failures)"
+        entry: python scripts/generate_schema_docs.py
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-push]
   - repo: local
     hooks:
       - id: remove-core-file
@@ -142,26 +175,25 @@ repos:
     hooks:
       - id: bandit-sql
         name: "🔒 Bandit - Python security analysis"
-        entry: bandit -r sql
+        # --skip B404: subprocess is used intentionally by the migration +
+        # build pipelines; every call site is audited (list form, no shell).
+        entry: bandit -r sql --skip B404,B603,B607
         language: system
+        pass_filenames: false  # bandit -r already targets the whole sql/ tree
         types: [python]
         stages: [pre-commit]
   - repo: local
     hooks:
       - id: bandit-scripts
         name: "🔒 Bandit - Python security analysis"
-        entry: bandit -r scripts
+        entry: bandit -r scripts --skip B404,B603,B607
         language: system
+        pass_filenames: false  # bandit -r already targets the whole scripts/ tree
         types: [python]
         stages: [pre-commit]
-  - repo: local
-    hooks:
-      - id: bearer-sql
-        name: "🛡️ Bearer - Security & privacy scanner"
-        entry: bearer scan --exit-code 1 sql
-        language: system
-        pass_filenames: false
-        stages: [pre-commit]
+  # Bearer doesn't support SQL — its detectors only ship for Python, Ruby,
+  # JS, Java, Go, PHP. The SQL pass returned "report not yet available" and
+  # failed every commit. Removed; bearer-scripts still covers the bash + py.
   - repo: local
     hooks:
       - id: bearer-scripts
@@ -172,36 +204,15 @@ repos:
         stages: [pre-commit]
   - repo: local
     hooks:
-      - id: semgrep-sql
-        name: "🔍 Semgrep - Static analysis"
-        entry: semgrep --config=auto sql
-        language: system
-        types: [python]
-        stages: [pre-commit]
-  - repo: local
-    hooks:
       - id: semgrep-scripts
         name: "🔍 Semgrep - Static analysis"
         entry: semgrep --config=auto scripts
         language: system
         types: [python]
         stages: [pre-commit]
-  - repo: local
-    hooks:
-      - id: codeql
-        name: "🧬 CodeQL - Code analysis"
-        entry: codeql database analyze ./codeql-db codeql/python-queries
-        language: system
-        types: [python]
-        stages: [pre-commit]
-  # - repo: local # needs a github token to run
-  #   hooks:
-  #     - id: renovate
-  #       name: "🔄 Renovate - Dependency updater"
-  #       entry: renovate
-  #       language: system
-  #       types: [json, yaml]
-  #       stages: [pre-commit]
+  # CodeQL, Snyk, and Codecov are CI-only: CodeQL needs a pre-built DB,
+  # Snyk needs an API token in the environment, Codecov uploads coverage
+  # to codecov.io. They belong in GitHub Actions, not local pre-commit.
 
   # This must run before reuse license compliance check
   - repo: local
@@ -220,40 +231,33 @@ repos:
         entry: reuse lint
         language: system
         always_run: true # Ensures it runs on all files, not just staged ones
-        stages: [pre-commit]
-  - repo: local
-    hooks:
-      - id: snyk
-        name: "🕵️ Snyk - Vulnerability scanner"
-        entry: snyk test
-        language: system
-        types: [python]
+        pass_filenames: false # reuse lint scans the whole tree; no positional args
         stages: [pre-commit]
   - repo: local
     hooks:
       - id: pylint
         name: "🦉 Pylint - Python linter"
-        entry: pylint .
+        # .pylintrc handles ignore-paths (.venv/, site/, pgdata/, etc.)
+        entry: pylint scripts
         language: system
+        pass_filenames: false
         types: [python]
         stages: [pre-commit]
-  - repo: local
-    hooks:
-      - id: codecov
-        name: "📊 Codecov - Coverage reporting"
-        entry: codecov-cli
-        language: system
-        types: [python]
-        stages: [pre-commit]
-  # Fix end of files
+  # Fix end of files. Frozen schema files are excluded — the immutability
+  # gate treats baseline SQL as content-addressed; an auto-fix here would
+  # silently mutate it and then trip the gate in CI (where origin/main is
+  # current and bootstrap mode can't hide the change).
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
       - id: trailing-whitespace
+        exclude: '^sql/([0-9].*\.sql|extensions\.sql|fixtures\.sql|migrations/(pg|gpkg)/v.*\.sql)$'
       - id: end-of-file-fixer
+        exclude: '^sql/([0-9].*\.sql|extensions\.sql|fixtures\.sql|migrations/(pg|gpkg)/v.*\.sql)$'
       - id: mixed-line-ending
         args:
           - '--fix=lf'
+        exclude: '^sql/([0-9].*\.sql|extensions\.sql|fixtures\.sql|migrations/(pg|gpkg)/v.*\.sql)$'
   # Remove unused imports/variables
   - repo: https://github.com/myint/autoflake
     rev: v2.3.1

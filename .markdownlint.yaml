@@ -5,8 +5,13 @@
 # policy: presentations use Marp frontmatter and inline HTML, our prose
 # tolerates long lines, and tables aren't column-style-managed.
 MD003: false        # allow either atx or setext headings (Marp presentations mix them)
+MD007: false        # mkdocs YAML frontmatter under SPDX comments confuses indent check
 MD013: false        # don't enforce a maximum line length
 MD022: false        # allow headings without surrounding blank lines (Marp frontmatter)
+MD030: false        # Material grid cards use 3 spaces after `-` so card body aligns
+MD032: false        # SPDX comments before frontmatter make MD032 noisy
 MD033: false        # allow inline HTML (used in presentations and tables)
 MD041: false        # allow non-heading first lines (Marp '---' frontmatter)
+MD046: false        # admonition-nested code blocks are 4-space indented + fenced
+MD050: false        # Material grid cards use __bold__ titles; project uses both styles
 MD060: false        # don't enforce table-column compact style

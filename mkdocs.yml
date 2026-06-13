@@ -1,0 +1,197 @@
+# SPDX-FileCopyrightText: Tim Sutton
+# SPDX-License-Identifier: MIT
+site_name: Infrastructure Mapper
+site_description: A spatial database for capturing physical infrastructure with PostgreSQL, PostGIS, GeoPackage and QGIS.
+site_url: https://kartoza.github.io/InfrastructureMapper/
+site_author: Kartoza
+copyright: >
+  &copy; Kartoza — Made with 💗 by
+  <a href="https://kartoza.com">Kartoza</a>
+  &middot; <a href="https://github.com/sponsors/kartoza">Donate</a>
+  &middot; <a href="https://github.com/kartoza/InfrastructureMapper">GitHub</a>
+
+repo_url: https://github.com/kartoza/InfrastructureMapper
+repo_name: kartoza/InfrastructureMapper
+edit_uri: edit/main/docs/
+
+docs_dir: docs
+site_dir: site
+
+theme:
+  name: material
+  # Kartoza Brand Pack v0.1 — logo + favicon (see kartoza-tokens.css for
+  # palette / type tokens; the swatch sheet lives in design.md).
+  logo: assets/brand/kartoza-symbol-color.svg
+  favicon: assets/brand/favicon.png
+  font:
+    # FR-020 — Nunito for everything; FR-021 — JetBrains Mono for code.
+    text: Nunito
+    code: JetBrains Mono
+  language: en
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - announce.dismiss
+    - content.action.edit
+    - content.action.view
+    - content.code.annotate
+    - content.code.copy
+    - content.tabs.link
+    - content.tooltips
+    - navigation.footer
+    - navigation.indexes
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.path
+    - navigation.sections
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.top
+    - navigation.tracking
+    - search.highlight
+    - search.share
+    - search.suggest
+    - toc.follow
+  icon:
+    repo: fontawesome/brands/github
+    edit: material/file-edit-outline
+    view: material/eye-outline
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/kartoza/InfrastructureMapper
+      name: GitHub repository
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/KartozaGeo
+      name: Kartoza on Twitter
+    - icon: fontawesome/solid/heart
+      link: https://github.com/sponsors/kartoza
+      name: Sponsor on GitHub
+  generator: false
+
+extra_css:
+  # Single source of truth for the Kartoza palette + type stack (NFR-020).
+  # extra.css consumes the tokens it defines.
+  - stylesheets/kartoza-tokens.css
+  - stylesheets/extra.css
+
+extra_javascript:
+  - https://unpkg.com/mermaid@10/dist/mermaid.min.js
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+      toc_depth: 4
+  - pymdownx.betterem
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds: {case: lower}
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+plugins:
+  - search:
+      lang: en
+  - glightbox:
+      touchNavigation: true
+      loop: false
+      effect: zoom
+      slide_effect: slide
+      width: 100%
+      height: auto
+      zoomable: true
+      draggable: true
+      skip_classes:
+        - no-lightbox
+  - git-revision-date-localized:
+      enable_creation_date: true
+      type: timeago
+      fallback_to_build_date: true
+      strict: false
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - getting-started/index.md
+    - GeoPackage in QGIS: getting-started/geopackage.md
+    - Load into Postgres: getting-started/postgres.md
+    - Field Workflow: getting-started/field-workflow.md
+  - Data Model:
+    - data-model/index.md
+    - Infrastructure: data-model/01-infrastructure.md
+    - Electricity: data-model/02-electricity.md
+    - Water: data-model/03-water.md
+    - Vegetation: data-model/04-vegetation.md
+    - Monitoring: data-model/05-monitoring.md
+    - Buildings: data-model/06-buildings.md
+    - Fencing: data-model/07-fencing.md
+    - Points of Interest: data-model/08-poi.md
+    - Land Use: data-model/09-landuse.md
+    - Gates: data-model/10-gates.md
+    - Poles: data-model/11-poles.md
+    - Culinary Facilities: data-model/12-culinary.md
+    - Roads: data-model/13-roads.md
+  - Schema Lifecycle:
+    - schema-lifecycle/index.md
+    - Versioning: schema-lifecycle/versioning.md
+    - Migrations: schema-lifecycle/migrations.md
+    - Release Process: schema-lifecycle/release.md
+    - CI &amp; Pre-commit: schema-lifecycle/ci.md
+  - Developer Guide:
+    - developer-guide/index.md
+    - Dev Shell: developer-guide/dev-shell.md
+    - Local Build: developer-guide/local-build.md
+    - Nix Flake: developer-guide/nix-flake.md
+    - Scripts: developer-guide/scripts.md
+    - Project Structure: developer-guide/project-structure.md
+    - Contributing: developer-guide/contributing.md
+  - About:
+    - about/index.md
+    - Specification: about/specification.md
+    - Design Aesthetic: about/design.md
+    - Using AI: about/ai-policy.md
+    - Code of Conduct: about/code-of-conduct.md
+    - Sponsors: about/sponsors.md
+    - Icon Licenses: about/icon-licenses.md

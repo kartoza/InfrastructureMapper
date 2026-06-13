@@ -74,6 +74,9 @@ for cmd in psql createdb dropdb ogr2ogr ogrinfo sha256sum sqlite3; do
     fi
 done
 
+# Bring up the project-local cluster if it isn't already serving.
+bash "$ROOT/scripts/ensure_pg.sh"
+
 BASELINE_FILES=(
     sql/0-meta.sql
     sql/1-infrastructure.sql
