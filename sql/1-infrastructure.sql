@@ -89,7 +89,7 @@ COMMENT ON COLUMN infrastructure_log_action.notes IS 'Additional information of 
 
 COMMENT ON COLUMN infrastructure_log_action.image IS 'Image of the action taken.';
 
--- INFRASTRUCTURE MANAGEMENT LOG
+-- INFRASTRUCTURE MANAGEMENT LOG 
 CREATE TABLE
 infrastructure_management_log (
     id SERIAL NOT NULL PRIMARY KEY,

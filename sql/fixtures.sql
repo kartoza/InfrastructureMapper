@@ -174,7 +174,7 @@ INSERT INTO point_of_interest_type (last_update_by, name, sort_order) VALUES (
 INSERT INTO condition (last_update_by, name) VALUES ('Jeff', 'Fixed');
 INSERT INTO condition (last_update_by, name) VALUES ('Jeff', 'Broken');
 
--- pole_material
+-- pole_material 
 INSERT INTO pole_material (last_update_by, id, name) VALUES (
     'Charles', 1, 'Metal'
 );
@@ -199,7 +199,7 @@ INSERT INTO pole_function (id, last_update_by, pole_function_name) VALUES (
     4, 'Charles', 'Street lighting'
 );
 
--- pole
+-- pole 
 INSERT INTO pole (
     last_update,
     last_update_by,

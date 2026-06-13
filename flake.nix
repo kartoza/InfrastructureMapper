@@ -125,9 +125,13 @@
           ]))
         ];
         shellHook = ''
-          export PGHOST="$PWD/pgdata"
-          export PGPORT=5432
-          export PGDATABASE="gis"
+          # Respect any PGHOST/PGPORT/PGDATABASE already set by the caller
+          # (CI sets PGHOST=localhost so we hit the service-container PG);
+          # only fall back to the project-local cluster when unset.
+          : "''${PGHOST:=$PWD/pgdata}"
+          : "''${PGPORT:=5432}"
+          : "''${PGDATABASE:=gis}"
+          export PGHOST PGPORT PGDATABASE
 
           if [ ! -d ".venv" ]; then
             python -m venv .venv
@@ -143,6 +147,12 @@
             pip install -r requirements.txt
           else
             echo "No requirements.txt found, skipping pip install."
+          fi
+
+          # Install the pre-commit + pre-push git hooks (idempotent).
+          # pre-push is what mirrors CI's docs + immutability checks.
+          if command -v pre-commit >/dev/null && [ -d .git ]; then
+            pre-commit install --install-hooks >/dev/null 2>&1 || true
           fi
 
           # Pretty welcome with live Postgres status.

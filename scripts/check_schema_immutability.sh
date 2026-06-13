@@ -141,11 +141,22 @@ check_unreleased_annotations() {
 # base ref, this branch is introducing it. Skip the frozen-file rejection so
 # the establishing PR can land cleanly. The Issue-NNN annotation check still
 # runs (it's about migration hygiene, not baseline immutability).
+#
+# Caveat: a stale local origin/main can trigger bootstrap mode even when
+# main upstream has the hook. To prevent that hiding a real violation, try
+# to fetch a fresh origin/main first in staged/all modes; if that fails
+# (offline), emit a loud warning instead of silently skipping.
 BOOTSTRAP=0
+if [ "$MODE" != "base" ] && git remote get-url origin >/dev/null 2>&1; then
+    git fetch --quiet origin main 2>/dev/null || true
+fi
 if ! git cat-file -e "$PREV_REF:scripts/check_schema_immutability.sh" 2>/dev/null; then
     BOOTSTRAP=1
-    echo "ℹ️  Bootstrap mode: '$PREV_REF' does not yet contain scripts/check_schema_immutability.sh." >&2
-    echo "    Baseline-modification check is skipped on this branch." >&2
+    echo "⚠️  Bootstrap mode: '$PREV_REF' does not yet contain scripts/check_schema_immutability.sh." >&2
+    echo "    Baseline-modification check is SKIPPED locally — CI will still" >&2
+    echo "    enforce it against the real merge base. If you have not run" >&2
+    echo "    'git fetch origin main' recently, do that first to avoid a" >&2
+    echo "    surprise rejection on push." >&2
     echo "" >&2
 fi
 
