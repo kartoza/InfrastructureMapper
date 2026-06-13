@@ -2,7 +2,7 @@
 <!-- SPDX-License-Identifier: MIT -->
 # 💧 Water
 
-![Water](../assets/brand/icons/water.svg)
+![Water](../assets/brand/icons/water.svg){ .kz-domain-hero }
 
 The **Water** component models water-related infrastructure, such as pipelines, tanks, and pumps. This schema enables the representation of the spatial layout and relationships of water distribution and storage elements.
 

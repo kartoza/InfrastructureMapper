@@ -2,15 +2,9 @@
 <!-- SPDX-License-Identifier: MIT -->
 # Data Model
 
-The Infrastructure Mapper schema is split into capture domains. Each is
-defined by a top-level `sql/N-domain.sql` baseline file and rendered into a
-mkdocs page below. Every page has three parts:
-
-1. **Narrative** &mdash; what the domain models and how its tables relate.
-2. **Mermaid ERD** &mdash; visual diagram of the domain's tables and foreign keys.
-3. **Schema Reference** &mdash; the auto-generated materialised view of the
-   current schema (baseline + all applied PG migrations). This is regenerated
-   on every push to `main` by the Docs CI workflow.
+The Infrastructure Mapper schema is organised into capture domains.
+Pick a domain below to see what it captures, how its tables relate, and
+the full column-by-column schema reference.
 
 <div class="grid cards kz-domain-grid" markdown>
 
@@ -119,14 +113,3 @@ mkdocs page below. Every page has three parts:
     [:octicons-arrow-right-24: Open](13-roads.md)
 
 </div>
-
-## What's regenerated, what's hand-curated
-
-The narrative and mermaid diagram at the top of each component page are
-hand-written, just like commit messages or architecture notes. The
-**Schema Reference** block at the bottom &mdash; delimited by
-`<!-- SCHEMA-REFERENCE-START ... -->` markers &mdash; is rebuilt from a
-fresh reference Postgres database every time the docs workflow runs.
-
-If you change the schema, you don't touch the Schema Reference by hand;
-you write a migration, and the next push to `main` rebuilds it for you.

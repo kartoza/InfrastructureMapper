@@ -2,7 +2,7 @@
 <!-- SPDX-License-Identifier: MIT -->
 # 🏗️ Infrastructure
 
-![Infrastructure](../assets/brand/icons/infrastructure.svg)
+![Infrastructure](../assets/brand/icons/infrastructure.svg){ .kz-domain-hero }
 
 The **Infrastructure** component defines the core entities for representing general infrastructure elements and their types. It provides a flexible structure for categorizing and storing spatial features that do not fit into more specific categories like buildings or roads.
 

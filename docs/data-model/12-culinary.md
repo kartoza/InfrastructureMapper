@@ -2,7 +2,7 @@
 <!-- SPDX-License-Identifier: MIT -->
 # 🍽️ Culinary
 
-![Culinary](../assets/brand/icons/culinary.svg)
+![Culinary](../assets/brand/icons/culinary.svg){ .kz-domain-hero }
 
 The **Culinary** component models food service infrastructure, such as kitchens, dining areas, and food storage facilities. This schema enables the representation of culinary-related spaces, their types, and their spatial relationships within the infrastructure.
 

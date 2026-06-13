@@ -3,7 +3,7 @@
 
 # 📍 Points Of Interest
 
-![Points Of Interest](../assets/brand/icons/poi.svg)
+![Points Of Interest](../assets/brand/icons/poi.svg){ .kz-domain-hero }
 
 The **Points Of Interest (POI)** component models notable locations or features that are relevant for mapping and analysis but do not fit into other infrastructure categories. This schema supports categorizing POIs, storing their spatial locations, and associating descriptive information.
 

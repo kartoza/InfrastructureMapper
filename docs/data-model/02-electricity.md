@@ -2,7 +2,7 @@
 <!-- SPDX-License-Identifier: MIT -->
 # ⚡ Electricity
 
-![Electricity](../assets/brand/icons/electricity.svg)
+![Electricity](../assets/brand/icons/electricity.svg){ .kz-domain-hero }
 
 The **Electricity** component models electrical infrastructure, including power lines, poles, and transformers. This schema enables the representation of the spatial layout and relationships of electricity distribution elements.
 

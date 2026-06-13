@@ -216,6 +216,16 @@ body,
     border: 1px solid var(--rule-line);
 }
 
+/* Small domain icon at the top of each data-model/NN-*.md page.
+   The SVG has no intrinsic width, so without this it would expand
+   to the content column width (~720px) — far too dominant. */
+.md-typeset img.kz-domain-hero {
+    display: block;
+    width: 160px;
+    height: auto;
+    margin: 0 0 1.5rem;
+}
+
 /* Hero CTA buttons — flat, no shadow, Blue primary, Cloud secondary.
    markdown wraps consecutive links in a single <p>; we apply the flex
    layout to that <p> too so buttons sit side-by-side instead of
@@ -228,7 +238,11 @@ body,
     margin: 0;
     justify-content: center;
 }
-.kz-cta a {
+/* Selectors are intentionally prefixed with `.md-typeset` so they beat
+   mkdocs-material's `.md-typeset a { color: … }` rule (which would
+   otherwise repaint our CTA text in Kartoza Blue and make it
+   invisible against the Blue primary fill). */
+.md-typeset .kz-cta a {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
@@ -238,31 +252,31 @@ body,
     text-decoration: none;
     transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
-.kz-cta__primary {
+.md-typeset .kz-cta a.kz-cta__primary {
     background: var(--kartoza-blue);
     color: var(--surface-white);
     border: 2px solid var(--kartoza-blue);
 }
-.kz-cta__primary:hover {
+.md-typeset .kz-cta a.kz-cta__primary:hover {
     background: #4790b8;
     border-color: #4790b8;
     color: var(--surface-white);
 }
-.kz-cta__secondary {
+.md-typeset .kz-cta a.kz-cta__secondary {
     background: var(--surface-white);
     color: var(--text-default);
     border: 2px solid var(--text-default);
 }
-.kz-cta__secondary:hover {
+.md-typeset .kz-cta a.kz-cta__secondary:hover {
     background: var(--text-default);
     color: var(--surface-white);
 }
-[data-md-color-scheme="slate"] .kz-cta__secondary {
+[data-md-color-scheme="slate"] .md-typeset .kz-cta a.kz-cta__secondary {
     background: transparent;
     color: var(--surface-cloud);
     border-color: var(--surface-cloud);
 }
-[data-md-color-scheme="slate"] .kz-cta__secondary:hover {
+[data-md-color-scheme="slate"] .md-typeset .kz-cta a.kz-cta__secondary:hover {
     background: var(--surface-cloud);
     color: var(--text-default);
 }

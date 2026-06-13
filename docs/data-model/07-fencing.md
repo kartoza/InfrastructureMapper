@@ -2,7 +2,7 @@
 <!-- SPDX-License-Identifier: MIT -->
 # 🚧 Fencing
 
-![Fencing](../assets/brand/icons/fencing.svg)
+![Fencing](../assets/brand/icons/fencing.svg){ .kz-domain-hero }
 
 The **Fencing** component models boundary and enclosure features, such as fences and gates, that are not directly associated with buildings. This schema allows for the representation of different fence types, individual fence segments, and standalone gates, supporting detailed mapping of property boundaries and access points.
 

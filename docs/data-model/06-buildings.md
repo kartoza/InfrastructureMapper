@@ -2,7 +2,7 @@
 <!-- SPDX-License-Identifier: MIT -->
 # 🏠 Buildings
 
-![Buildings](../assets/brand/icons/buildings.svg)
+![Buildings](../assets/brand/icons/buildings.svg){ .kz-domain-hero }
 
 The **Buildings** component models structures and their related entities. The schema supports different building types, fences, and gates, allowing for detailed representation of built infrastructure and their spatial relationships.
 

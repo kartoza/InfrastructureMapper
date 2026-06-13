@@ -57,10 +57,29 @@ differences between PG and GPKG.
 3. `nix run .#docs-build` (which runs `mkdocs build --strict`) to catch
    broken links before opening the PR.
 
-You **do not** edit the auto-generated Schema Reference blocks inside
-`docs/data-model/NN-*.md` &mdash; those rebuild on push to main. The
-narrative and mermaid ERD above the marker line are hand-curated and
-fair game.
+### Data-model pages — what's hand-written, what's regenerated
+
+Each capture domain has a top-level `sql/N-domain.sql` baseline file
+and a matching `docs/data-model/NN-domain.md` page. Every page has
+three parts:
+
+1. **Narrative** &mdash; what the domain models and how its tables
+   relate.
+2. **Mermaid ERD** &mdash; visual diagram of the domain's tables and
+   foreign keys.
+3. **Schema Reference** &mdash; the auto-generated materialised view
+   of the current schema (baseline + all applied PG migrations).
+
+The narrative and mermaid diagram at the top are hand-written, just
+like commit messages or architecture notes. The **Schema Reference**
+block at the bottom &mdash; delimited by
+`<!-- SCHEMA-REFERENCE-START ... -->` markers &mdash; is rebuilt from
+a fresh reference Postgres database every time the Docs CI workflow
+runs.
+
+If you change the schema, you don't touch the Schema Reference by
+hand; you write a migration, and the next push to `main` rebuilds it
+for you.
 
 ## Coding standards
 
