@@ -1,6 +1,11 @@
 <!-- SPDX-FileCopyrightText: Tim Sutton -->
 <!-- SPDX-License-Identifier: MIT -->
-# Installation
+# The Dev Shell
+
+This page is for contributors who want to build the schema from source
+or work on the project itself. If you just want to use the schema in
+Postgres or open the GeoPackage in QGIS, see
+[Getting Started](../getting-started/index.md) instead.
 
 ## Requirements
 

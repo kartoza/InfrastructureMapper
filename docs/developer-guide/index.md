@@ -8,6 +8,25 @@ contribution flow.
 
 <div class="grid cards" markdown>
 
+-   :material-download:{ .lg .middle } __The Dev Shell__
+
+    ---
+
+    Install Nix, enter the project's reproducible dev shell, see the
+    welcome banner that lists every `nix run` app the project ships.
+
+    [:octicons-arrow-right-24: Set up the dev shell](dev-shell.md)
+
+-   :material-rocket-launch:{ .lg .middle } __Local Build__
+
+    ---
+
+    Five minutes from a fresh `nix develop` to a working GeoPackage
+    open in QGIS. The from-source path; end users just download a
+    release artefact.
+
+    [:octicons-arrow-right-24: Build locally](local-build.md)
+
 -   :simple-nixos:{ .lg .middle } __The Nix Flake__
 
     ---

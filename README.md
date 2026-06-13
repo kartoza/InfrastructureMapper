@@ -55,7 +55,7 @@ The full documentation lives at
 **<https://timlinux.github.io/InfrastructureMapper/>** &mdash; built with
 mkdocs-material from `docs/`, regenerated on every push to `main`.
 
-- [Getting Started](https://timlinux.github.io/InfrastructureMapper/getting-started/) &mdash; install, build, take it into the field.
+- [Getting Started](https://timlinux.github.io/InfrastructureMapper/getting-started/) &mdash; load the schema into Postgres, open the GeoPackage in QGIS, take it into the field.
 - [Data Model](https://timlinux.github.io/InfrastructureMapper/data-model/) &mdash; every capture domain with hand-written narrative and auto-generated schema references.
 - [Schema Lifecycle](https://timlinux.github.io/InfrastructureMapper/schema-lifecycle/) &mdash; versioning, migrations, releases, CI.
 - [Developer Guide](https://timlinux.github.io/InfrastructureMapper/developer-guide/) &mdash; the Nix flake, scripts, contribution flow.

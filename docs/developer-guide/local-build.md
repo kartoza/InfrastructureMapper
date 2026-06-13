@@ -1,8 +1,11 @@
 <!-- SPDX-FileCopyrightText: Tim Sutton -->
 <!-- SPDX-License-Identifier: MIT -->
-# Quick Start
+# Local Build
 
-Five minutes from a fresh `nix develop` to a working GeoPackage open in QGIS.
+Five minutes from a fresh `nix develop` to a working GeoPackage open in
+QGIS. This is the contributor / from-source path; end users typically
+just download a release artefact &mdash; see
+[Getting Started](../getting-started/index.md).
 
 ## 1. Start Postgres
 
@@ -83,4 +86,4 @@ ogrinfo, or any GPKG-aware tool.
   domain has hand-written narrative and an auto-generated schema reference.
 - Read about the [schema lifecycle](../schema-lifecycle/index.md): how
   baseline, migrations, and releases fit together.
-- Take the GeoPackage [into the field](field-workflow.md).
+- Take the GeoPackage [into the field](../getting-started/field-workflow.md).

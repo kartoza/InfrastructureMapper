@@ -155,8 +155,8 @@ nav:
   - Home: index.md
   - Getting Started:
     - getting-started/index.md
-    - Installation: getting-started/installation.md
-    - Quick Start: getting-started/quickstart.md
+    - GeoPackage in QGIS: getting-started/geopackage.md
+    - Load into Postgres: getting-started/postgres.md
     - Field Workflow: getting-started/field-workflow.md
   - Data Model:
     - data-model/index.md
@@ -181,6 +181,8 @@ nav:
     - CI &amp; Pre-commit: schema-lifecycle/ci.md
   - Developer Guide:
     - developer-guide/index.md
+    - Dev Shell: developer-guide/dev-shell.md
+    - Local Build: developer-guide/local-build.md
     - Nix Flake: developer-guide/nix-flake.md
     - Scripts: developer-guide/scripts.md
     - Project Structure: developer-guide/project-structure.md

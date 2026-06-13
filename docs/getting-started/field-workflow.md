@@ -47,23 +47,28 @@ There are three reasonable approaches, in order of "off the shelf":
 
 ## Versioned snapshots, not in-place migration
 
-GeoPackages are treated as versioned snapshots, not databases that get migrated
-in-place during a field trip. The recommended flow:
+GeoPackages are treated as versioned snapshots, not databases that get
+migrated in-place during a field trip. The recommended flow:
 
-1. **Office**: cut a release. The new schema goes onto the production PG via
-   `nix run .#migrate-pg`.
-2. **Office**: take a fresh GeoPackage snapshot
-   (`nix run .#build-gpkg --crs EPSG:…`) at the current schema version.
+1. **Office**: a new schema version is released. Apply it to your
+   production Postgres &mdash; see
+   [Migrations](../schema-lifecycle/migrations.md).
+2. **Office**: download a fresh GeoPackage at the current schema
+   version, either from the
+   [GitHub Releases page](https://github.com/kartoza/InfrastructureMapper/releases/latest)
+   or by exporting one from your Postgres.
 3. **Field**: capture against that snapshot.
-4. **Office**: sync the returning GeoPackage back to PG. The GeoPackage is
-   then archived; the next field trip gets a new snapshot at the latest schema.
+4. **Office**: sync the returning GeoPackage back to Postgres. The
+   field GeoPackage is then archived; the next field trip gets a fresh
+   snapshot at the latest schema.
 
-This means *the schema can evolve freely while data is in the field* &mdash;
-the constraint is "sync before fork the next snapshot."
+This means *the schema can evolve freely while data is in the field*
+&mdash; the constraint is "sync before forking the next snapshot."
 
-## When the GeoPackage itself is the prod database
+## When the GeoPackage itself is the production database
 
-For QGIS-desktop-only deployments without a server, the GeoPackage *is* prod.
-There, in-place GeoPackage migration matters: use
-[`migrate_gpkg.py`](../schema-lifecycle/migrations.md) to advance an existing
-field GeoPackage to a newer schema version.
+For QGIS-desktop-only deployments without a Postgres server, the
+GeoPackage *is* production. There, in-place GeoPackage migration
+matters: see
+[Migrations](../schema-lifecycle/migrations.md) for the script that
+advances an existing field GeoPackage to a newer schema version.
