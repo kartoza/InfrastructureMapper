@@ -36,7 +36,7 @@ erDiagram
 <!-- SCHEMA-REFERENCE-START - auto-generated, do not edit by hand -->
 ## Schema Reference
 
-_Materialized at **v0.1.0** - baseline plus every applied PG migration._
+_Materialized at **v0.2.0** - baseline plus every applied PG migration._
 
 _Source: `8-poi.sql`. 3 table(s)._
 
