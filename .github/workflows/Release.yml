@@ -27,109 +27,148 @@ jobs:
       PGPORT: '5432'
       PGUSER: ci
       PGPASSWORD: ci
+      PGDATABASE: ci
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Install GDAL + tooling
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gdal-bin postgresql-client sqlite3 jq
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v22
 
-      - name: Resolve release version
+      - name: Resolve release version + previous tag
         id: ver
         run: |
+          set -euo pipefail
           VERSION="$(tr -d '[:space:]' < VERSION)"
           VTAG="v$VERSION"
           if [ "$GITHUB_REF" != "refs/tags/$VTAG" ]; then
             echo "::warning::tag '$GITHUB_REF' does not match VERSION '$VTAG'"
           fi
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "tag=$VTAG" >> "$GITHUB_OUTPUT"
+          PREV_TAG="$(git tag --sort=-v:refname | grep '^v' | grep -v "^$VTAG$" | head -1 || true)"
+          {
+            echo "version=$VERSION"
+            echo "tag=$VTAG"
+            echo "prev_tag=$PREV_TAG"
+          } >> "$GITHUB_OUTPUT"
+          echo "Resolved: VTAG=$VTAG  PREV_TAG=${PREV_TAG:-(none)}"
 
-      - name: Build reference PG database
+      - name: Build HEAD artifacts (composite + per-domain)
         run: |
-          # Load baseline + fixtures + all PG migrations into the service container.
-          BUILD_DB=im_release_build
-          createdb "$BUILD_DB"
-          PSQL="psql -d $BUILD_DB -v ON_ERROR_STOP=1 -q"
-          $PSQL -f sql/extensions.sql
-          $PSQL -f sql/0-meta.sql
-          for n in 1 2 3 4 5 6 7 8 9 10 11 12 13; do
-            for f in "sql/${n}-"*.sql; do
-              [ -f "$f" ] && $PSQL -f "$f"
-            done
+          nix develop --command bash scripts/build_artifacts.sh \
+            --version "${{ steps.ver.outputs.tag }}" \
+            --out dist
+
+      - name: Build previous-tag composite for schema diff
+        if: steps.ver.outputs.prev_tag != ''
+        run: |
+          set -euo pipefail
+          PREV="${{ steps.ver.outputs.prev_tag }}"
+          git worktree add ../prev "$PREV"
+          for f in build_artifacts.sh build_artifacts.py ensure_pg.sh; do
+            [ -f "../prev/scripts/$f" ] || cp "scripts/$f" "../prev/scripts/$f"
           done
-          $PSQL -f sql/fixtures.sql
-          # Stamp baseline.
-          MAJ="${{ steps.ver.outputs.version }}"; MAJ="${MAJ%%.*}"
-          MIN="${{ steps.ver.outputs.version }}"; MIN="$(echo "$MIN" | cut -d. -f2)"
-          PAT="${{ steps.ver.outputs.version }}"; PAT="$(echo "$PAT" | cut -d. -f3)"
-          $PSQL -c "INSERT INTO schema_migrations (version, major, minor, patch, applied_by, checksum, is_baseline, notes) VALUES ('${{ steps.ver.outputs.tag }}', $MAJ, $MIN, $PAT, 'release-pipeline', 'baseline', TRUE, 'Initial baseline');"
-          # Apply frozen PG migrations.
-          for mig in sql/migrations/pg/v*.sql; do
-            [ -f "$mig" ] || continue
-            $PSQL -f "$mig"
-          done
+          ( cd ../prev && nix develop "${{ github.workspace }}#" --command \
+              bash scripts/build_artifacts.sh \
+                --version "$PREV" \
+                --out "${{ github.workspace }}/dist-prev" \
+                --skip-gpkg )
+          git worktree remove --force ../prev
 
-      - name: Publish PG schema dump
+      - name: Run migra schema diff vs previous tag
+        if: steps.ver.outputs.prev_tag != ''
         run: |
-          mkdir -p dist
-          pg_dump -d im_release_build --schema-only \
-            > "dist/pg-schema-${{ steps.ver.outputs.tag }}.sql"
-
-      - name: Publish PG fixtures dump
-        run: |
-          # Lookup tables — match anything ending _type/_status/_surface/_condition plus named singletons.
-          SQL="SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND (table_name ~ '_(type|status|surface|condition|category)\$' OR table_name IN ('condition','month','water_source','plant_usage','pole_material','pole_function','facility_type'))"
-          TABLES=$(psql -d im_release_build -At -c "$SQL")
-          ARGS=""
-          for t in $TABLES; do ARGS="$ARGS -t $t"; done
-          # shellcheck disable=SC2086
-          pg_dump -d im_release_build --data-only $ARGS \
-            > "dist/pg-fixtures-${{ steps.ver.outputs.tag }}.sql"
-
-      - name: Build GPKG via ogr2ogr
-        run: |
-          GPKG="dist/KartozaInfrastructureMapper-${{ steps.ver.outputs.tag }}.gpkg"
-          ogr2ogr -f GPKG "$GPKG" \
-            PG:"host=localhost port=5432 dbname=im_release_build user=ci password=ci" \
-            -oo LIST_ALL_TABLES=YES
-          # Post-process: recreate the version view (ogr2ogr materialises views as tables).
-          sqlite3 "$GPKG" "DROP TABLE IF EXISTS current_schema_version; DROP VIEW IF EXISTS current_schema_version; CREATE VIEW current_schema_version AS SELECT version, major, minor, patch, applied_at, is_baseline FROM schema_migrations ORDER BY major DESC, minor DESC, patch DESC LIMIT 1; DELETE FROM gpkg_contents WHERE table_name = 'current_schema_version';"
-
-      - name: Bundle PG migration archive
-        run: |
-          tar -czf "dist/pg-migrations-${{ steps.ver.outputs.tag }}.tar.gz" \
-              sql/migrations/pg/v*.sql scripts/migrate_pg.sh
-
-      - name: Bundle GPKG migration archive
-        run: |
-          tar -czf "dist/gpkg-migrations-${{ steps.ver.outputs.tag }}.tar.gz" \
-              sql/migrations/gpkg/v*.sql scripts/migrate_gpkg.py
+          set -euo pipefail
+          BASE_BUNDLE="$(find dist-prev -maxdepth 1 -name 'pg-schema-*.sql' -print -quit)"
+          HEAD_BUNDLE="dist/pg-schema-${{ steps.ver.outputs.tag }}.sql"
+          nix develop --command python3 scripts/schema_diff.py \
+            --base-bundle "$BASE_BUNDLE" \
+            --head-bundle "$HEAD_BUNDLE" \
+            --version "${{ steps.ver.outputs.tag }}" \
+            --base-label "${{ steps.ver.outputs.prev_tag }}" \
+            --head-label "${{ steps.ver.outputs.tag }}" \
+            --out dist
 
       - name: Generate release notes
         run: |
+          set -euo pipefail
           VTAG="${{ steps.ver.outputs.tag }}"
-          PREV_TAG="$(git tag --sort=-v:refname | grep '^v' | grep -v "^$VTAG$" | head -1 || true)"
+          PREV="${{ steps.ver.outputs.prev_tag }}"
           {
             echo "## $VTAG"
             echo ""
-            if [ -n "$PREV_TAG" ]; then
-              echo "### PG migrations since $PREV_TAG"
-              for f in $(git diff --name-only "$PREV_TAG" "$VTAG" -- sql/migrations/pg/v*.sql); do
+            if [ -n "$PREV" ]; then
+              echo "### Migrations since $PREV"
+              echo ""
+              echo "**PostgreSQL:**"
+              for f in $(git diff --name-only "$PREV" "$VTAG" -- 'sql/migrations/pg/v*.sql'); do
                 echo "- \`$f\`"
               done
               echo ""
-              echo "### GPKG migrations since $PREV_TAG"
-              for f in $(git diff --name-only "$PREV_TAG" "$VTAG" -- sql/migrations/gpkg/v*.sql); do
+              echo "**GeoPackage:**"
+              for f in $(git diff --name-only "$PREV" "$VTAG" -- 'sql/migrations/gpkg/v*.sql'); do
                 echo "- \`$f\`"
               done
+              echo ""
+              if [ -f "dist/schema-diff-${VTAG}.summary.md" ]; then
+                echo "### Schema diff vs $PREV"
+                echo ""
+                cat "dist/schema-diff-${VTAG}.summary.md"
+              fi
             else
               echo "Initial release."
             fi
+            echo ""
+            echo "### What's in this release"
+            echo ""
+            echo "- **Composite SQL** (\`pg-schema-${VTAG}.sql\`) — full schema + fixtures, apply to an empty DB."
+            echo "- **Composite GeoPackage** (\`KartozaInfrastructureMapper-${VTAG}.gpkg\`) — everything in one file for QGIS."
+            echo "- **Per-domain SQL slices** (13) — bootstrap just one domain (e.g. \`pg-schema-07-fencing-${VTAG}.sql\`)."
+            echo "- **Per-domain GeoPackages** (13) — one-domain QGIS bundles."
+            echo "- **Migration tarballs** — apply forward migrations on top of an existing earlier-version DB."
+            if [ -f "dist/schema-diff-${VTAG}.sql" ]; then
+              echo "- **Schema diff** (\`schema-diff-${VTAG}.sql\`) — migra-generated ALTER statements."
+            fi
           } > dist/RELEASE_NOTES.md
+
+      - name: Publish version-less "-latest" companion assets
+        # Stable URLs of the form
+        #   https://github.com/<org>/<repo>/releases/latest/download/<file>
+        # require an exact filename match. Our versioned filenames embed the
+        # tag, so we ship a parallel set without the version so README/docs
+        # can hard-link to the always-current asset.
+        run: |
+          set -euo pipefail
+          VTAG="${{ steps.ver.outputs.tag }}"
+          cd dist
+          for src in \
+              "pg-schema-${VTAG}.sql" \
+              "pg-fixtures-${VTAG}.sql" \
+              "KartozaInfrastructureMapper-${VTAG}.gpkg" \
+              "pg-migrations-${VTAG}.tar.gz" \
+              "gpkg-migrations-${VTAG}.tar.gz" \
+              "schema-diff-${VTAG}.sql" \
+              "schema-diff-${VTAG}.summary.md"; do
+            [ -f "$src" ] || continue
+            # Strip the "-VTAG" segment from the filename to produce the
+            # -latest variant (e.g. pg-schema-v0.2.0.sql -> pg-schema-latest.sql).
+            stable="${src/-${VTAG}/-latest}"
+            cp "$src" "$stable"
+          done
+          # Per-domain slices: pg-schema-07-fencing-v0.2.0.sql -> pg-schema-07-fencing-latest.sql
+          for src in pg-schema-[0-9][0-9]-*-"${VTAG}".sql; do
+            [ -f "$src" ] || continue
+            stable="${src/-${VTAG}/-latest}"
+            cp "$src" "$stable"
+          done
+          for src in KartozaInfrastructureMapper-[0-9][0-9]-*-"${VTAG}".gpkg; do
+            [ -f "$src" ] || continue
+            stable="${src/-${VTAG}/-latest}"
+            cp "$src" "$stable"
+          done
+
+      - name: List release artifacts
+        run: ls -lh dist/
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
@@ -140,6 +179,20 @@ jobs:
             dist/pg-schema-${{ steps.ver.outputs.tag }}.sql
             dist/pg-fixtures-${{ steps.ver.outputs.tag }}.sql
             dist/KartozaInfrastructureMapper-${{ steps.ver.outputs.tag }}.gpkg
+            dist/pg-schema-*-${{ steps.ver.outputs.tag }}.sql
+            dist/KartozaInfrastructureMapper-*-${{ steps.ver.outputs.tag }}.gpkg
             dist/pg-migrations-${{ steps.ver.outputs.tag }}.tar.gz
             dist/gpkg-migrations-${{ steps.ver.outputs.tag }}.tar.gz
+            dist/schema-diff-${{ steps.ver.outputs.tag }}.sql
+            dist/schema-diff-${{ steps.ver.outputs.tag }}.summary.md
+            dist/MANIFEST.json
             dist/RELEASE_NOTES.md
+            dist/pg-schema-latest.sql
+            dist/pg-fixtures-latest.sql
+            dist/KartozaInfrastructureMapper-latest.gpkg
+            dist/pg-schema-*-latest.sql
+            dist/KartozaInfrastructureMapper-*-latest.gpkg
+            dist/pg-migrations-latest.tar.gz
+            dist/gpkg-migrations-latest.tar.gz
+            dist/schema-diff-latest.sql
+            dist/schema-diff-latest.summary.md

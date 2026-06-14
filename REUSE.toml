@@ -6,7 +6,7 @@ SPDX-PackageSupplier = "Tim Sutton <tim@kartoza.com>"
 SPDX-PackageDownloadLocation = "https://github.com/kartoza/InfrastructureMapper"
 
 [[annotations]]
-path = [".envrc", ".gitignore", ".pre-commit-config.yaml", ".pylintrc", ".sqlfluff", ".yamllint", "VERSION", "flake.lock", "cspell.config.yaml", "diagrams/**", "docs/assets/**", "img/**", "img/interns/**", "presentations/**", "qgis_projects/**", "qml/**"]
+path = [".envrc", ".gitignore", ".pre-commit-config.yaml", ".pylintrc", ".sqlfluff", ".yamllint", "VERSION", "flake.lock", "cspell.config.yaml", "bearer.ignore", "diagrams/**", "docs/assets/**", "img/**", "img/interns/**", "presentations/**", "qgis_projects/**", "qml/**"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "Tim Sutton"
 SPDX-License-Identifier = "MIT"

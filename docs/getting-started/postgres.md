@@ -30,24 +30,36 @@ docker run --name im-pg \
   -d postgis/postgis:17-3.5
 ```
 
-## 1. Download the schema tarball
+## 1. Download the schema
 
-From the [GitHub Releases page] grab the file matching
-`infrastructure-mapper-vX.Y.Z-schema.tar.gz`.
+Every release on the [GitHub Releases page] publishes the schema as a
+single self-contained SQL file plus per-domain slices:
 
 [GitHub Releases page]: https://github.com/kartoza/InfrastructureMapper/releases/latest
 
+| File | Stable "latest" URL | What it is |
+| --- | --- | --- |
+| `pg-schema-vX.Y.Z.sql` | [`pg-schema-latest.sql`](https://github.com/kartoza/InfrastructureMapper/releases/latest/download/pg-schema-latest.sql) | **Everything** &mdash; extensions, meta, all 13 domains, fixtures. Apply to an empty database to bootstrap the full schema. |
+| `pg-schema-NN-name-vX.Y.Z.sql` | [`pg-schema-NN-name-latest.sql`](https://github.com/kartoza/InfrastructureMapper/releases/latest/download/pg-schema-07-fencing-latest.sql) | **One domain only** &mdash; e.g. `pg-schema-07-fencing-latest.sql`. Self-contained; includes extensions, meta, that domain's tables, and the lookup-table fixtures it needs. |
+| `pg-fixtures-vX.Y.Z.sql` | [`pg-fixtures-latest.sql`](https://github.com/kartoza/InfrastructureMapper/releases/latest/download/pg-fixtures-latest.sql) | Data-only dump of lookup tables. Useful if you've already loaded the schema and want to refresh seed data. |
+| `pg-migrations-vX.Y.Z.tar.gz` | [`pg-migrations-latest.tar.gz`](https://github.com/kartoza/InfrastructureMapper/releases/latest/download/pg-migrations-latest.tar.gz) | Forward migrations from a previous baseline to this version. See [Migrations](../schema-lifecycle/migrations.md) for when to use these instead of a fresh load. |
+| `schema-diff-vX.Y.Z.sql` | [`schema-diff-latest.sql`](https://github.com/kartoza/InfrastructureMapper/releases/latest/download/schema-diff-latest.sql) | `migra`-generated diff vs the previous release &mdash; ALTER statements that would bring the prior version up to this one. |
+
+Pick whichever flavour you like &mdash; `curl` from the stable URL, or
+`gh release download` for the versioned filename:
+
 ```bash
-# Example: download via gh CLI
+# Composite (everything) — stable URL, always the latest release:
+curl -LO https://github.com/kartoza/InfrastructureMapper/releases/latest/download/pg-schema-latest.sql
+
+# Just one domain (example: fencing):
+curl -LO https://github.com/kartoza/InfrastructureMapper/releases/latest/download/pg-schema-07-fencing-latest.sql
+
+# Or, with versioned filenames via gh CLI:
 gh release download --repo kartoza/InfrastructureMapper \
-  --pattern 'infrastructure-mapper-*-schema.tar.gz'
-
-tar xf infrastructure-mapper-*-schema.tar.gz
-cd infrastructure-mapper-*
+  --pattern 'pg-schema-v*.sql' \
+  --pattern 'pg-fixtures-v*.sql'
 ```
-
-The archive contains a `sql/` directory with the canonical baseline,
-fixtures, and every released migration up to that tag.
 
 ## 2. Create your target database
 
@@ -62,32 +74,35 @@ schema only requires PostGIS &mdash; nothing else extra.
 
 ## 3. Apply the schema
 
-The release tarball loads in a strict order: extensions, the meta
-table, each numbered baseline domain, fixtures, then every released
-migration in semver order. A shell snippet that does the whole thing:
+The composite file is a single ordered SQL bundle &mdash; one `psql`
+invocation loads everything:
 
 ```bash
 DB=infrastructure
-PSQL="psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d $DB"
-
-$PSQL -f sql/extensions.sql
-$PSQL -f sql/0-meta.sql
-
-# Numbered baseline files (1, 2, … 13), in numeric order:
-ls sql/[1-9]*.sql sql/[1-9][0-9]*.sql 2>/dev/null \
-  | sort -V \
-  | xargs -I{} $PSQL -f {}
-
-$PSQL -f sql/fixtures.sql
-
-# Released migrations, in semver order:
-ls sql/migrations/pg/v*.sql 2>/dev/null \
-  | sort -V \
-  | xargs -I{} $PSQL -f {}
+psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d $DB \
+  -f pg-schema-latest.sql
 ```
 
 `ON_ERROR_STOP=1` is important &mdash; if any statement fails, the
 whole load aborts rather than leaving the schema half-applied.
+
+### Just one domain
+
+The per-domain slices are equally self-contained &mdash; they bundle
+the extensions, meta layer, that domain's tables, and the lookup-table
+fixtures it needs. Loading `pg-schema-07-fencing-vX.Y.Z.sql` into an
+empty database gives you a working `fence` / `fence_type` /
+`fence_conditions` schema with no other domain present.
+
+```bash
+psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d $DB \
+  -f pg-schema-07-fencing-latest.sql
+```
+
+You can load several slices into the same database; they share the
+extensions and meta-layer DDL idempotently (`CREATE TABLE IF NOT
+EXISTS`), so re-running them after the first one is a no-op for the
+shared bits.
 
 ## 4. Verify
 

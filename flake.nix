@@ -35,6 +35,69 @@
         inherit extraPythonPackages;
       };
       postgresWithPostGIS = pkgs.postgresql.withPackages (ps: [ ps.postgis ]);
+
+      # migra + transitive deps (schemainspect, sqlbag) are not packaged in
+      # nixpkgs (schemainspect was removed in May 2024 as broken under
+      # SQLAlchemy 2.x). We build them here pinned to sqlalchemy_1_4, which is
+      # the last version their unmaintained upstreams support.
+      py = pkgs.python3Packages;
+      sqlalchemy14 = py.sqlalchemy_1_4;
+
+      schemainspect = py.buildPythonPackage rec {
+        pname = "schemainspect";
+        version = "3.1.1663587362";
+        # Distributed via poetry but the sdist ships a generated setup.py and
+        # the pyproject has no [build-system] — use the setuptools backend.
+        format = "setuptools";
+        src = pkgs.fetchPypi {
+          inherit pname version;
+          hash = "sha256-opWtVvehnAnl4e+fFtrb9jkuJhlstfBbWv5hPJnOdGg=";
+        };
+        # pkg_resources is imported at runtime; bundle setuptools for Py 3.12.
+        propagatedBuildInputs = [
+          sqlalchemy14
+          py.setuptools
+        ];
+        doCheck = false;
+        pythonImportsCheck = [ "schemainspect" ];
+      };
+
+      sqlbag = py.buildPythonPackage rec {
+        pname = "sqlbag";
+        version = "0.1.1617247075";
+        format = "setuptools";
+        src = pkgs.fetchPypi {
+          inherit pname version;
+          hash = "sha256-udeGLDsgMDVteWyocpB5Yv1UcEBml4166JOD9RIzZu0=";
+        };
+        propagatedBuildInputs = with py; [
+          sqlalchemy14
+          six
+          packaging
+          psycopg2
+        ];
+        doCheck = false;
+        pythonImportsCheck = [ "sqlbag" ];
+      };
+
+      migra = py.buildPythonPackage rec {
+        pname = "migra";
+        version = "3.0.1663481299";
+        format = "pyproject";
+        src = pkgs.fetchPypi {
+          inherit pname version;
+          hash = "sha256-DPDBJdVTAI2f9UAmY6UXA8zEdLtltaT0cnkG2/WOIX8=";
+        };
+        nativeBuildInputs = [ py.poetry-core ];
+        propagatedBuildInputs = [
+          schemainspect
+          sqlbag
+          py.six
+          py.psycopg2
+        ];
+        doCheck = false;
+        pythonImportsCheck = [ "migra" ];
+      };
     in
     {
       packages.${system} = {
@@ -55,6 +118,8 @@
           pkgs.gum
           pkgs.gum # UX for TUIs
           pkgs.jq
+          pkgs.gdal # ogr2ogr + ogrinfo for GPKG builds
+          pkgs.sqlite # sqlite3 CLI for GPKG post-processing
           pkgs.libsForQt5.kcachegrind
           pkgs.nixfmt-rfc-style
           pkgs.pre-commit
@@ -122,6 +187,11 @@
             ps.mkdocs-git-revision-date-localized-plugin
             ps.mkdocs-mermaid2-plugin
             ps.pymdown-extensions
+            # Schema diff stack for build_artifacts / schema_diff.
+            migra
+            sqlbag
+            schemainspect
+            ps.psycopg2
           ]))
         ];
         shellHook = ''
@@ -210,6 +280,8 @@
           pg-reset = mkScriptApp "scripts/reset_pg.sh";
           # Schema lifecycle convenience apps.
           build-gpkg = mkScriptApp "scripts/build_gpkg.sh";
+          build-artifacts = mkScriptApp "scripts/build_artifacts.sh";
+          schema-diff = mkPythonApp "scripts/schema_diff.py";
           migrate-pg = mkScriptApp "scripts/migrate_pg.sh";
           migrate-gpkg = mkPythonApp "scripts/migrate_gpkg.py";
           docs = mkPythonApp "scripts/generate_schema_docs.py";

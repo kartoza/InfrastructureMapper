@@ -149,6 +149,48 @@ CI runs the full pre-commit suite + the immutability hook + a fresh
 GeoPackage build + the test suite. A green CI on a PR is the precondition
 for review.
 
+### What CI attaches to your PR
+
+The **Artifacts** workflow runs on every PR (and on every push to
+`main`) and produces the same set of files that a release would
+publish:
+
+- `pg-schema-pr-NN-SHA.sql` &mdash; composite schema as it stands on the
+  PR head.
+- `pg-schema-NN-name-pr-NN-SHA.sql` (13 files) &mdash; one per domain
+  slice.
+- `KartozaInfrastructureMapper-*.gpkg` &mdash; composite GeoPackage plus
+  one per domain.
+- `pg-migrations-*.tar.gz` / `gpkg-migrations-*.tar.gz` &mdash; the
+  frozen migration files bundled with the runner scripts.
+- `schema-diff-*.sql` &mdash; a `migra`-generated diff against the PR's
+  base ref. ALTER statements that would bring the base up to the PR
+  head.
+- `schema-diff-*.summary.md` &mdash; a short Markdown summary (tables
+  added / dropped / altered) embedded in a PR comment.
+
+The workflow leaves a single auto-updating comment on the PR with the
+diff summary and a link to the Actions run where the artifacts are
+attached (90-day retention). Reviewers can download the slice they
+care about &mdash; or just the diff &mdash; without checking the
+branch out locally.
+
+You can produce the same artifacts on your laptop with:
+
+```bash
+nix run .#build-artifacts -- --version dev-$(git rev-parse --short HEAD)
+# Output in ./dist/. Add --skip-gpkg for faster schema-only iteration.
+```
+
+And run the diff against any other branch you have built:
+
+```bash
+nix run .#schema-diff -- \
+  --version dev-vs-main \
+  --base-bundle dist-base/pg-schema-main-XXXXXXX.sql \
+  --head-bundle dist/pg-schema-dev-YYYYYYY.sql
+```
+
 ## Code of Conduct
 
 Be kind, be specific, be patient. The full text is at

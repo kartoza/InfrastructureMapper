@@ -1,0 +1,74 @@
+{
+  "080dc716cc3a5a854458e2188e5164b8_0": {
+    "author": "Tim Sutton",
+    "comment": "CLI build tool: inputs originate from argparse not untrusted callers; subprocess uses argv list form and paths come from --out / --base-bundle / --head-bundle.",
+    "false_positive": true,
+    "ignored_at": "2026-06-14T12:51:38Z"
+  },
+  "080dc716cc3a5a854458e2188e5164b8_1": {
+    "author": "Tim Sutton",
+    "comment": "CLI build tool: inputs originate from argparse not untrusted callers; subprocess uses argv list form and paths come from --out / --base-bundle / --head-bundle.",
+    "false_positive": true,
+    "ignored_at": "2026-06-14T12:51:39Z"
+  },
+  "080dc716cc3a5a854458e2188e5164b8_2": {
+    "author": "Tim Sutton",
+    "comment": "CLI build tool: inputs originate from argparse not untrusted callers; subprocess uses argv list form and paths come from --out / --base-bundle / --head-bundle.",
+    "false_positive": true,
+    "ignored_at": "2026-06-14T12:51:39Z"
+  },
+  "080dc716cc3a5a854458e2188e5164b8_3": {
+    "author": "Tim Sutton",
+    "comment": "CLI build tool: inputs originate from argparse not untrusted callers; subprocess uses argv list form and paths come from --out / --base-bundle / --head-bundle.",
+    "false_positive": true,
+    "ignored_at": "2026-06-14T12:51:40Z"
+  },
+  "080dc716cc3a5a854458e2188e5164b8_4": {
+    "author": "Tim Sutton",
+    "comment": "CLI build tool: inputs originate from argparse not untrusted callers; subprocess uses argv list form and paths come from --out / --base-bundle / --head-bundle.",
+    "false_positive": true,
+    "ignored_at": "2026-06-14T12:51:40Z"
+  },
+  "5e449eeb2303ade573df19cbe72b2859_0": {
+    "author": "Tim Sutton",
+    "comment": "CLI build tool: inputs originate from argparse not untrusted callers; subprocess uses argv list form and paths come from --out / --base-bundle / --head-bundle.",
+    "false_positive": true,
+    "ignored_at": "2026-06-14T12:51:41Z"
+  },
+  "5e449eeb2303ade573df19cbe72b2859_1": {
+    "author": "Tim Sutton",
+    "comment": "CLI build tool: inputs originate from argparse not untrusted callers; subprocess uses argv list form and paths come from --out / --base-bundle / --head-bundle.",
+    "false_positive": true,
+    "ignored_at": "2026-06-14T12:51:41Z"
+  },
+  "70bd8a0d4ebf501af88f96827fb50f0e_0": {
+    "author": "Tim Sutton",
+    "comment": "CLI build tool: inputs originate from argparse not untrusted callers; subprocess uses argv list form and paths come from --out / --base-bundle / --head-bundle.",
+    "false_positive": true,
+    "ignored_at": "2026-06-14T12:51:42Z"
+  },
+  "70bd8a0d4ebf501af88f96827fb50f0e_1": {
+    "author": "Tim Sutton",
+    "comment": "CLI build tool: inputs originate from argparse not untrusted callers; subprocess uses argv list form and paths come from --out / --base-bundle / --head-bundle.",
+    "false_positive": true,
+    "ignored_at": "2026-06-14T12:51:43Z"
+  },
+  "d041718960eed1d1fd18e12aa7557c6e_0": {
+    "author": "Tim Sutton",
+    "comment": "CLI build tool: inputs originate from argparse not untrusted callers; subprocess uses argv list form and paths come from --out / --base-bundle / --head-bundle.",
+    "false_positive": true,
+    "ignored_at": "2026-06-14T12:51:43Z"
+  },
+  "d041718960eed1d1fd18e12aa7557c6e_1": {
+    "author": "Tim Sutton",
+    "comment": "CLI build tool: inputs originate from argparse not untrusted callers; subprocess uses argv list form and paths come from --out / --base-bundle / --head-bundle.",
+    "false_positive": true,
+    "ignored_at": "2026-06-14T12:51:44Z"
+  },
+  "d041718960eed1d1fd18e12aa7557c6e_2": {
+    "author": "Tim Sutton",
+    "comment": "CLI build tool: inputs originate from argparse not untrusted callers; subprocess uses argv list form and paths come from --out / --base-bundle / --head-bundle.",
+    "false_positive": true,
+    "ignored_at": "2026-06-14T12:51:44Z"
+  }
+}

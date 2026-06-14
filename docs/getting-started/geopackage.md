@@ -9,27 +9,33 @@ entries.
 
 ## 1. Download the GeoPackage
 
-Every release publishes two GeoPackages on the
-[GitHub Releases page]:
+Every release on the [GitHub Releases page] publishes the full schema
+as a single GeoPackage, plus per-domain slices for narrower workflows:
 
 [GitHub Releases page]: https://github.com/kartoza/InfrastructureMapper/releases/latest
 
-| File pattern | When to pick this one |
-| --- | --- |
-| `infrastructure-mapper-vX.Y.Z.gpkg` | Default. Geometries in **EPSG:4326** (longitude / latitude). Accurate to ~2&nbsp;m. |
-| `infrastructure-mapper-vX.Y.Z-utm35s.gpkg` | Geometries reprojected to **EPSG:32735** (UTM Zone 35S). Use this for southern-African work where you need metres-accurate distances and areas. |
+| File | Stable "latest" URL | What it is |
+| --- | --- | --- |
+| `KartozaInfrastructureMapper-vX.Y.Z.gpkg` | [`KartozaInfrastructureMapper-latest.gpkg`](https://github.com/kartoza/InfrastructureMapper/releases/latest/download/KartozaInfrastructureMapper-latest.gpkg) | **Everything** &mdash; all 13 domains, every lookup table, in one file. Default choice. |
+| `KartozaInfrastructureMapper-NN-name-vX.Y.Z.gpkg` | [`KartozaInfrastructureMapper-NN-name-latest.gpkg`](https://github.com/kartoza/InfrastructureMapper/releases/latest/download/KartozaInfrastructureMapper-07-fencing-latest.gpkg) | **One domain only** &mdash; e.g. `KartozaInfrastructureMapper-07-fencing-latest.gpkg`. Pick this if you only care about one domain. |
 
-Click the link, scroll to **Assets**, download the file you want.
-
-!!! tip "Which CRS should I pick?"
-    If your work covers a small area and needs distance / area
-    measurements in metres, pick the projected variant matching your
-    region (UTM 35S ships by default; other zones can be built from
-    source &mdash; see [Local Build]). If you are exchanging data
-    globally or with web maps, the EPSG:4326 variant is the universal
-    default.
+All GeoPackages ship with geometries in **EPSG:4326** (longitude /
+latitude). If you need a metric CRS for distance / area measurements,
+build your own &mdash; see [Local Build].
 
 [Local Build]: ../developer-guide/local-build.md
+
+```bash
+# Whole schema — stable URL, always the latest release:
+curl -LO https://github.com/kartoza/InfrastructureMapper/releases/latest/download/KartozaInfrastructureMapper-latest.gpkg
+
+# Just one domain (example: fencing):
+curl -LO https://github.com/kartoza/InfrastructureMapper/releases/latest/download/KartozaInfrastructureMapper-07-fencing-latest.gpkg
+
+# Or, with versioned filenames via gh CLI:
+gh release download --repo kartoza/InfrastructureMapper \
+  --pattern 'KartozaInfrastructureMapper-v*.gpkg'
+```
 
 ## 2. Open it in QGIS
 
@@ -61,7 +67,7 @@ SELECT version FROM current_schema_version;
 Or, from a terminal:
 
 ```bash
-sqlite3 infrastructure-mapper-vX.Y.Z.gpkg \
+sqlite3 KartozaInfrastructureMapper-latest.gpkg \
   "SELECT version FROM current_schema_version;"
 ```
 
