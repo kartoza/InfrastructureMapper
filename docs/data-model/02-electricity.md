@@ -63,7 +63,7 @@ erDiagram
 <!-- SCHEMA-REFERENCE-START - auto-generated, do not edit by hand -->
 ## Schema Reference
 
-_Materialized at **v0.1.0** - baseline plus every applied PG migration._
+_Materialized at **v0.2.0** - baseline plus every applied PG migration._
 
 _Source: `2-electricity.sql`. 4 table(s)._
 
