@@ -131,9 +131,12 @@ jobs:
         if: steps.ver.outputs.base_sha != ''
         run: |
           set -euo pipefail
-          # Bundles are produced by build_artifacts.sh with predictable names;
-          # globbing them via find avoids shellcheck SC2012 (ls parsing).
-          BASE_BUNDLE="$(find dist-base -maxdepth 1 -name 'pg-schema-*.sql' -print -quit)"
+          # Use explicit filenames — `find ... pg-schema-*.sql -print -quit`
+          # also matched per-domain slices (pg-schema-11-poles-*.sql etc.)
+          # and could non-deterministically pick a slice as the "base
+          # bundle", which then failed to load because its FK targets live
+          # in other domains.
+          BASE_BUNDLE="dist-base/pg-schema-${{ steps.ver.outputs.base_label }}.sql"
           HEAD_BUNDLE="dist/pg-schema-${{ steps.ver.outputs.head_ver }}.sql"
           nix develop --command python3 scripts/schema_diff.py \
             --base-bundle "$BASE_BUNDLE" \
