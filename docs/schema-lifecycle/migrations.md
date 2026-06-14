@@ -96,10 +96,10 @@ Both behave identically:
    one, including a SHA-256 checksum of the file as applied.
 
 `UNRELEASED.sql` is **never** applied by the runners &mdash; it's
-work-in-progress, not a shipping migration. To preview pending changes
-locally, run `scripts/release.sh --bump patch --dry-run` to see what
-filename it would get, then either re-cut a build or run the SQL by hand
-in a throwaway database.
+work-in-progress, not a shipping migration. To preview pending changes,
+read `sql/migrations/{pg,gpkg}/UNRELEASED.sql` directly or run the SQL
+by hand against a throwaway database. The next release filename will be
+the bumped version (`VERSION` + the appropriate semver step).
 
 ## When in doubt: rebuild
 

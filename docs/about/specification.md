@@ -116,16 +116,29 @@ does not have a preceding `-- Issue #NNN:` line in the file.
 
 ### 5.1 Local release script
 
-`scripts/release.sh --bump <major|minor|patch> [--commit]`:
+`scripts/release.sh` runs in two modes because `main` is protected
+(direct pushes are rejected — releases must land via PR).
 
-1. Reads `VERSION`, computes the next version.
-2. Requires that at least one of the two `UNRELEASED.sql` files contain a
+**Mode A — `--bump <major|minor|patch> --commit [--empty]`:**
+
+1. Refuses to run unless on a clean `main` that matches `origin/main`.
+2. Reads `VERSION`, computes the next version `X.Y.Z`.
+3. Requires that at least one of the two `UNRELEASED.sql` files contain a
    `-- Issue #` block (override with `--empty`).
-3. `git mv` both `UNRELEASED.sql` → `vX.Y.Z.sql`.
-4. Recreates empty `UNRELEASED.sql` files (header preserved).
-5. Writes new version into `VERSION`.
-6. Regenerates per-component schema reference docs.
-7. With `--commit`, creates the release commit and the `vX.Y.Z` git tag.
+4. Creates a release branch `release/vX.Y.Z`.
+5. `git mv` both `UNRELEASED.sql` → `vX.Y.Z.sql`.
+6. Recreates empty `UNRELEASED.sql` files (header preserved).
+7. Writes new version into `VERSION`.
+8. Regenerates per-component schema reference docs under `docs/data-model/`.
+9. Commits everything as `Release vX.Y.Z`, pushes the branch, opens a PR
+   via `gh pr create`.
+
+**Mode B — `--tag` (no `--bump`):**
+
+1. Refuses to run unless on `main` at `origin/main`.
+2. Reads `VERSION` (now `X.Y.Z` from the merged PR).
+3. Creates an annotated tag `vX.Y.Z` at `main` HEAD.
+4. Pushes the tag, which triggers `Release.yml`.
 
 ### 5.2 Release pipeline
 

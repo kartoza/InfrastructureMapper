@@ -106,3 +106,6 @@ claude.out
 # Kartoza Brand Asset Pack — versioned by Kartoza, copied into docs/assets
 # on demand. The folder itself is not part of this project's history.
 Kartoza_Brand_Assets_v0_1/
+
+# Claude Code session metadata (transcripts, local settings)
+.claude/
