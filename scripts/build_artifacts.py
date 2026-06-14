@@ -412,8 +412,16 @@ def build_domain_gpkg(
 
 
 _GPKG_DROP_TEMPLATES = (
-    'DELETE FROM gpkg_contents WHERE table_name = "{}";',
-    'DELETE FROM gpkg_geometry_columns WHERE table_name = "{}";',
+    # Single quotes around the table name: in SQLite double quotes denote
+    # identifiers, so `WHERE table_name = "building"` would be parsed as
+    # comparing against the *column* named building (which doesn't exist) and
+    # fail with "no such column". Single quotes give us a string literal.
+    # Domain table names never contain a single quote, so straight
+    # interpolation is safe.
+    "DELETE FROM gpkg_contents WHERE table_name = '{}';",
+    "DELETE FROM gpkg_geometry_columns WHERE table_name = '{}';",
+    # DROP TABLE uses double quotes — that's identifier-quoting, which is
+    # what we want for the table name in this statement.
     'DROP TABLE IF EXISTS "{}";',
 )
 
