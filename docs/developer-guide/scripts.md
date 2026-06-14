@@ -11,6 +11,8 @@ Every meaningful workflow has both a `scripts/<name>` entry point and a
 | `nix run` | Script | What it does |
 |---|---|---|
 | `.#build-gpkg` | `scripts/build_gpkg.sh` | Drops + recreates `im_gpkg_build` PG database, applies baseline + frozen migrations + `fixtures.sql`, stamps `schema_migrations`, exports to `gpkg/KartozaInfrastructureMapper.gpkg`. Accepts `--crs EPSG:NNNN` to reproject. |
+| `.#build-artifacts` | `scripts/build_artifacts.sh` &rarr; `scripts/build_artifacts.py` | Produces the composite + 13 per-domain SQL files and GPKGs that ship with PRs and releases. Requires `--version <tag>`. Add `--skip-gpkg` for fast schema-only iteration. |
+| `.#schema-diff` | `scripts/schema_diff.py` | Runs `migra` between two composite SQL bundles to produce a structured ALTER-style diff plus a Markdown summary. Used by the Artifacts and Release workflows. |
 | `.#migrate-pg` | `scripts/migrate_pg.sh` | Applies any `sql/migrations/pg/vX.Y.Z.sql` newer than `current_schema_version` against a target PG database. Strict-sequential, refuses downgrades. |
 | `.#migrate-gpkg` | `scripts/migrate_gpkg.py` | Same semantics as `migrate-pg`, but for an in-place GeoPackage. |
 | `.#release` | `scripts/release.sh` | Bumps `VERSION`, renames `UNRELEASED.sql` → `vX.Y.Z.sql` for both PG and GPKG, commits, tags. Needs `--bump patch\|minor\|major` and `--commit` to actually mutate. |

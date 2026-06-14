@@ -1,0 +1,245 @@
+# SPDX-FileCopyrightText: Tim Sutton
+# SPDX-License-Identifier: MIT
+name: 📦 Artifacts
+
+# Build composite + per-domain schema/GPKG artifacts on every PR and main push,
+# and (for PRs) compute a migra schema diff against the base ref. Released
+# versions (tag pushes) are handled by Release.yml which calls the same
+# scripts/build_artifacts.sh + scripts/schema_diff.py and attaches the
+# results to the GitHub release page.
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'sql/**'
+      - 'scripts/build_artifacts.*'
+      - 'scripts/schema_diff.py'
+      - 'flake.nix'
+      - 'flake.lock'
+      - '.github/workflows/Artifacts.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'sql/**'
+      - 'scripts/build_artifacts.*'
+      - 'scripts/schema_diff.py'
+      - 'flake.nix'
+      - 'flake.lock'
+      - '.github/workflows/Artifacts.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  build:
+    name: Build artifacts
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgis/postgis:17-3.5
+        env:
+          POSTGRES_PASSWORD: ci
+          POSTGRES_USER: ci
+          POSTGRES_DB: ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      PGHOST: localhost
+      PGPORT: '5432'
+      PGUSER: ci
+      PGPASSWORD: ci
+      PGDATABASE: ci
+    steps:
+      - name: Checkout HEAD
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v22
+
+      - name: Resolve version labels and base ref
+        id: ver
+        run: |
+          set -euo pipefail
+          HEAD_SHA="$(git rev-parse --short HEAD)"
+          case "${{ github.event_name }}" in
+            pull_request)
+              HEAD_VER="pr-${{ github.event.pull_request.number }}-${HEAD_SHA}"
+              BASE_SHA="${{ github.event.pull_request.base.sha }}"
+              BASE_LABEL="base-${BASE_SHA:0:7}"
+              HEAD_LABEL="pr-${{ github.event.pull_request.number }}"
+              ;;
+            push)
+              HEAD_VER="main-${HEAD_SHA}"
+              BASE_SHA="$(git rev-parse HEAD~1 2>/dev/null || echo '')"
+              BASE_LABEL="prev-${BASE_SHA:0:7}"
+              HEAD_LABEL="main-${HEAD_SHA}"
+              ;;
+            *)
+              HEAD_VER="dispatch-${HEAD_SHA}"
+              BASE_SHA=""
+              BASE_LABEL=""
+              HEAD_LABEL="dispatch-${HEAD_SHA}"
+              ;;
+          esac
+          {
+            echo "head_ver=$HEAD_VER"
+            echo "head_label=$HEAD_LABEL"
+            echo "base_sha=$BASE_SHA"
+            echo "base_label=$BASE_LABEL"
+          } >> "$GITHUB_OUTPUT"
+          echo "Resolved: HEAD=$HEAD_VER  BASE=$BASE_SHA ($BASE_LABEL)"
+
+      - name: Build HEAD artifacts
+        run: |
+          nix develop --command bash scripts/build_artifacts.sh \
+            --version "${{ steps.ver.outputs.head_ver }}" \
+            --out dist
+
+      - name: Build BASE composite for diff
+        if: steps.ver.outputs.base_sha != ''
+        run: |
+          set -euo pipefail
+          BASE_SHA="${{ steps.ver.outputs.base_sha }}"
+          # Use a worktree so HEAD stays intact for the upload step.
+          git worktree add ../base "$BASE_SHA"
+          # If the base predates the build_artifacts.* scripts, copy them in
+          # from HEAD so the build can run. This is safe because we only use
+          # them to assemble the base ref's SQL.
+          for f in build_artifacts.sh build_artifacts.py ensure_pg.sh; do
+            [ -f "../base/scripts/$f" ] || cp "scripts/$f" "../base/scripts/$f"
+          done
+          # Run the build inside the worktree with a separate output dir,
+          # skipping the GPKG (we only need pg-schema-*.sql for the diff).
+          ( cd ../base && nix develop "${{ github.workspace }}#" --command \
+              bash scripts/build_artifacts.sh \
+                --version "${{ steps.ver.outputs.base_label }}" \
+                --out "${{ github.workspace }}/dist-base" \
+                --skip-gpkg )
+          git worktree remove --force ../base
+
+      - name: Run migra schema diff
+        if: steps.ver.outputs.base_sha != ''
+        run: |
+          set -euo pipefail
+          # Bundles are produced by build_artifacts.sh with predictable names;
+          # globbing them via find avoids shellcheck SC2012 (ls parsing).
+          BASE_BUNDLE="$(find dist-base -maxdepth 1 -name 'pg-schema-*.sql' -print -quit)"
+          HEAD_BUNDLE="dist/pg-schema-${{ steps.ver.outputs.head_ver }}.sql"
+          nix develop --command python3 scripts/schema_diff.py \
+            --base-bundle "$BASE_BUNDLE" \
+            --head-bundle "$HEAD_BUNDLE" \
+            --version "${{ steps.ver.outputs.head_ver }}" \
+            --base-label "${{ steps.ver.outputs.base_label }}" \
+            --head-label "${{ steps.ver.outputs.head_label }}" \
+            --out dist
+
+      - name: Show artifact list
+        run: |
+          ls -lh dist/
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: infrastructure-mapper-${{ steps.ver.outputs.head_ver }}
+          path: dist/
+          retention-days: 90
+          if-no-files-found: error
+
+      - name: Post / update PR comment
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const distDir = 'dist';
+            const headVer = '${{ steps.ver.outputs.head_ver }}';
+            const baseLabel = '${{ steps.ver.outputs.base_label }}';
+            const headLabel = '${{ steps.ver.outputs.head_label }}';
+            const runId = context.runId;
+            const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${runId}`;
+            const marker = '<!-- infrastructure-mapper-artifacts-comment -->';
+
+            function humanBytes(n) {
+              if (n < 1024) return `${n} B`;
+              if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KiB`;
+              return `${(n / 1024 / 1024).toFixed(1)} MiB`;
+            }
+
+            const files = fs.readdirSync(distDir)
+              .map(name => ({ name, size: fs.statSync(path.join(distDir, name)).size }))
+              .sort((a, b) => a.name.localeCompare(b.name));
+
+            const composite = files.filter(f =>
+              !f.name.match(/-(0[0-9]|1[0-3])-/) &&
+              !f.name.startsWith('schema-diff-') &&
+              f.name !== 'MANIFEST.json');
+            const perDomain = files.filter(f => f.name.match(/-(0[0-9]|1[0-3])-/));
+            const diff = files.filter(f => f.name.startsWith('schema-diff-'));
+
+            let summary = '';
+            const summaryPath = path.join(distDir, `schema-diff-${headVer}.summary.md`);
+            if (fs.existsSync(summaryPath)) {
+              summary = fs.readFileSync(summaryPath, 'utf8');
+            }
+
+            function fileTable(rows) {
+              if (!rows.length) return '_(none)_';
+              return [
+                '| File | Size |',
+                '|------|-----:|',
+                ...rows.map(f => `| \`${f.name}\` | ${humanBytes(f.size)} |`),
+              ].join('\n');
+            }
+
+            const body = [
+              marker,
+              `## 📦 Build artifacts — \`${headVer}\``,
+              '',
+              summary || `_No schema-diff summary available_`,
+              '',
+              `### Composite (everything)`,
+              fileTable(composite),
+              '',
+              `### Per-domain slices`,
+              fileTable(perDomain),
+              '',
+              `### Schema diff`,
+              fileTable(diff),
+              '',
+              `Download all: [Actions run #${runId}](${runUrl}) → artifact \`infrastructure-mapper-${headVer}\``,
+              '',
+              `_Retention: 90 days. Updated automatically on each push._`,
+            ].join('\n');
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const existing = comments.find(c => c.body && c.body.startsWith(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }

@@ -129,3 +129,11 @@ words:
   - konkapp
   - Sensa
   - svgrepo
+  # Release artifact pipeline
+  - migra
+  - sqlbag
+  - schemainspect
+  - idempotently
+  - pyproject
+  - mkdocs
+  - dropdb
