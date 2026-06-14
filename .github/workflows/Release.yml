@@ -79,7 +79,10 @@ jobs:
         if: steps.ver.outputs.prev_tag != ''
         run: |
           set -euo pipefail
-          BASE_BUNDLE="$(find dist-prev -maxdepth 1 -name 'pg-schema-*.sql' -print -quit)"
+          # Explicit filenames; pg-schema-*.sql also matches per-domain
+          # slices (pg-schema-NN-name-*.sql), so a glob can pick a slice
+          # that lacks cross-domain FK targets and fail to load.
+          BASE_BUNDLE="dist-prev/pg-schema-${{ steps.ver.outputs.prev_tag }}.sql"
           HEAD_BUNDLE="dist/pg-schema-${{ steps.ver.outputs.tag }}.sql"
           nix develop --command python3 scripts/schema_diff.py \
             --base-bundle "$BASE_BUNDLE" \
