@@ -10,4 +10,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: bash scripts/codebase_size_check.sh
+      - uses: DeterminateSystems/nix-installer-action@v22
+      - run: nix develop --command bash scripts/codebase_size_check.sh

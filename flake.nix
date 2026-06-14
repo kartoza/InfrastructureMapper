@@ -160,6 +160,7 @@
             ps.pytest
             ps.pytest-qt
             ps.black
+            ps.isort
             ps.click # needed by black
             ps.jsonschema
             ps.pandas
