@@ -105,7 +105,7 @@ row "nix run .#schema-diff"     "migra diff between two composite SQL bundles"
 row "nix run .#migrate-pg"      "Apply pending PG migrations to a target DB"
 row "nix run .#migrate-gpkg"    "Apply pending GPKG migrations to a target file"
 row "nix run .#docs"            "Regenerate Schema Reference in docs/data-model/*.md"
-row "nix run .#release"         "Cut a release (--bump patch|minor|major --commit)"
+row "nix run .#release"         "Cut a release: --bump X --commit (PR), then --tag after merge"
 
 section "📚" "Documentation site (mkdocs-material)"
 row "nix run .#docs-serve"   "Live preview at http://127.0.0.1:8000"

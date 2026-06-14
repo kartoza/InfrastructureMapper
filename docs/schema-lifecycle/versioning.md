@@ -24,8 +24,10 @@ Per the project's commit convention:
 | New feature, additive | minor (`0.1.0` → `0.2.0`) |
 | Breaking schema change | major (`0.1.0` → `1.0.0`) |
 
-`scripts/release.sh --bump patch|minor|major --commit` does the actual bump,
-file renames, and tag.
+`scripts/release.sh --bump patch|minor|major --commit` opens the release PR
+(file rename, `VERSION` bump, docs regenerate, branch push, PR via `gh`). A
+follow-up `scripts/release.sh --tag` on `main` after the PR merges creates
+and pushes the tag, triggering `Release.yml`.
 
 ## The `schema_migrations` table
 

@@ -6,68 +6,102 @@ A release in Infrastructure Mapper is a *schema* release: it freezes the
 current `UNRELEASED.sql` migration into a versioned `vX.Y.Z.sql`, bumps
 `VERSION`, tags `main`, and publishes built artifacts.
 
-## `scripts/release.sh` &mdash; the cutover
+## `scripts/release.sh` &mdash; two-step cutover
+
+`main` is protected (PRs + status checks required), so the release
+flow is two steps:
 
 ```bash
+# Step 1: prepare the release branch + PR.
 nix run .#release -- --bump patch --commit
-nix run .#release -- --bump minor --commit
-nix run .#release -- --bump major --commit
+# (or --bump minor / --bump major)
+
+# After the PR has merged into main:
+git checkout main && git pull --ff-only
+
+# Step 2: tag the merged release commit.
+nix run .#release -- --tag
 ```
 
-The script does five things, in order:
+**Step 1 (`--commit`)** does the following on a fresh branch
+`release/vX.Y.Z`:
 
-1. **Validate**: refuses to run with a dirty working tree, on a non-main
-   branch, or if either `UNRELEASED.sql` is empty (no point bumping for
-   no schema change).
+1. **Validate**: refuses to run unless you're on a clean main that
+   matches `origin/main`. Refuses if either `UNRELEASED.sql` is empty
+   (no point bumping for no schema change) &mdash; pass `--empty` to
+   override (e.g. for a docs-only patch bump).
 2. **Bump `VERSION`**: reads the current semver, applies the requested
    bump, writes `MAJOR.MINOR.PATCH` back to the file.
 3. **Rename**: `sql/migrations/pg/UNRELEASED.sql` →
    `sql/migrations/pg/vX.Y.Z.sql`, and the same for `gpkg/`. Creates
    fresh empty `UNRELEASED.sql` files for the next cycle.
-4. **Commit**: a single commit titled
-   `Release vX.Y.Z` containing the `VERSION` bump and the renames.
-5. **Tag**: `git tag vX.Y.Z` on that commit.
+4. **Regenerate** the per-domain schema reference docs under
+   `docs/data-model/` (best-effort &mdash; needs Postgres reachable).
+5. **Commit + push**: a single `Release vX.Y.Z` commit on
+   `release/vX.Y.Z`, pushed to origin.
+6. **Open PR**: via `gh pr create`, base `main`, head `release/vX.Y.Z`.
 
-`--dry-run` prints what would happen without touching anything.
+**Step 2 (`--tag`)** runs on main *after* the PR has merged. It:
 
-`--commit` is required for the script to actually mutate state &mdash;
-without it, the dry-run path is the default. This is intentional belt-and-
-braces against accidental releases from a development shell.
+1. Verifies you're on `main` and at `origin/main`.
+2. Reads `VERSION` (which the merged PR has set to `X.Y.Z`).
+3. Creates an annotated tag `vX.Y.Z` at `main` HEAD.
+4. Pushes the tag.
+
+Pushing the tag triggers `.github/workflows/Release.yml`, which builds
+and publishes the artifacts.
+
+Why two steps: branch protection blocks direct pushes to `main`, so the
+release commit has to land via PR. The tag is just a pointer to the
+already-merged commit and doesn't go through branch protection, so it
+can be pushed directly. The `--tag` step also gives you a sanity gate
+between "PR is merged" and "Release.yml fires" &mdash; you can pause
+between the two if needed.
 
 ## The Release GitHub Action
 
-Pushing a `vX.Y.Z` tag to the remote triggers `.github/workflows/release.yml`,
-which builds and publishes:
+Pushing a `vX.Y.Z` tag triggers `.github/workflows/Release.yml`. It
+runs `scripts/build_artifacts.sh` and `scripts/schema_diff.py`, then
+attaches the full asset set to the GitHub release:
 
-| Artifact | What's in it |
+| Asset | What's in it |
 |---|---|
-| `infrastructure-mapper-vX.Y.Z-schema.tar.gz` | The full `sql/` tree at the tag (baseline + all migrations through vX.Y.Z). |
-| `infrastructure-mapper-vX.Y.Z.gpkg` | A canonical GeoPackage built fresh from the tag, in EPSG:4326. |
-| `infrastructure-mapper-vX.Y.Z-utm35s.gpkg` | The same data reprojected to EPSG:32735 (UTM Zone 35S) for southern Africa metric work. |
-| `CHANGELOG.md` extract | The release notes for `vX.Y.Z` parsed from `CHANGELOG.md`. |
+| `pg-schema-vX.Y.Z.sql` (+ `pg-schema-latest.sql`) | Composite SQL: extensions + meta + every domain + fixtures. |
+| `KartozaInfrastructureMapper-vX.Y.Z.gpkg` (+ `-latest.gpkg`) | Composite GeoPackage with every domain. |
+| `pg-schema-NN-name-vX.Y.Z.sql` (×13, + `-latest`) | Per-domain SQL slice. |
+| `KartozaInfrastructureMapper-NN-name-vX.Y.Z.gpkg` (×13, + `-latest`) | Per-domain GeoPackage. |
+| `pg-fixtures-vX.Y.Z.sql` (+ `-latest`) | Data-only dump of lookup tables. |
+| `pg-migrations-vX.Y.Z.tar.gz` (+ `-latest`) | Forward migration files + runner script. |
+| `gpkg-migrations-vX.Y.Z.tar.gz` (+ `-latest`) | Same, for GeoPackage. |
+| `schema-diff-vX.Y.Z.sql` (+ `-latest`) | `migra`-generated ALTER diff vs the previous release. |
+| `MANIFEST.json` | Byte sizes + per-domain table lists for every artifact. |
 
-Artifacts attach to the GitHub Release page automatically. Schema consumers
-can `curl` the tarball, or download a ready-to-use GeoPackage for the
-common metric CRS without rebuilding locally.
+Every asset is published twice: once with the version embedded (for
+reproducibility / archival) and once with `-latest` (so
+`https://github.com/kartoza/InfrastructureMapper/releases/latest/download/<name>`
+stable URLs resolve to the always-current file).
 
 ## Consuming a release
 
-For most users, the recommended consumption path is:
+For most users:
 
 ```bash
-# Download the canonical metric GeoPackage:
-gh release download vX.Y.Z --pattern '*-utm35s.gpkg'
+# Composite GeoPackage (everything, latest):
+curl -LO https://github.com/kartoza/InfrastructureMapper/releases/latest/download/KartozaInfrastructureMapper-latest.gpkg
 
-# Or, to apply the schema to an existing Postgres database:
-gh release download vX.Y.Z --pattern '*-schema.tar.gz'
-tar xf infrastructure-mapper-vX.Y.Z-schema.tar.gz
-psql -d my_db -f sql/0-meta.sql
-# … then the rest of the baseline + migrations in order.
+# Composite SQL (everything, latest):
+curl -LO https://github.com/kartoza/InfrastructureMapper/releases/latest/download/pg-schema-latest.sql
+psql -d my_db -v ON_ERROR_STOP=1 -f pg-schema-latest.sql
+
+# Just one domain (example: fencing):
+curl -LO https://github.com/kartoza/InfrastructureMapper/releases/latest/download/pg-schema-07-fencing-latest.sql
+curl -LO https://github.com/kartoza/InfrastructureMapper/releases/latest/download/KartozaInfrastructureMapper-07-fencing-latest.gpkg
 ```
 
-`scripts/migrate_pg.py` and `scripts/migrate_gpkg.py` can also pull a
-tarball directly &mdash; the runners just need access to the `sql/`
-directory tree.
+`scripts/migrate_pg.sh` and `scripts/migrate_gpkg.py` can apply the
+forward migrations from `pg-migrations-latest.tar.gz` /
+`gpkg-migrations-latest.tar.gz` on top of an existing earlier-version
+database.
 
 ## Why semver and not date-based versions
 

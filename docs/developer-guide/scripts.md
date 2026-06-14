@@ -15,7 +15,7 @@ Every meaningful workflow has both a `scripts/<name>` entry point and a
 | `.#schema-diff` | `scripts/schema_diff.py` | Runs `migra` between two composite SQL bundles to produce a structured ALTER-style diff plus a Markdown summary. Used by the Artifacts and Release workflows. |
 | `.#migrate-pg` | `scripts/migrate_pg.sh` | Applies any `sql/migrations/pg/vX.Y.Z.sql` newer than `current_schema_version` against a target PG database. Strict-sequential, refuses downgrades. |
 | `.#migrate-gpkg` | `scripts/migrate_gpkg.py` | Same semantics as `migrate-pg`, but for an in-place GeoPackage. |
-| `.#release` | `scripts/release.sh` | Bumps `VERSION`, renames `UNRELEASED.sql` → `vX.Y.Z.sql` for both PG and GPKG, commits, tags. Needs `--bump patch\|minor\|major` and `--commit` to actually mutate. |
+| `.#release` | `scripts/release.sh` | Two-step release: `--bump patch\|minor\|major --commit` creates a `release/vX.Y.Z` branch + opens a PR (rotates `UNRELEASED.sql` → `vX.Y.Z.sql`, bumps `VERSION`, regenerates schema docs). After PR merge: `--tag` tags `main` HEAD and pushes the tag, which triggers `Release.yml`. |
 | `.#docs` | `scripts/generate_schema_docs.py` | Regenerates the per-component schema reference Markdown from a fresh reference PG database. Output goes under `docs/data-model/`. |
 
 ## QGIS launchers
@@ -78,7 +78,7 @@ Nothing stops you. From inside `nix develop`:
 ```bash
 ./scripts/build_gpkg.sh --crs EPSG:32735
 ./scripts/migrate_gpkg.py path/to/some.gpkg
-./scripts/release.sh --bump minor --dry-run
+./scripts/release.sh --bump minor --commit   # prepares branch + PR
 ```
 
 The `nix run .#…` wrappers exist for **cold-shell** usage &mdash; running
