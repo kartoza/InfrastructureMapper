@@ -35,7 +35,7 @@ erDiagram
 <!-- SCHEMA-REFERENCE-START - auto-generated, do not edit by hand -->
 ## Schema Reference
 
-_Materialized at **v0.1.0** - baseline plus every applied PG migration._
+_Materialized at **v0.1.1** - baseline plus every applied PG migration._
 
 _Source: `9-landuse.sql`. 6 table(s)._
 

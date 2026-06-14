@@ -43,7 +43,7 @@ erDiagram
 <!-- SCHEMA-REFERENCE-START - auto-generated, do not edit by hand -->
 ## Schema Reference
 
-_Materialized at **v0.1.0** - baseline plus every applied PG migration._
+_Materialized at **v0.1.1** - baseline plus every applied PG migration._
 
 _Source: `4-vegetation.sql`. 9 table(s)._
 
