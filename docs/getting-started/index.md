@@ -6,6 +6,16 @@ Pick the path that matches what you want to do. Each one assumes you
 already have **the tool on the left-hand column** installed; no Nix,
 no dev shell, no compilation.
 
+## Direct downloads (latest release)
+
+| Asset | Stable URL |
+| --- | --- |
+| **GeoPackage** (everything) | [`KartozaInfrastructureMapper-latest.gpkg`](https://github.com/kartoza/InfrastructureMapper/releases/latest/download/KartozaInfrastructureMapper-latest.gpkg) |
+| **PostgreSQL schema** (everything) | [`pg-schema-latest.sql`](https://github.com/kartoza/InfrastructureMapper/releases/latest/download/pg-schema-latest.sql) |
+| **PG migrations** | [`pg-migrations-latest.tar.gz`](https://github.com/kartoza/InfrastructureMapper/releases/latest/download/pg-migrations-latest.tar.gz) |
+| **GPKG migrations** | [`gpkg-migrations-latest.tar.gz`](https://github.com/kartoza/InfrastructureMapper/releases/latest/download/gpkg-migrations-latest.tar.gz) |
+| **Per-domain slices** | Pattern: `pg-schema-NN-name-latest.sql` and `KartozaInfrastructureMapper-NN-name-latest.gpkg` &mdash; full list on the [Releases page](https://github.com/kartoza/InfrastructureMapper/releases/latest) |
+
 <div class="grid cards" markdown>
 
 -   :material-database-outline:{ .lg .middle } __Open the GeoPackage in QGIS__

@@ -131,6 +131,42 @@ jobs:
             fi
           } > dist/RELEASE_NOTES.md
 
+      - name: Publish version-less "-latest" companion assets
+        # Stable URLs of the form
+        #   https://github.com/<org>/<repo>/releases/latest/download/<file>
+        # require an exact filename match. Our versioned filenames embed the
+        # tag, so we ship a parallel set without the version so README/docs
+        # can hard-link to the always-current asset.
+        run: |
+          set -euo pipefail
+          VTAG="${{ steps.ver.outputs.tag }}"
+          cd dist
+          for src in \
+              "pg-schema-${VTAG}.sql" \
+              "pg-fixtures-${VTAG}.sql" \
+              "KartozaInfrastructureMapper-${VTAG}.gpkg" \
+              "pg-migrations-${VTAG}.tar.gz" \
+              "gpkg-migrations-${VTAG}.tar.gz" \
+              "schema-diff-${VTAG}.sql" \
+              "schema-diff-${VTAG}.summary.md"; do
+            [ -f "$src" ] || continue
+            # Strip the "-VTAG" segment from the filename to produce the
+            # -latest variant (e.g. pg-schema-v0.2.0.sql -> pg-schema-latest.sql).
+            stable="${src/-${VTAG}/-latest}"
+            cp "$src" "$stable"
+          done
+          # Per-domain slices: pg-schema-07-fencing-v0.2.0.sql -> pg-schema-07-fencing-latest.sql
+          for src in pg-schema-[0-9][0-9]-*-"${VTAG}".sql; do
+            [ -f "$src" ] || continue
+            stable="${src/-${VTAG}/-latest}"
+            cp "$src" "$stable"
+          done
+          for src in KartozaInfrastructureMapper-[0-9][0-9]-*-"${VTAG}".gpkg; do
+            [ -f "$src" ] || continue
+            stable="${src/-${VTAG}/-latest}"
+            cp "$src" "$stable"
+          done
+
       - name: List release artifacts
         run: ls -lh dist/
 
@@ -151,3 +187,12 @@ jobs:
             dist/schema-diff-${{ steps.ver.outputs.tag }}.summary.md
             dist/MANIFEST.json
             dist/RELEASE_NOTES.md
+            dist/pg-schema-latest.sql
+            dist/pg-fixtures-latest.sql
+            dist/KartozaInfrastructureMapper-latest.gpkg
+            dist/pg-schema-*-latest.sql
+            dist/KartozaInfrastructureMapper-*-latest.gpkg
+            dist/pg-migrations-latest.tar.gz
+            dist/gpkg-migrations-latest.tar.gz
+            dist/schema-diff-latest.sql
+            dist/schema-diff-latest.summary.md

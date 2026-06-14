@@ -37,23 +37,28 @@ single self-contained SQL file plus per-domain slices:
 
 [GitHub Releases page]: https://github.com/kartoza/InfrastructureMapper/releases/latest
 
-| File pattern | What it is |
-| --- | --- |
-| `pg-schema-vX.Y.Z.sql` | **Everything** &mdash; extensions, meta, all 13 domains, fixtures. Apply to an empty database to bootstrap the full schema. |
-| `pg-schema-NN-name-vX.Y.Z.sql` | **One domain only** &mdash; e.g. `pg-schema-07-fencing-vX.Y.Z.sql`. Self-contained; includes the extensions and meta layer plus that domain's tables and the lookup-table fixtures it needs. Pick this when you only care about, say, fences. |
-| `pg-fixtures-vX.Y.Z.sql` | Data-only dump of lookup tables. Useful if you've already loaded the schema and want to refresh seed data. |
-| `pg-migrations-vX.Y.Z.tar.gz` | Forward migrations from a previous baseline to this version. See [Migrations](../schema-lifecycle/migrations.md) for when to use these instead of a fresh load. |
-| `schema-diff-vX.Y.Z.sql` | `migra`-generated diff vs the previous release &mdash; ALTER statements that would bring the prior version up to this one. |
+| File | Stable "latest" URL | What it is |
+| --- | --- | --- |
+| `pg-schema-vX.Y.Z.sql` | [`pg-schema-latest.sql`](https://github.com/kartoza/InfrastructureMapper/releases/latest/download/pg-schema-latest.sql) | **Everything** &mdash; extensions, meta, all 13 domains, fixtures. Apply to an empty database to bootstrap the full schema. |
+| `pg-schema-NN-name-vX.Y.Z.sql` | [`pg-schema-NN-name-latest.sql`](https://github.com/kartoza/InfrastructureMapper/releases/latest/download/pg-schema-07-fencing-latest.sql) | **One domain only** &mdash; e.g. `pg-schema-07-fencing-latest.sql`. Self-contained; includes extensions, meta, that domain's tables, and the lookup-table fixtures it needs. |
+| `pg-fixtures-vX.Y.Z.sql` | [`pg-fixtures-latest.sql`](https://github.com/kartoza/InfrastructureMapper/releases/latest/download/pg-fixtures-latest.sql) | Data-only dump of lookup tables. Useful if you've already loaded the schema and want to refresh seed data. |
+| `pg-migrations-vX.Y.Z.tar.gz` | [`pg-migrations-latest.tar.gz`](https://github.com/kartoza/InfrastructureMapper/releases/latest/download/pg-migrations-latest.tar.gz) | Forward migrations from a previous baseline to this version. See [Migrations](../schema-lifecycle/migrations.md) for when to use these instead of a fresh load. |
+| `schema-diff-vX.Y.Z.sql` | [`schema-diff-latest.sql`](https://github.com/kartoza/InfrastructureMapper/releases/latest/download/schema-diff-latest.sql) | `migra`-generated diff vs the previous release &mdash; ALTER statements that would bring the prior version up to this one. |
+
+Pick whichever flavour you like &mdash; `curl` from the stable URL, or
+`gh release download` for the versioned filename:
 
 ```bash
-# Composite (everything):
+# Composite (everything) — stable URL, always the latest release:
+curl -LO https://github.com/kartoza/InfrastructureMapper/releases/latest/download/pg-schema-latest.sql
+
+# Just one domain (example: fencing):
+curl -LO https://github.com/kartoza/InfrastructureMapper/releases/latest/download/pg-schema-07-fencing-latest.sql
+
+# Or, with versioned filenames via gh CLI:
 gh release download --repo kartoza/InfrastructureMapper \
   --pattern 'pg-schema-v*.sql' \
   --pattern 'pg-fixtures-v*.sql'
-
-# Just one domain (example: fencing):
-gh release download --repo kartoza/InfrastructureMapper \
-  --pattern 'pg-schema-07-fencing-v*.sql'
 ```
 
 ## 2. Create your target database
@@ -75,7 +80,7 @@ invocation loads everything:
 ```bash
 DB=infrastructure
 psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d $DB \
-  -f pg-schema-vX.Y.Z.sql
+  -f pg-schema-latest.sql
 ```
 
 `ON_ERROR_STOP=1` is important &mdash; if any statement fails, the
@@ -91,7 +96,7 @@ empty database gives you a working `fence` / `fence_type` /
 
 ```bash
 psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d $DB \
-  -f pg-schema-07-fencing-vX.Y.Z.sql
+  -f pg-schema-07-fencing-latest.sql
 ```
 
 You can load several slices into the same database; they share the

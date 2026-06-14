@@ -35,6 +35,47 @@ Ship the schema as a Postgres database. Snapshot it as a GeoPackage. Take it to 
 field in QField or Mergin Maps. Migrate it forward with `vX.Y.Z` migrations. All from
 the same source of truth.
 
+## Download the latest release
+
+Always-current direct links &mdash; no version pinning, no GitHub navigation:
+
+<div class="grid cards" markdown>
+
+-   :material-database-outline:{ .lg .middle } __GeoPackage__
+
+    ---
+
+    Single `.gpkg` with every domain. Drag onto a QGIS canvas.
+
+    [:octicons-download-24: KartozaInfrastructureMapper-latest.gpkg](https://github.com/kartoza/InfrastructureMapper/releases/latest/download/KartozaInfrastructureMapper-latest.gpkg)
+
+-   :material-database:{ .lg .middle } __PostgreSQL schema__
+
+    ---
+
+    Self-contained SQL: extensions + meta + every domain + fixtures.
+
+    [:octicons-download-24: pg-schema-latest.sql](https://github.com/kartoza/InfrastructureMapper/releases/latest/download/pg-schema-latest.sql)
+
+-   :material-source-branch:{ .lg .middle } __Migrations__
+
+    ---
+
+    Forward migrations + runner scripts. Apply on top of an older DB.
+
+    [:octicons-download-24: pg-migrations-latest.tar.gz](https://github.com/kartoza/InfrastructureMapper/releases/latest/download/pg-migrations-latest.tar.gz)
+    &middot;
+    [:octicons-download-24: gpkg-migrations-latest.tar.gz](https://github.com/kartoza/InfrastructureMapper/releases/latest/download/gpkg-migrations-latest.tar.gz)
+
+</div>
+
+Want just one domain? Every release also ships 13 per-domain SQL + GeoPackage slices
+(e.g. `pg-schema-07-fencing-latest.sql`,
+`KartozaInfrastructureMapper-07-fencing-latest.gpkg`) &mdash; see
+[Getting Started](getting-started/index.md) for the per-domain download patterns,
+or [GitHub Releases](https://github.com/kartoza/InfrastructureMapper/releases/latest)
+for the full asset list.
+
 ## What's in the box
 
 <div class="grid cards" markdown>

@@ -14,10 +14,10 @@ as a single GeoPackage, plus per-domain slices for narrower workflows:
 
 [GitHub Releases page]: https://github.com/kartoza/InfrastructureMapper/releases/latest
 
-| File pattern | What it is |
-| --- | --- |
-| `KartozaInfrastructureMapper-vX.Y.Z.gpkg` | **Everything** &mdash; all 13 domains, every lookup table, all in one file. Default choice. |
-| `KartozaInfrastructureMapper-NN-name-vX.Y.Z.gpkg` | **One domain only** &mdash; e.g. `KartozaInfrastructureMapper-07-fencing-vX.Y.Z.gpkg`. Pick this if you only care about fences, or roads, or any single domain. |
+| File | Stable "latest" URL | What it is |
+| --- | --- | --- |
+| `KartozaInfrastructureMapper-vX.Y.Z.gpkg` | [`KartozaInfrastructureMapper-latest.gpkg`](https://github.com/kartoza/InfrastructureMapper/releases/latest/download/KartozaInfrastructureMapper-latest.gpkg) | **Everything** &mdash; all 13 domains, every lookup table, in one file. Default choice. |
+| `KartozaInfrastructureMapper-NN-name-vX.Y.Z.gpkg` | [`KartozaInfrastructureMapper-NN-name-latest.gpkg`](https://github.com/kartoza/InfrastructureMapper/releases/latest/download/KartozaInfrastructureMapper-07-fencing-latest.gpkg) | **One domain only** &mdash; e.g. `KartozaInfrastructureMapper-07-fencing-latest.gpkg`. Pick this if you only care about one domain. |
 
 All GeoPackages ship with geometries in **EPSG:4326** (longitude /
 latitude). If you need a metric CRS for distance / area measurements,
@@ -26,13 +26,15 @@ build your own &mdash; see [Local Build].
 [Local Build]: ../developer-guide/local-build.md
 
 ```bash
-# Whole schema:
-gh release download --repo kartoza/InfrastructureMapper \
-  --pattern 'KartozaInfrastructureMapper-v*.gpkg'
+# Whole schema — stable URL, always the latest release:
+curl -LO https://github.com/kartoza/InfrastructureMapper/releases/latest/download/KartozaInfrastructureMapper-latest.gpkg
 
 # Just one domain (example: fencing):
+curl -LO https://github.com/kartoza/InfrastructureMapper/releases/latest/download/KartozaInfrastructureMapper-07-fencing-latest.gpkg
+
+# Or, with versioned filenames via gh CLI:
 gh release download --repo kartoza/InfrastructureMapper \
-  --pattern 'KartozaInfrastructureMapper-07-fencing-v*.gpkg'
+  --pattern 'KartozaInfrastructureMapper-v*.gpkg'
 ```
 
 ## 2. Open it in QGIS
@@ -65,7 +67,7 @@ SELECT version FROM current_schema_version;
 Or, from a terminal:
 
 ```bash
-sqlite3 KartozaInfrastructureMapper-vX.Y.Z.gpkg \
+sqlite3 KartozaInfrastructureMapper-latest.gpkg \
   "SELECT version FROM current_schema_version;"
 ```
 
