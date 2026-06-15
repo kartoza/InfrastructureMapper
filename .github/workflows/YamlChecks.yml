@@ -10,27 +10,32 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: pip install yamllint
-      - run: yamllint .
+      - uses: DeterminateSystems/nix-installer-action@v22
+      - run: nix develop .#minimal --command yamllint .
   yamlfmt:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install yamlfmt
-        run: sudo snap install yamlfmt
-      - name: Run yamlfmt
+      - uses: DeterminateSystems/nix-installer-action@v22
+      - name: Run yamlfmt via flake
         run: |
-          find . -name '*.yaml' -o -name '*.yml' | while read -r f; do
-            # Skip empty files
-            if [ ! -s "$f" ]; then
-              echo "🦘 Skipping empty file: $f"
-              continue
-            fi
-            # Skip files with only whitespace/comments
-            if ! grep -q '[^[:space:]#]' "$f"; then
-              echo "🦘 Skipping file containing only whitespace or comments: $f"
-              continue
-            fi
-            echo "⚒️ Formatting yaml file: $f"
-            yamlfmt "$f"
-          done
+          # shellcheck disable=SC2016
+          # ($f is expanded by the inner bash -c shell, not the outer one;
+          # single-quoting the script body is intentional so the runner
+          # doesn't pre-expand it.)
+          nix develop .#minimal --command bash -c '
+            find . -name "*.yaml" -o -name "*.yml" | while read -r f; do
+              # Skip empty files
+              if [ ! -s "$f" ]; then
+                echo "🦘 Skipping empty file: $f"
+                continue
+              fi
+              # Skip files with only whitespace/comments
+              if ! grep -q "[^[:space:]#]" "$f"; then
+                echo "🦘 Skipping file containing only whitespace or comments: $f"
+                continue
+              fi
+              echo "⚒️ Formatting yaml file: $f"
+              yamlfmt "$f"
+            done
+          '
