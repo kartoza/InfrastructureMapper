@@ -27,5 +27,5 @@ jobs:
           fi
       - name: Run schema-immutability checker
         run: |
-          nix develop --command \
+          nix develop .#minimal --command \
             bash scripts/check_schema_immutability.sh --base "${{ steps.base.outputs.ref }}"

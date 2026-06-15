@@ -11,4 +11,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: DeterminateSystems/nix-installer-action@v22
-      - run: nix develop --command bash scripts/codebase_size_check.sh
+      - run: nix develop .#minimal --command bash scripts/codebase_size_check.sh

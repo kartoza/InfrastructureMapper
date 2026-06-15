@@ -11,28 +11,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: DeterminateSystems/nix-installer-action@v22
-      - run: nix develop --command black --check --diff .
+      - run: nix develop .#minimal --command black --check --diff .
   ensure-utf8-encoding:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: DeterminateSystems/nix-installer-action@v22
-      - run: nix develop --command bash scripts/encoding_check.sh
+      - run: nix develop .#minimal --command bash scripts/encoding_check.sh
   ensure-google-docstrings:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: DeterminateSystems/nix-installer-action@v22
-      - run: nix develop --command bash scripts/docstrings_check.sh
+      - run: nix develop .#minimal --command bash scripts/docstrings_check.sh
   test-count-feedback:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: DeterminateSystems/nix-installer-action@v22
-      - run: nix develop --command python scripts/commit_test_stats.py
+      - run: nix develop .#minimal --command python scripts/commit_test_stats.py
   isort:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: DeterminateSystems/nix-installer-action@v22
-      - run: nix develop --command isort --check --diff .
+      - run: nix develop .#minimal --command isort --check --diff .

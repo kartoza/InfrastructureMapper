@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: DeterminateSystems/nix-installer-action@v22
-      - run: nix develop --command yamllint .
+      - run: nix develop .#minimal --command yamllint .
   yamlfmt:
     runs-on: ubuntu-latest
     steps:
@@ -23,7 +23,7 @@ jobs:
           # ($f is expanded by the inner bash -c shell, not the outer one;
           # single-quoting the script body is intentional so the runner
           # doesn't pre-expand it.)
-          nix develop --command bash -c '
+          nix develop .#minimal --command bash -c '
             find . -name "*.yaml" -o -name "*.yml" | while read -r f; do
               # Skip empty files
               if [ ! -s "$f" ]; then
