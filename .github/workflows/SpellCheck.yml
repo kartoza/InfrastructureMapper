@@ -10,5 +10,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: npm install -g cspell
-      - run: cspell --no-progress --no-summary '**/*.md'
+      - uses: DeterminateSystems/nix-installer-action@v22
+      - run: nix develop .#minimal --command cspell --no-progress --no-summary '**/*.md'

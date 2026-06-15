@@ -106,130 +106,162 @@
         postgres = postgresWithPostGIS;
       };
 
-      devShells.${system}.default = pkgs.mkShell {
-        packages = [
-          pkgs.autoflake
-          pkgs.chafa
-          pkgs.ffmpeg
-          pkgs.gdb
-          pkgs.git
-          pkgs.glow # terminal markdown viewer
-          pkgs.gource # Software version control visualization
-          pkgs.gum
-          pkgs.gum # UX for TUIs
-          pkgs.jq
-          pkgs.gdal # ogr2ogr + ogrinfo for GPKG builds
-          pkgs.sqlite # sqlite3 CLI for GPKG post-processing
-          pkgs.libsForQt5.kcachegrind
-          pkgs.nixfmt-rfc-style
-          pkgs.pre-commit
-          pkgs.pyprof2calltree # needed to covert cprofile call trees into a format kcachegrind can read
-          pkgs.python3
-          pkgs.qgis
-          pkgs.qt5.full # so we get designer
-          pkgs.qt5.qtbase
-          pkgs.qt5.qtlocation
-          pkgs.qt5.qtquickcontrols2
-          pkgs.qt5.qtsvg
-          pkgs.qt5.qttools
-          pkgs.skate # Distributed key/value store
-          pkgs.vim
-          pkgs.virtualenv
-          pkgs.vscode
-          pkgs.sqlfluff
-          pkgs.marp-cli
-          pkgs.shellcheck
-          pkgs.shfmt
-          pkgs.markdownlint-cli
-          pkgs.yamllint
-          pkgs.yamlfmt
-          pkgs.actionlint # for checking gh actions
-          pkgs.bearer
-          pkgs.reuse # SPDX/REUSE license compliance checker
-          # Python security / quality tools used by pre-commit hooks.
-          pkgs.python3Packages.bandit
-          pkgs.python3Packages.pylint
-          pkgs.semgrep
-          postgresWithPostGIS
-          pkgs.nodePackages.cspell
-          (pkgs.python3.withPackages (ps: [
-            ps.python
-            ps.pip
-            ps.setuptools
-            ps.wheel
-            ps.pytest
-            ps.pytest-qt
-            ps.black
-            ps.click # needed by black
-            ps.jsonschema
-            ps.pandas
-            ps.odfpy
-            ps.psutil
-            ps.httpx
-            ps.toml
-            ps.typer
-            ps.paver
-            # For autocompletion in vscode
-            ps.pyqt5-stubs
-            ps.debugpy
-            ps.numpy
-            ps.gdal
-            ps.toml
-            ps.typer
-            ps.snakeviz # For visualising cprofiler outputs
-            # Add these for SQL linting/formatting:
-            ps.sqlfmt
-            # MkDocs documentation site (Material theme + plugins).
-            ps.mkdocs
-            ps.mkdocs-material
-            ps.mkdocs-material-extensions
-            ps.mkdocs-glightbox
-            ps.mkdocs-git-revision-date-localized-plugin
-            ps.mkdocs-mermaid2-plugin
-            ps.pymdown-extensions
-            # Schema diff stack for build_artifacts / schema_diff.
-            migra
-            sqlbag
-            schemainspect
-            ps.psycopg2
-          ]))
-        ];
-        shellHook = ''
-          # Respect any PGHOST/PGPORT/PGDATABASE already set by the caller
-          # (CI sets PGHOST=localhost so we hit the service-container PG);
-          # only fall back to the project-local cluster when unset.
-          : "''${PGHOST:=$PWD/pgdata}"
-          : "''${PGPORT:=5432}"
-          : "''${PGDATABASE:=gis}"
-          export PGHOST PGPORT PGDATABASE
+      devShells.${system} = {
+        # Lightweight shell for CI lint / immutability / docstring /
+        # yaml / spelling jobs. Excludes QGIS, Qt5, GDAL, PostGIS,
+        # mkdocs and the migra stack — pulling those for a job that
+        # just needs bash + git triggers chronic cache.nixos.org
+        # flakiness because of the download volume.
+        minimal = pkgs.mkShell {
+          packages = [
+            pkgs.bash
+            pkgs.coreutils
+            pkgs.git
+            pkgs.gnugrep
+            pkgs.gawk
+            pkgs.gnused
+            pkgs.findutils
+            pkgs.python3
+            pkgs.shellcheck
+            pkgs.shfmt
+            pkgs.actionlint
+            pkgs.markdownlint-cli
+            pkgs.yamllint
+            pkgs.yamlfmt
+            pkgs.reuse
+            pkgs.sqlfluff
+            pkgs.nodePackages.cspell
+            pkgs.python3Packages.black
+            pkgs.python3Packages.isort
+          ];
+        };
 
-          if [ ! -d ".venv" ]; then
-            python -m venv .venv
-          fi
+        default = pkgs.mkShell {
+          packages = [
+            pkgs.autoflake
+            pkgs.chafa
+            pkgs.ffmpeg
+            pkgs.gdb
+            pkgs.git
+            pkgs.glow # terminal markdown viewer
+            pkgs.gource # Software version control visualization
+            pkgs.gum
+            pkgs.gum # UX for TUIs
+            pkgs.jq
+            pkgs.gdal # ogr2ogr + ogrinfo for GPKG builds
+            pkgs.sqlite # sqlite3 CLI for GPKG post-processing
+            pkgs.libsForQt5.kcachegrind
+            pkgs.nixfmt-rfc-style
+            pkgs.pre-commit
+            pkgs.pyprof2calltree # needed to covert cprofile call trees into a format kcachegrind can read
+            pkgs.python3
+            pkgs.qgis
+            pkgs.qt5.full # so we get designer
+            pkgs.qt5.qtbase
+            pkgs.qt5.qtlocation
+            pkgs.qt5.qtquickcontrols2
+            pkgs.qt5.qtsvg
+            pkgs.qt5.qttools
+            pkgs.skate # Distributed key/value store
+            pkgs.vim
+            pkgs.virtualenv
+            pkgs.vscode
+            pkgs.sqlfluff
+            pkgs.marp-cli
+            pkgs.shellcheck
+            pkgs.shfmt
+            pkgs.markdownlint-cli
+            pkgs.yamllint
+            pkgs.yamlfmt
+            pkgs.actionlint # for checking gh actions
+            pkgs.bearer
+            pkgs.reuse # SPDX/REUSE license compliance checker
+            # Python security / quality tools used by pre-commit hooks.
+            pkgs.python3Packages.bandit
+            pkgs.python3Packages.pylint
+            pkgs.semgrep
+            postgresWithPostGIS
+            pkgs.nodePackages.cspell
+            (pkgs.python3.withPackages (ps: [
+              ps.python
+              ps.pip
+              ps.setuptools
+              ps.wheel
+              ps.pytest
+              ps.pytest-qt
+              ps.black
+              ps.isort
+              ps.click # needed by black
+              ps.jsonschema
+              ps.pandas
+              ps.odfpy
+              ps.psutil
+              ps.httpx
+              ps.toml
+              ps.typer
+              ps.paver
+              # For autocompletion in vscode
+              ps.pyqt5-stubs
+              ps.debugpy
+              ps.numpy
+              ps.gdal
+              ps.toml
+              ps.typer
+              ps.snakeviz # For visualising cprofiler outputs
+              # Add these for SQL linting/formatting:
+              ps.sqlfmt
+              # MkDocs documentation site (Material theme + plugins).
+              ps.mkdocs
+              ps.mkdocs-material
+              ps.mkdocs-material-extensions
+              ps.mkdocs-glightbox
+              ps.mkdocs-git-revision-date-localized-plugin
+              ps.mkdocs-mermaid2-plugin
+              ps.pymdown-extensions
+              # Schema diff stack for build_artifacts / schema_diff.
+              migra
+              sqlbag
+              schemainspect
+              ps.psycopg2
+            ]))
+          ];
+          shellHook = ''
+            # Respect any PGHOST/PGPORT/PGDATABASE already set by the caller
+            # (CI sets PGHOST=localhost so we hit the service-container PG);
+            # only fall back to the project-local cluster when unset.
+            : "''${PGHOST:=$PWD/pgdata}"
+            : "''${PGPORT:=5432}"
+            : "''${PGDATABASE:=gis}"
+            export PGHOST PGPORT PGDATABASE
 
-          # Activate the virtual environment
-          source .venv/bin/activate
+            if [ ! -d ".venv" ]; then
+              python -m venv .venv
+            fi
 
-          # Upgrade pip and install packages from requirements.txt if it exists
-          pip install --upgrade pip > /dev/null
-          if [ -f requirements.txt ]; then
-            echo "Installing Python requirements from requirements.txt..."
-            pip install -r requirements.txt
-          else
-            echo "No requirements.txt found, skipping pip install."
-          fi
+            # Activate the virtual environment
+            source .venv/bin/activate
 
-          # Install the pre-commit + pre-push git hooks (idempotent).
-          # pre-push is what mirrors CI's docs + immutability checks.
-          if command -v pre-commit >/dev/null && [ -d .git ]; then
-            pre-commit install --install-hooks >/dev/null 2>&1 || true
-          fi
+            # Upgrade pip and install packages from requirements.txt if it exists
+            pip install --upgrade pip > /dev/null
+            if [ -f requirements.txt ]; then
+              echo "Installing Python requirements from requirements.txt..."
+              pip install -r requirements.txt
+            else
+              echo "No requirements.txt found, skipping pip install."
+            fi
 
-          # Pretty welcome with live Postgres status.
-          if [ -x scripts/welcome.sh ]; then
-            bash scripts/welcome.sh || true
-          fi
-        '';
+            # Install the pre-commit + pre-push git hooks (idempotent).
+            # pre-push is what mirrors CI's docs + immutability checks.
+            if command -v pre-commit >/dev/null && [ -d .git ]; then
+              pre-commit install --install-hooks >/dev/null 2>&1 || true
+            fi
+
+            # Pretty welcome with live Postgres status.
+            if [ -x scripts/welcome.sh ]; then
+              bash scripts/welcome.sh || true
+            fi
+          '';
+        };
       };
 
       apps.${system} =

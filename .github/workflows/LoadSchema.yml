@@ -31,14 +31,17 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v22
       - name: Wait for Postgres to be ready
+        # pg_isready ships with postgresql in the flake.
         run: |
-          for _ in {1..30}; do
-            pg_isready -h localhost -U postgres && break
-            sleep 2
-          done
-      - name: Install PostgreSQL client
-        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+          nix develop --command bash -c '
+            for _ in {1..30}; do
+              pg_isready -h localhost -U postgres && break
+              sleep 2
+            done
+          '
       - name: Run load_schema.sh
         env:
           PGHOST: localhost
@@ -48,4 +51,4 @@ jobs:
           PGPORT: 5432
         run: |
           chmod +x ./scripts/load_schema.sh
-          ./scripts/load_schema.sh
+          nix develop --command bash ./scripts/load_schema.sh
