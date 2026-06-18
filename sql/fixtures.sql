@@ -441,3 +441,127 @@ INSERT INTO segment_condition (
 ) VALUES (
     'Lindie', 'Under Repair', 'Currently under maintenance or construction'
 );
+
+
+-- healthcare facilities
+-- ownership_type
+INSERT INTO ownership_type (last_update_by, ownership_type, notes) VALUES (
+    'Nikita', 'Public', 'Government-owned healthcare facility.'
+);
+INSERT INTO ownership_type (last_update_by, ownership_type, notes) VALUES (
+    'Nikita', 'Private', 'Privately operated healthcare facility.'
+);
+
+-- building_condition
+INSERT INTO building_condition (last_update_by, condition_type, notes) VALUES (
+    'Nikita', 'Good', 'Facility is in good condition.'
+);
+INSERT INTO building_condition (last_update_by, condition_type, notes) VALUES (
+    'Nikita', 'Needs Repair', 'Some repairs or maintenance required.'
+);
+INSERT INTO building_condition (last_update_by, condition_type, notes) VALUES (
+    'Nikita', 'Under Renovation', 'Currently being renovated.'
+);
+INSERT INTO building_condition (last_update_by, condition_type, notes) VALUES (
+    'Nikita', 'Bad', 'Poor building condition, needs major work.'
+);
+
+-- healthcare_facility_type
+INSERT INTO healthcare_facility_type (last_update_by, type, notes) VALUES (
+    'Nikita', 'Hospital', 'General medical and surgical facility.'
+);
+INSERT INTO healthcare_facility_type (last_update_by, type, notes) VALUES (
+    'Nikita', 'Doctors practice', 'General practitioner services.'
+);
+INSERT INTO healthcare_facility_type (last_update_by, type, notes) VALUES (
+    'Nikita', 'Pharmacy', 'Dispenses medicine and medical supplies.'
+);
+INSERT INTO healthcare_facility_type (last_update_by, type, notes) VALUES (
+    'Nikita', 'Diagnostic Imaging Centers', 'Radiology and imaging services.'
+);
+INSERT INTO healthcare_facility_type (last_update_by, type, notes) VALUES (
+    'Nikita', 'Optometrist', 'Eye examinations and vision care.'
+);
+INSERT INTO healthcare_facility_type (last_update_by, type, notes) VALUES (
+    'Nikita', 'Dental Office', 'Dentistry and oral care.'
+);
+INSERT INTO healthcare_facility_type (last_update_by, type, notes) VALUES (
+    'Nikita', 'Community Healthcare Centres', 'Community-level primary healthcare.'
+);
+INSERT INTO healthcare_facility_type (last_update_by, type, notes) VALUES (
+    'Nikita', 'Hospice', 'Pain management.'
+);
+INSERT INTO healthcare_facility_type (last_update_by, type, notes) VALUES (
+    'Nikita', 'Womens Health', 'Women-specific healthcare services.'
+);
+INSERT INTO healthcare_facility_type (last_update_by, type, notes) VALUES (
+    'Nikita', 'Dialysis Centre', 'Kidney dialysis treatment facility.'
+);
+INSERT INTO healthcare_facility_type (last_update_by, type, notes) VALUES (
+    'Nikita', 'Physiotherapist', 'Rehabilitation and physical therapy.'
+);
+INSERT INTO healthcare_facility_type (last_update_by, type, notes) VALUES (
+    'Nikita', 'Medical centre', 'General outpatient medical care.'
+);
+INSERT INTO healthcare_facility_type (last_update_by, type, notes) VALUES (
+    'Nikita', 'Occupational therapist', 'Functional rehabilitation therapy.'
+);
+INSERT INTO healthcare_facility_type (last_update_by, type, notes) VALUES (
+    'Nikita', 'Clinic', 'Primary healthcare clinic.'
+);
+INSERT INTO healthcare_facility_type (last_update_by, type, notes) VALUES (
+    'Nikita', 'Optometry', 'Vision care services.'
+);
+INSERT INTO healthcare_facility_type (last_update_by, type, notes) VALUES (
+    'Nikita', 'Chiropractor', 'Musculoskeletal adjustments and therapy.'
+);
+
+-- facility_services
+INSERT INTO facility_services (last_update_by, service, notes) VALUES (
+    'Nikita', 'General consultation', 'General doctor consultation.'
+);
+INSERT INTO facility_services (last_update_by, service, notes) VALUES (
+    'Nikita', 'Emergency care', 'Emergency medical response.'
+);
+INSERT INTO facility_services (last_update_by, service, notes) VALUES (
+    'Nikita', 'Surgery', 'General surgical procedures.'
+);
+INSERT INTO facility_services (last_update_by, service, notes) VALUES (
+    'Nikita', 'Radiology', 'Medical imaging services.'
+);
+INSERT INTO facility_services (last_update_by, service, notes) VALUES (
+    'Nikita', 'Physical therapy', 'Rehabilitation therapy.'
+);
+INSERT INTO facility_services (last_update_by, service, notes) VALUES (
+    'Nikita', 'Orthopedic services', 'Bone and joint treatments.'
+);
+INSERT INTO facility_services (last_update_by, service, notes) VALUES (
+    'Nikita', 'Pharmacy services', 'Dispensing medication.'
+);
+INSERT INTO facility_services (last_update_by, service, notes) VALUES (
+    'Nikita', 'Prenatal care', 'Pregnancy-related care.'
+);
+INSERT INTO facility_services (last_update_by, service, notes) VALUES (
+    'Nikita', 'Dental care', 'Dental treatment services.'
+);
+INSERT INTO facility_services (last_update_by, service, notes) VALUES (
+    'Nikita', 'Vaccinations', 'Immunization services.'
+);
+INSERT INTO facility_services (last_update_by, service, notes) VALUES (
+    'Nikita', 'Eye examinations/treatment', 'Optometry and visual health.'
+);
+INSERT INTO facility_services (last_update_by, service, notes) VALUES (
+    'Nikita', 'Counseling services', 'Mental health support.'
+);
+INSERT INTO facility_services (last_update_by, service, notes) VALUES (
+    'Nikita', 'Pain management', 'Pain relief and chronic care.'
+);
+INSERT INTO facility_services (last_update_by, service, notes) VALUES (
+    'Nikita', 'Occupational therapy', 'Functional rehabilitation.'
+);
+INSERT INTO facility_services (last_update_by, service, notes) VALUES (
+    'Nikita', 'Dialysis treatment', 'Kidney dialysis therapy.'
+);
+INSERT INTO facility_services (last_update_by, service, notes) VALUES (
+    'Nikita', 'Chiropractic services', 'Spinal and musculoskeletal alignment.'
+);
