@@ -441,3 +441,72 @@ INSERT INTO segment_condition (
 ) VALUES (
     'Lindie', 'Under Repair', 'Currently under maintenance or construction'
 );
+
+
+-- pollution
+-- property_use_type
+INSERT INTO property_use_type (last_update_by, name, notes) VALUES (
+    'Francois', 'Factory', 'Property used for manufacturing or processing'
+);
+INSERT INTO property_use_type (last_update_by, name, notes) VALUES (
+    'Francois', 'Agricultural/Farm', 'Property used for farming livestock or crops'
+);
+INSERT INTO property_use_type (last_update_by, name, notes) VALUES (
+    'Francois', 'Storage', 'Property used for storing vehicles or machinery'
+);
+INSERT INTO property_use_type (last_update_by, name, notes) VALUES (
+    'Francois', 'Fuel station', 'Property used for providing fuel'
+);
+
+-- pollutant
+INSERT INTO pollutant (last_update_by, type, notes) VALUES (
+    'Francois', 'Chemicals', 'Chemical pollutants'
+);
+INSERT INTO pollutant (last_update_by, type, notes) VALUES (
+    'Francois', 'Fertilizers', 'Fertilizer pollutants'
+);
+INSERT INTO pollutant (last_update_by, type, notes) VALUES (
+    'Francois', 'Oil', 'Oil pollutants'
+);
+INSERT INTO pollutant (last_update_by, type, notes) VALUES (
+    'Francois', 'Wastewater', 'Wastewater pollutants'
+);
+INSERT INTO pollutant (last_update_by, type, notes) VALUES (
+    'Francois', 'Pesticides', 'Pesticide pollutants'
+);
+
+-- impact_severity
+INSERT INTO impact_severity (last_update_by, name, notes) VALUES (
+    'Francois', 'High', 'High pollution impact'
+);
+INSERT INTO impact_severity (last_update_by, name, notes) VALUES (
+    'Francois', 'Medium', 'Medium pollution impact'
+);
+INSERT INTO impact_severity (last_update_by, name, notes) VALUES (
+    'Francois', 'Low', 'Low pollution impact'
+);
+
+-- waterbody_type
+INSERT INTO waterbody_type (last_update_by, name, notes) VALUES (
+    'Francois', 'River', 'River or stream'
+);
+INSERT INTO waterbody_type (last_update_by, name, notes) VALUES (
+    'Francois', 'Dam', 'Large body of water with distinctive dam wall'
+);
+INSERT INTO waterbody_type (last_update_by, name, notes) VALUES (
+    'Francois', 'Wetland', 'Natural body of water'
+);
+INSERT INTO waterbody_type (last_update_by, name, notes) VALUES (
+    'Francois', 'Pond', 'Small body of water on rural properties'
+);
+
+-- water_quality_status
+INSERT INTO water_quality_status (last_update_by, name, notes) VALUES (
+    'Francois', 'Good', 'Waterbody contains healthy clear water '
+);
+INSERT INTO water_quality_status (last_update_by, name, notes) VALUES (
+    'Francois', 'Moderate', 'Waterbody contains merky water and moderate signs of pollution'
+);
+INSERT INTO water_quality_status (last_update_by, name, notes) VALUES (
+    'Francois', 'Poor', 'Waterbody is clearly polluted with observable pollution consequences'
+);
