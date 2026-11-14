@@ -181,7 +181,7 @@ echo ">> Wrote VERSION=$NEW"
 # Regenerate schema reference docs (best-effort; needs Postgres running).
 if command -v psql >/dev/null && pg_isready -h "${PGHOST:-$ROOT/pgdata}" -p "${PGPORT:-5432}" -q 2>/dev/null; then
     echo ">> Regenerating schema reference docs..."
-    .venv/bin/python scripts/generate_schema_docs.py || {
+    python scripts/generate_schema_docs.py || {
         echo "WARNING: doc regeneration failed; continue anyway." >&2
     }
 else
