@@ -9,7 +9,7 @@
 missing=0
 for file in $(git diff --cached --name-only --diff-filter=ACM | grep -E "\.py$"); do
     if ! which darglint >/dev/null 2>&1; then
-        echo "darglint not installed. Please install it with: pip install darglint"
+        echo "darglint not on PATH. Run inside 'nix develop' (or 'nix develop .#minimal')."
         exit 1
     fi
     if ! output=$(darglint --docstring-style=google "$file" 2>&1); then

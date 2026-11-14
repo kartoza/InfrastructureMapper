@@ -98,6 +98,20 @@
         doCheck = false;
         pythonImportsCheck = [ "migra" ];
       };
+
+      # darglint was removed from nixpkgs (upstream is unmaintained); it has
+      # no runtime dependencies, so vendor it the same way as migra et al.
+      darglint = py.buildPythonPackage rec {
+        pname = "darglint";
+        version = "1.8.1";
+        format = "setuptools";
+        src = pkgs.fetchPypi {
+          inherit pname version;
+          hash = "sha256-CA1RBt8UmxmYIufufeucAStJiRU48UoRvmgQRPC7INo=";
+        };
+        doCheck = false;
+        pythonImportsCheck = [ "darglint" ];
+      };
     in
     {
       packages.${system} = {
@@ -133,6 +147,7 @@
             pkgs.nodePackages.cspell
             pkgs.python3Packages.black
             pkgs.python3Packages.isort
+            darglint
           ];
         };
 
@@ -179,6 +194,7 @@
             # Python security / quality tools used by pre-commit hooks.
             pkgs.python3Packages.bandit
             pkgs.python3Packages.pylint
+            darglint
             pkgs.semgrep
             postgresWithPostGIS
             pkgs.nodePackages.cspell
@@ -233,22 +249,6 @@
             : "''${PGPORT:=5432}"
             : "''${PGDATABASE:=gis}"
             export PGHOST PGPORT PGDATABASE
-
-            if [ ! -d ".venv" ]; then
-              python -m venv .venv
-            fi
-
-            # Activate the virtual environment
-            source .venv/bin/activate
-
-            # Upgrade pip and install packages from requirements.txt if it exists
-            pip install --upgrade pip > /dev/null
-            if [ -f requirements.txt ]; then
-              echo "Installing Python requirements from requirements.txt..."
-              pip install -r requirements.txt
-            else
-              echo "No requirements.txt found, skipping pip install."
-            fi
 
             # Install the pre-commit + pre-push git hooks (idempotent).
             # pre-push is what mirrors CI's docs + immutability checks.
@@ -316,6 +316,8 @@
           schema-diff = mkPythonApp "scripts/schema_diff.py";
           migrate-pg = mkScriptApp "scripts/migrate_pg.sh";
           migrate-gpkg = mkPythonApp "scripts/migrate_gpkg.py";
+          generate-models = mkPythonApp "scripts/generate_models.py";
+          apply-pg = mkScriptApp "scripts/apply_pg.sh";
           docs = mkPythonApp "scripts/generate_schema_docs.py";
           release = mkScriptApp "scripts/release.sh";
           # MkDocs convenience apps.

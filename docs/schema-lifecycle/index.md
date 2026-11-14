@@ -32,6 +32,16 @@ SELECT version FROM current_schema_version;
 
     [:octicons-arrow-right-24: Writing a migration](migrations.md)
 
+-   :material-crosshairs-gps:{ .lg .middle } __Choosing a CRS__
+
+    ---
+
+    Generate a CRS-templated copy of the schema and its migrations, load
+    it into Postgres or a GeoPackage, and keep it up to date after
+    `git pull` &mdash; without re-entering the CRS every time.
+
+    [:octicons-arrow-right-24: Choose a CRS](crs.md)
+
 -   :material-rocket:{ .lg .middle } __Release Process__
 
     ---
