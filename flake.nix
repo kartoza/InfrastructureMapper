@@ -98,6 +98,20 @@
         doCheck = false;
         pythonImportsCheck = [ "migra" ];
       };
+
+      # darglint was removed from nixpkgs (upstream is unmaintained); it has
+      # no runtime dependencies, so vendor it the same way as migra et al.
+      darglint = py.buildPythonPackage rec {
+        pname = "darglint";
+        version = "1.8.1";
+        format = "setuptools";
+        src = pkgs.fetchPypi {
+          inherit pname version;
+          hash = "sha256-CA1RBt8UmxmYIufufeucAStJiRU48UoRvmgQRPC7INo=";
+        };
+        doCheck = false;
+        pythonImportsCheck = [ "darglint" ];
+      };
     in
     {
       packages.${system} = {
@@ -133,7 +147,7 @@
             pkgs.nodePackages.cspell
             pkgs.python3Packages.black
             pkgs.python3Packages.isort
-            pkgs.python3Packages.darglint
+            darglint
           ];
         };
 
@@ -180,7 +194,7 @@
             # Python security / quality tools used by pre-commit hooks.
             pkgs.python3Packages.bandit
             pkgs.python3Packages.pylint
-            pkgs.python3Packages.darglint
+            darglint
             pkgs.semgrep
             postgresWithPostGIS
             pkgs.nodePackages.cspell
