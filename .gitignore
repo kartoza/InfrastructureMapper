@@ -99,6 +99,13 @@ PROMPT.log
 # Built GeoPackage artifacts — produced by scripts/build_gpkg.sh and the
 # Release workflow; not stored in git history.
 gpkg/*.gpkg
+
+# Remembered CRS choice (scripts/generate_models.py, scripts/lib/crs.sh) and
+# the CRS-templated model/migration SQL it generates — machine-local, never
+# committed. See docs/schema-lifecycle/crs.md.
+/.im-crs
+/build/models/
+
 claude.sh
 claude.out
 .claude-ci/

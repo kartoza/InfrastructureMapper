@@ -10,11 +10,13 @@ Every meaningful workflow has both a `scripts/<name>` entry point and a
 
 | `nix run` | Script | What it does |
 |---|---|---|
-| `.#build-gpkg` | `scripts/build_gpkg.sh` | Drops + recreates `im_gpkg_build` PG database, applies baseline + frozen migrations + `fixtures.sql`, stamps `schema_migrations`, exports to `gpkg/KartozaInfrastructureMapper.gpkg`. Accepts `--crs EPSG:NNNN` to reproject. |
+| `.#generate-models` | `scripts/generate_models.py` | Resolves a CRS (`--crs` flag &gt; remembered `.im-crs` &gt; interactive prompt), mirrors every `sql/**/*.sql` file into `build/models/sql/` with the literal `4326` SRID token replaced by the chosen CRS. See [Choosing a CRS](../schema-lifecycle/crs.md). |
+| `.#apply-pg` | `scripts/apply_pg.sh` | The "load or update" command for a persistent PG database: regenerates `build/models/`, bootstraps an empty target from the CRS-templated baseline, then delegates to `migrate-pg` for anything pending. Idempotent &mdash; safe to rerun after `git pull`. |
+| `.#build-gpkg` | `scripts/build_gpkg.sh` | Drops + recreates `im_gpkg_build` PG database, applies baseline + frozen migrations + `fixtures.sql`, stamps `schema_migrations`, exports to `gpkg/KartozaInfrastructureMapper.gpkg`. CRS resolves the same way as `generate-models` (`--crs` &gt; remembered &gt; prompt). |
 | `.#build-artifacts` | `scripts/build_artifacts.sh` &rarr; `scripts/build_artifacts.py` | Produces the composite + 13 per-domain SQL files and GPKGs that ship with PRs and releases. Requires `--version <tag>`. Add `--skip-gpkg` for fast schema-only iteration. |
 | `.#schema-diff` | `scripts/schema_diff.py` | Runs `migra` between two composite SQL bundles to produce a structured ALTER-style diff plus a Markdown summary. Used by the Artifacts and Release workflows. |
-| `.#migrate-pg` | `scripts/migrate_pg.sh` | Applies any `sql/migrations/pg/vX.Y.Z.sql` newer than `current_schema_version` against a target PG database. Strict-sequential, refuses downgrades. |
-| `.#migrate-gpkg` | `scripts/migrate_gpkg.py` | Same semantics as `migrate-pg`, but for an in-place GeoPackage. |
+| `.#migrate-pg` | `scripts/migrate_pg.sh` | Applies any `vX.Y.Z.sql` newer than `current_schema_version` against a target PG database. Strict-sequential, refuses downgrades. Reads `sql/migrations/pg` by default; `--migrations-dir` points it at a CRS-templated copy instead. |
+| `.#migrate-gpkg` | `scripts/migrate_gpkg.py` | Same semantics as `migrate-pg`, but for an in-place GeoPackage. Also accepts `--migrations-dir`; `--crs` always refuses &mdash; rebuild via `build-gpkg` instead. |
 | `.#release` | `scripts/release.sh` | Two-step release: `--bump patch\|minor\|major --commit` creates a `release/vX.Y.Z` branch + opens a PR (rotates `UNRELEASED.sql` → `vX.Y.Z.sql`, bumps `VERSION`, regenerates schema docs). After PR merge: `--tag` tags `main` HEAD and pushes the tag, which triggers `Release.yml`. |
 | `.#docs` | `scripts/generate_schema_docs.py` | Regenerates the per-component schema reference Markdown from a fresh reference PG database. Output goes under `docs/data-model/`. |
 

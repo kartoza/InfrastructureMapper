@@ -137,3 +137,6 @@ words:
   - pyproject
   - mkdocs
   - dropdb
+  # CRS model generation tooling
+  - GEOMFROMTEXT
+  - crosshairs

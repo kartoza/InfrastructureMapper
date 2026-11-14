@@ -177,6 +177,7 @@ nav:
     - schema-lifecycle/index.md
     - Versioning: schema-lifecycle/versioning.md
     - Migrations: schema-lifecycle/migrations.md
+    - Choosing a CRS: schema-lifecycle/crs.md
     - Release Process: schema-lifecycle/release.md
     - CI &amp; Pre-commit: schema-lifecycle/ci.md
   - Developer Guide:

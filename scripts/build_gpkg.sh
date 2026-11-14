@@ -7,7 +7,7 @@
 # Workflow:
 #   1. Drop/recreate a throwaway PG database.
 #   2. Apply baseline schema + fixtures + any frozen PG migrations.
-#   3. (Optional) Reproject all spatial columns to --crs.
+#   3. Reproject all spatial columns to the resolved CRS.
 #   4. Stamp the result with the current VERSION.
 #   5. Export to GeoPackage via ogr2ogr.
 #   6. Post-process for GPKG-specific bits (view, etc.).
@@ -18,18 +18,19 @@
 # Usage:
 #   scripts/build_gpkg.sh [--crs EPSG:NNNN]
 #
-# Without --crs, spatial columns keep their schema-declared SRID (4326). 4326 is
-# geographic and accurate only to ~2 m; pick a metric CRS (UTM zone, etc.) for
-# field work that needs precise distances or areas.
+# CRS is resolved as: --crs flag > CRS remembered in .im-crs (see
+# scripts/generate_models.py) > interactive prompt. EPSG:4326 is geographic
+# and accurate only to ~2 m; pick a metric CRS (UTM zone, etc.) for field
+# work that needs precise distances or areas.
 
 set -euo pipefail
 
-CRS=""
+CRS_FLAG=""
 while [ $# -gt 0 ]; do
     case "$1" in
-        --crs) CRS="$2"; shift 2 ;;
-        --crs=*) CRS="${1#--crs=}"; shift ;;
-        -h|--help) sed -n '2,25p' "$0"; exit 0 ;;
+        --crs) CRS_FLAG="$2"; shift 2 ;;
+        --crs=*) CRS_FLAG="${1#--crs=}"; shift ;;
+        -h|--help) sed -n '2,24p' "$0"; exit 0 ;;
         *) echo "Unknown arg: $1" >&2; exit 2 ;;
     esac
 done
@@ -37,30 +38,16 @@ done
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
+# shellcheck source=scripts/lib/crs.sh
+source "$ROOT/scripts/lib/crs.sh"
+crs_resolve "$CRS_FLAG"
+CRS="$CRS_EPSG"
+TARGET_SRID="$CRS_SRID"
+
 PGHOST="${PGHOST:-$ROOT/pgdata}"
 PGPORT="${PGPORT:-5432}"
 BUILD_DB="${BUILD_DB:-im_gpkg_build}"
 GPKG_OUTPUT="${GPKG_OUTPUT:-$ROOT/gpkg/KartozaInfrastructureMapper.gpkg}"
-
-# Validate --crs format and warn on geographic CRSes.
-TARGET_SRID=""
-if [ -n "$CRS" ]; then
-    case "$CRS" in
-        EPSG:[0-9]*) TARGET_SRID="${CRS#EPSG:}" ;;
-        [0-9]*)      TARGET_SRID="$CRS"; CRS="EPSG:$CRS" ;;
-        *) echo "ERROR: --crs must be like 'EPSG:3857' or just '3857'." >&2; exit 2 ;;
-    esac
-    if [ "$TARGET_SRID" = "4326" ]; then
-        echo "⚠️  WARNING: EPSG:4326 is a geographic CRS — distances and areas computed in" >&2
-        echo "    it are only accurate to ~2 m. Pick a metric CRS (UTM zone, EPSG:3857)" >&2
-        echo "    for field work needing precise measurements." >&2
-        echo "" >&2
-    fi
-else
-    echo "⚠️  WARNING: --crs not specified; geometries will stay in EPSG:4326. This is" >&2
-    echo "    accurate only to ~2 m. Pass --crs EPSG:NNNN to reproject (e.g. UTM zone)." >&2
-    echo "" >&2
-fi
 
 VERSION="$(tr -d '[:space:]' < "$ROOT/VERSION")"
 MAJOR="$(echo "$VERSION" | cut -d. -f1)"

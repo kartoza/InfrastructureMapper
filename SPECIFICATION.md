@@ -183,8 +183,8 @@ consistent.
 
 ### 7.3 Geographic-CRS warning
 
-When `--crs` is omitted or set to EPSG:4326, the build script must emit a
-warning explaining that geographic CRSes are only accurate to ~2 m.
+When the resolved CRS is EPSG:4326, the build script must emit a warning
+explaining that geographic CRSes are only accurate to ~2 m.
 
 ### 7.4 Runtime reprojection
 
@@ -197,6 +197,37 @@ silently producing wrong geometries.
 
 The system assumes a paired prod PG and prod GPKG share the same CRS at
 sync time. CRS mismatch is not silently reconciled.
+
+### 7.6 Remembered CRS and model generation
+
+A checkout's chosen CRS is persisted in `.im-crs` at the repo root
+(gitignored — machine-local state, never schema). Resolution order,
+shared by `scripts/generate_models.py`, `scripts/apply_pg.sh`, and
+`scripts/build_gpkg.sh`, is: an explicit `--crs` flag, else the value in
+`.im-crs`, else an interactive prompt (fails fast on a non-interactive
+stdin with neither available).
+
+`scripts/generate_models.py` mirrors every `sql/**/*.sql` file — baseline,
+`fixtures.sql`, and every PG/GPKG migration — into `build/models/sql/`
+(gitignored), replacing the literal token `4326` with the resolved SRID.
+`4326` is used throughout this codebase exclusively to mean "the baseline
+CRS" — in `GEOMETRY(type, 4326)` declarations, `ST_GEOMFROMTEXT(...,
+4326)` fixtures, and `ST_TRANSFORM(..., 4326)` / `srs_id = 4326` in
+migrations — so a global token substitution is sufficient; no per-statement
+parsing is needed. The one non-`4326` literal, `32734` on the original
+roads/intersection baseline (see §1, predating the `v0.2.0` fix forward),
+is never substituted — it is corrected by the migration that already
+targets `4326` like everything else, which *is* templated.
+
+`scripts/apply_pg.sh` is the bootstrap-or-update tool for a persistent PG
+database: it regenerates `build/models/`, then either bootstraps an empty
+target from the CRS-templated baseline (stamped as `v0.0.0`, deliberately
+*not* the current released `VERSION`, so every released migration above
+it — including the roads/intersection fix — is still applied) or, if a
+version is already stamped, delegates straight to `migrate_pg.sh
+--migrations-dir build/models/sql/migrations/pg`. `build_gpkg.sh` is
+unchanged in this regard — it remains the full-rebuild path for GPKG (§7.4)
+and does not consume `build/models/`.
 
 ## 8. Field sync model
 

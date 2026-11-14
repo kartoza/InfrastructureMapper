@@ -16,6 +16,8 @@ Options:
     --dry-run               Show the plan, do not apply.
     --target vX.Y.Z         Stop after this version.
     --crs EPSG:NNNN         Also reproject all spatial columns to this CRS.
+    --migrations-dir DIR    Read vX.Y.Z.sql files from DIR instead of
+                            sql/migrations/gpkg.
 """
 from __future__ import annotations
 
@@ -52,17 +54,24 @@ def parse_version(s: str) -> Tuple[int, int, int]:
     return tuple(int(x) for x in m.groups())  # type: ignore[return-value]
 
 
-def discover_migrations() -> List[Tuple[Tuple[int, int, int], str, pathlib.Path]]:
+def discover_migrations(
+    migrations_dir: pathlib.Path = MIGRATIONS_DIR,
+) -> List[Tuple[Tuple[int, int, int], str, pathlib.Path]]:
     """Discover available GPKG migration files.
+
+    Args:
+        migrations_dir: Directory to scan for ``vX.Y.Z.sql`` files. Defaults
+            to ``sql/migrations/gpkg``; pass a CRS-templated copy (e.g. from
+            ``scripts/generate_models.py``) to apply from there instead.
 
     Returns:
         A list of ``(semver_tuple, "vX.Y.Z", path)`` entries sorted ascending
         by semver. Empty if the migrations directory does not exist.
     """
     out: List[Tuple[Tuple[int, int, int], str, pathlib.Path]] = []
-    if not MIGRATIONS_DIR.is_dir():
+    if not migrations_dir.is_dir():
         return out
-    for f in MIGRATIONS_DIR.iterdir():
+    for f in migrations_dir.iterdir():
         if not f.is_file() or not f.suffix == ".sql":
             continue
         if not SEMVER_RE.match(f.stem):
@@ -164,6 +173,13 @@ def main() -> int:
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--target", metavar="vX.Y.Z", default=None)
     ap.add_argument("--crs", metavar="EPSG:NNNN", default=None)
+    ap.add_argument(
+        "--migrations-dir",
+        type=pathlib.Path,
+        default=MIGRATIONS_DIR,
+        help="Read vX.Y.Z.sql files from here instead of sql/migrations/gpkg "
+        "(e.g. a CRS-templated copy from scripts/generate_models.py).",
+    )
     args = ap.parse_args()
 
     if not args.gpkg.is_file():
@@ -180,7 +196,7 @@ def main() -> int:
         current_semver, current_label = read_current_version(conn)
         print(f">> Current schema version on {args.gpkg}: {current_label}")
 
-        all_migs = discover_migrations()
+        all_migs = discover_migrations(args.migrations_dir)
         pending = [
             (sv, label, path)
             for (sv, label, path) in all_migs

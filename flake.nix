@@ -316,6 +316,8 @@
           schema-diff = mkPythonApp "scripts/schema_diff.py";
           migrate-pg = mkScriptApp "scripts/migrate_pg.sh";
           migrate-gpkg = mkPythonApp "scripts/migrate_gpkg.py";
+          generate-models = mkPythonApp "scripts/generate_models.py";
+          apply-pg = mkScriptApp "scripts/apply_pg.sh";
           docs = mkPythonApp "scripts/generate_schema_docs.py";
           release = mkScriptApp "scripts/release.sh";
           # MkDocs convenience apps.

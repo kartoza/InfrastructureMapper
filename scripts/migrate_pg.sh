@@ -16,6 +16,9 @@
 #   --dry-run               Show the plan, do not apply.
 #   --target vX.Y.Z         Stop after this version (default: latest available).
 #   --crs EPSG:NNNN         Also reproject all spatial columns to this CRS.
+#   --migrations-dir DIR    Read vX.Y.Z.sql files from DIR instead of
+#                           sql/migrations/pg (e.g. a CRS-templated copy
+#                           produced by scripts/generate_models.py).
 
 set -euo pipefail
 
@@ -23,6 +26,7 @@ DBNAME=""
 DRYRUN=0
 TARGET=""
 CRS=""
+MIGRATIONS_DIR=""
 
 while [ $# -gt 0 ]; do
     case "$1" in
@@ -31,7 +35,9 @@ while [ $# -gt 0 ]; do
         --target=*) TARGET="${1#--target=}"; shift ;;
         --crs) CRS="$2"; shift 2 ;;
         --crs=*) CRS="${1#--crs=}"; shift ;;
-        -h|--help) sed -n '2,20p' "$0"; exit 0 ;;
+        --migrations-dir) MIGRATIONS_DIR="$2"; shift 2 ;;
+        --migrations-dir=*) MIGRATIONS_DIR="${1#--migrations-dir=}"; shift ;;
+        -h|--help) sed -n '2,23p' "$0"; exit 0 ;;
         -*) echo "Unknown option: $1" >&2; exit 2 ;;
         *)
             if [ -z "$DBNAME" ]; then DBNAME="$1"; else
@@ -47,6 +53,7 @@ done
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PGHOST="${PGHOST:-$ROOT/pgdata}"
 PGPORT="${PGPORT:-5432}"
+MIGRATIONS_DIR="${MIGRATIONS_DIR:-$ROOT/sql/migrations/pg}"
 
 PSQL=(psql -h "$PGHOST" -p "$PGPORT" -d "$DBNAME" -v ON_ERROR_STOP=1 -At)
 
@@ -77,7 +84,7 @@ echo ">> Current schema version on '$DBNAME': $CUR_VERSION"
 shopt -s nullglob
 PENDING_FILES=()
 PENDING_VERS=()
-for f in "$ROOT"/sql/migrations/pg/v[0-9]*.sql; do
+for f in "$MIGRATIONS_DIR"/v[0-9]*.sql; do
     base="$(basename "$f")"
     ver="${base%.sql}"
     if semver_gt "$ver" "$CUR_VERSION"; then
