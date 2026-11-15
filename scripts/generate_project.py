@@ -528,7 +528,13 @@ def _road_segment_renderer(
         DEFAULT_ROAD_WIDTH_MM, fill_color, casing_color, centerline_color
     )
     categories.append(QgsRendererCategory(None, default_symbol, "Other"))
-    return QgsCategorizedSymbolRenderer(type_fk, categories)
+    renderer = QgsCategorizedSymbolRenderer(type_fk, categories)
+    # Symbol levels: render casing layers for every feature first, then
+    # every fill layer, then every centreline layer - otherwise one
+    # segment's casing can paint over a neighbouring segment's fill at
+    # junctions, since features would render independently layer-by-layer.
+    renderer.setUsingSymbolLevels(True)
+    return renderer
 
 
 def main() -> int:
