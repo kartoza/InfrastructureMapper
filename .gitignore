@@ -97,8 +97,10 @@ scripts/.test_stats.json
 PROMPT.log
 
 # Built GeoPackage artifacts — produced by scripts/build_gpkg.sh and the
-# Release workflow; not stored in git history.
-gpkg/*.gpkg
+# Release workflow; not stored in git history. Includes SQLite's own
+# -shm/-wal journal sidecar files, left behind by any open connection
+# (e.g. QGIS or scripts/generate_project.py) at the time of a crash/exit.
+gpkg/*.gpkg*
 
 # Remembered CRS choice (scripts/generate_models.py, scripts/lib/crs.sh) and
 # the CRS-templated model/migration SQL it generates — machine-local, never
