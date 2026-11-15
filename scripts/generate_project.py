@@ -20,11 +20,12 @@ reference-DB machinery). Runs as a plain standalone script - no GUI, no
 QApplication, no canvas/OpenGL - via `QgsApplication([], False)` (second arg
 `False` = GUI disabled), which is exactly what headless PyQGIS scripting is
 for and sidesteps needing any display/GLX at all. Needs `qgis.core`'s own
-Qt binding importable: `nix run .#generate-project` points PYTHONPATH at
-QGIS LTR's bundled Python (still Qt5-based as of the 3.40.x LTR line; see
-flake.nix's `extraPythonPackages`, which includes `pyqt5` for exactly
-this), rather than this script guessing or hardcoding a Qt binding path
-itself.
+Qt binding importable: `nix run .#generate-project` runs this script with
+QGIS 4.x's own bundled Python interpreter directly (mainline nixpkgs'
+`qgis`, Qt6-based, sourced from a separate `nixpkgs-unstable` flake input
+scoped to just this script - see flake.nix's `qgis4`/`mkQgis4PythonApp`),
+which already carries a matching PyQt6 build, rather than this script
+guessing or assembling a separate one itself.
 
 Usage:
     scripts/generate_project.py [--gpkg PATH] [--out PATH]

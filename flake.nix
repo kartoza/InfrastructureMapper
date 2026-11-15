@@ -5,12 +5,19 @@
 
   inputs.geospatial.url = "github:imincik/geospatial-nix.repo";
   inputs.nixpkgs.follows = "geospatial/nixpkgs";
+  # Separate, independent pin (not geospatial/nixpkgs) just to reach QGIS 4.x
+  # (Qt6) for scripts/generate_project.py. The June-2025 geospatial-nix pin
+  # above only has QGIS 3.x (3.42.3 mainline, 3.40.7 LTR) either way, and
+  # bumping it would also move the project's main nix run .#qgis app - this
+  # input stays scoped to the one script that actually needs 4.x.
+  inputs.nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
   outputs =
     {
       self,
       geospatial,
       nixpkgs,
+      nixpkgs-unstable,
     }:
     let
       system = "x86_64-linux";
@@ -21,17 +28,25 @@
           allowUnfree = true;
         };
       };
+      pkgsUnstable = import nixpkgs-unstable {
+        inherit system;
+        config = {
+          allowUnfree = true;
+        };
+      };
+      # QGIS 4.x (Qt6-based) - plain nixpkgs, not geospatial-nix (which just
+      # re-exports pkgs.qgis/pkgs.qgis-ltr unchanged; no need to go through
+      # it here). qgis4.unwrapped.py is QGIS's own bundled python, already
+      # carrying whatever Qt6/PyQt6 build QGIS itself was compiled against -
+      # scripts/generate_project.py uses that interpreter directly rather
+      # than guessing/assembling a separately-built one.
+      qgis4 = pkgsUnstable.qgis;
       extraPythonPackages = ps: [
         ps.pyqtwebengine
         ps.jsonschema
         ps.debugpy
         ps.future
         ps.psutil
-        # QGIS LTR (3.40.x) is still Qt5-based - Qt6 only arrives with the
-        # future QGIS 4.x line. scripts/generate_project.py imports qgis.core
-        # standalone (QgsApplication([], False), no GUI) via the LTR prefix's
-        # own python dir, which needs this directly importable there too.
-        ps.pyqt5
       ];
       qgisWithExtras = geospatial.packages.${system}.qgis.override {
         inherit extraPythonPackages;
@@ -289,21 +304,22 @@
               exec nix develop --command python "$ROOT/${scriptPath}" "$@"
             ''}";
           };
-          # Like mkPythonApp, but also puts qgisLtrWithExtras's own bundled
-          # Python modules (qgis.core itself, plus extraPythonPackages) on
-          # PYTHONPATH first, for scripts that import qgis.core standalone
-          # (no GUI) without launching the qgis binary at all.
-          mkQgisPythonApp = scriptPath: {
+          # For scripts that import qgis.core standalone (no GUI, no
+          # launching the qgis binary) - runs them with QGIS 4.x's own
+          # bundled python interpreter directly (already has the matching
+          # PyQt6 build, no separate env to assemble/guess), with
+          # share/qgis/python (the qgis.core module tree) added on top.
+          # Still goes through `nix develop` for psql/createdb/PGHOST etc.
+          # (scripts/generate_schema_docs.py's reference-DB machinery) -
+          # just not for the python interpreter itself.
+          mkQgis4PythonApp = scriptPath: {
             type = "app";
             program = "${pkgs.writeShellScript "${baseNameOf scriptPath}" ''
               ROOT="$(git rev-parse --show-toplevel 2> /dev/null || pwd)"
               cd "$ROOT"
-              # PYTHONPATH must be exported *inside* the nix develop shell, not
-              # before it - nix develop resets the environment on entry, so a
-              # value set in this outer wrapper never survives into --command.
               exec nix develop --command bash -c '
-                export PYTHONPATH="${qgisLtrWithExtras}/share/qgis/python:''${PYTHONPATH:-}"
-                exec python "$0" "$@"
+                export PYTHONPATH="${qgis4}/share/qgis/python:''${PYTHONPATH:-}"
+                exec "${qgis4.unwrapped.py}/bin/python3" "$0" "$@"
               ' "$ROOT/${scriptPath}" "$@"
             ''}";
           };
@@ -342,7 +358,7 @@
           generate-models = mkPythonApp "scripts/generate_models.py";
           apply-pg = mkScriptApp "scripts/apply_pg.sh";
           docs = mkPythonApp "scripts/generate_schema_docs.py";
-          generate-project = mkQgisPythonApp "scripts/generate_project.py";
+          generate-project = mkQgis4PythonApp "scripts/generate_project.py";
           release = mkScriptApp "scripts/release.sh";
           # MkDocs convenience apps.
           docs-serve = mkScriptApp "scripts/docs_serve.sh";
