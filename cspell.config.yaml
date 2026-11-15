@@ -145,3 +145,5 @@ words:
   # QGIS project generator
   - gpkgext
   - subforms
+  - PYQGIS
+  - nologo

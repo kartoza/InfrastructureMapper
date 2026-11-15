@@ -16,25 +16,55 @@ the schema's own COMMENT ON TABLE/COLUMN text.
 
 Requires: the target .gpkg already built (`nix run .#build-gpkg`), Postgres
 reachable (for metadata comments - reuses scripts/generate_schema_docs.py's
-reference-DB machinery), and QGIS on PATH (`nix develop`).
+reference-DB machinery). Not meant to be run with a plain `python3` - this
+module is loaded *inside* a running QGIS process via its PYQGIS_STARTUP
+mechanism (see scripts/generate_project.sh / `nix run .#generate-project`),
+so that `qgis.core` and its Qt binding come from QGIS's own already-correct
+initialisation - whichever Qt version that QGIS build actually uses (Qt5
+for QGIS 3.x, Qt6 for QGIS 4.x) - rather than this script guessing a Qt
+binding and importing it directly.
 
 Usage:
-    scripts/generate_project.py [--gpkg PATH] [--out PATH]
+    QT_QPA_PLATFORM=offscreen PYQGIS_STARTUP=scripts/generate_project.py qgis --nologo
+    (or just: nix run .#generate-project)
+
+Override paths via env vars (PYQGIS_STARTUP scripts don't see normal argv):
+    GENERATE_PROJECT_GPKG, GENERATE_PROJECT_OUT
 """
 from __future__ import annotations
 
-import argparse
 import json
 import os
 import pathlib
 import re
-import shutil
 import sqlite3
 import sys
 from typing import Dict, List, Optional, Tuple
 
-# Must be set before qgis.core (and the Qt it pulls in) is imported.
-os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+# qgis.core is only importable here because this module is loaded via
+# PYQGIS_STARTUP inside an already-initialised QGIS process - see the
+# module docstring. A plain `python3 generate_project.py` cannot work.
+# isort: off
+# pylint: disable=import-error
+from qgis.core import (
+    QgsAttributeEditorContainer,
+    QgsAttributeEditorField,
+    QgsAttributeEditorRelation,
+    QgsCategorizedSymbolRenderer,
+    QgsEditFormConfig,
+    QgsEditorWidgetSetup,
+    QgsFillSymbol,
+    QgsLayerMetadata,
+    QgsLineSymbol,
+    QgsMarkerSymbol,
+    QgsProject,
+    QgsRelation,
+    QgsRendererCategory,
+    QgsSingleSymbolRenderer,
+    QgsVectorLayer,
+)
+
+# isort: on
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -73,25 +103,6 @@ EXTRA_TABLE_DOMAINS = {
 }
 
 FK_RE = re.compile(r"FOREIGN KEY\s*\((\w+)\)\s*REFERENCES\s+(\w+)\s*\(")
-
-
-def ensure_qgis_importable() -> None:
-    """Put QGIS's bundled Python modules on sys.path, if not already there.
-
-    Raises:
-        SystemExit: If the ``qgis`` binary isn't on PATH.
-    """
-    qgis_bin = shutil.which("qgis")
-    if not qgis_bin:
-        print("ERROR: 'qgis' not on PATH. Run inside 'nix develop'.", file=sys.stderr)
-        raise SystemExit(2)
-    prefix = pathlib.Path(qgis_bin).resolve().parent.parent
-    qgis_python = prefix / "share" / "qgis" / "python"
-    if not qgis_python.is_dir():
-        print(f"ERROR: QGIS Python path not found at {qgis_python}.", file=sys.stderr)
-        raise SystemExit(2)
-    if str(qgis_python) not in sys.path:
-        sys.path.insert(0, str(qgis_python))
 
 
 def load_brand_colors() -> Dict[str, str]:
@@ -233,189 +244,155 @@ def build_project(  # pylint: disable=too-many-locals,too-many-branches,too-many
         gpkg_path: Path to the built ``.gpkg`` file to load layers from.
         out_path: Path to save the generated ``.qgz`` project to.
     """
-    ensure_qgis_importable()
-    # Imported here, not at module level: qgis.core isn't importable until
-    # ensure_qgis_importable() has extended sys.path.
-    # isort: off
-    # pylint: disable=import-outside-toplevel,import-error
-    from qgis.core import (
-        QgsApplication,
-        QgsAttributeEditorContainer,
-        QgsAttributeEditorField,
-        QgsAttributeEditorRelation,
-        QgsCategorizedSymbolRenderer,
-        QgsEditFormConfig,
-        QgsEditorWidgetSetup,
-        QgsFillSymbol,
-        QgsLayerMetadata,
-        QgsLineSymbol,
-        QgsMarkerSymbol,
-        QgsProject,
-        QgsRelation,
-        QgsRendererCategory,
-        QgsSingleSymbolRenderer,
-        QgsVectorLayer,
-    )
+    # QgsApplication already exists and Qt is already initialised - this
+    # module only ever runs loaded inside a live QGIS process (see the
+    # module docstring), never standalone.
+    project = QgsProject.instance()
+    root = project.layerTreeRoot()
+    colors = load_brand_colors()
+    domains = table_domains()
+    tables = real_layer_tables(gpkg_path)
+    relations = read_relations(gpkg_path)
 
-    # isort: on
+    layers: Dict[str, "QgsVectorLayer"] = {}
+    infos: Dict[str, Dict] = {}
+    groups = {}
 
-    qgs = QgsApplication([], False)
-    qgs.initQgis()
-    try:
-        project = QgsProject.instance()
-        root = project.layerTreeRoot()
-        colors = load_brand_colors()
-        domains = table_domains()
-        tables = real_layer_tables(gpkg_path)
-        relations = read_relations(gpkg_path)
+    for stem, (title, _hue) in DOMAIN_STYLE.items():
+        groups[stem] = root.insertGroup(len(groups), title)
 
-        layers: Dict[str, "QgsVectorLayer"] = {}
-        infos: Dict[str, Dict] = {}
-        groups = {}
+    # Pass 1: create every layer, set metadata, place in its group.
+    for table, data_type in tables:
+        info = schema_docs.introspect_table(table)
+        infos[table] = info
 
-        for stem, (title, _hue) in DOMAIN_STYLE.items():
-            groups[stem] = root.insertGroup(len(groups), title)
+        layer = QgsVectorLayer(f"{gpkg_path}|layername={table}", table, "ogr")
+        layers[table] = layer
 
-        # Pass 1: create every layer, set metadata, place in its group.
-        for table, data_type in tables:
-            info = schema_docs.introspect_table(table)
-            infos[table] = info
+        md = QgsLayerMetadata()
+        md.setIdentifier(table)
+        md.setTitle(humanize(table))
+        md.setAbstract(info["comment"] or f"{humanize(table)} layer.")
+        md.setLicenses(["MIT"])
+        contact = QgsLayerMetadata.Contact()
+        contact.organization = "Kartoza"
+        md.setContacts([contact])
+        layer.setMetadata(md)
 
-            layer = QgsVectorLayer(f"{gpkg_path}|layername={table}", table, "ogr")
-            layers[table] = layer
+        for col in info["columns"]:
+            if not col["comment"]:
+                continue
+            idx = layer.fields().indexOf(col["name"])
+            if idx >= 0:
+                layer.setFieldAlias(idx, col["comment"][:120])
 
-            md = QgsLayerMetadata()
-            md.setIdentifier(table)
-            md.setTitle(humanize(table))
-            md.setAbstract(info["comment"] or f"{humanize(table)} layer.")
-            md.setLicenses(["MIT"])
-            contact = QgsLayerMetadata.Contact()
-            contact.organization = "Kartoza"
-            md.setContacts([contact])
-            layer.setMetadata(md)
+        project.addMapLayer(layer, False)
+        stem = domains.get(table)
+        target = groups.get(stem, groups["1-infrastructure"])
+        if data_type != "features":
+            if target.findGroup("Lookup Tables") is None:
+                target.addGroup("Lookup Tables")
+            target = target.findGroup("Lookup Tables")
+        target.addLayer(layer)
 
-            for col in info["columns"]:
-                if not col["comment"]:
-                    continue
-                idx = layer.fields().indexOf(col["name"])
-                if idx >= 0:
-                    layer.setFieldAlias(idx, col["comment"][:120])
+    # Pass 2: relations + widgets + cartography (needs every layer to exist).
+    for rel in relations:
+        base_table = rel["base_table_name"]
+        related_table = rel["related_table_name"]
+        if base_table not in infos or related_table not in infos:
+            continue  # layer wasn't loaded (shouldn't happen, but don't crash)
 
-            project.addMapLayer(layer, False)
-            stem = domains.get(table)
-            target = groups.get(stem, groups["1-infrastructure"])
-            if data_type != "features":
-                if target.findGroup("Lookup Tables") is None:
-                    target.addGroup("Lookup Tables")
-                target = target.findGroup("Lookup Tables")
-            target.addLayer(layer)
+        fk_on_base = find_fk_column(infos[base_table], related_table)
+        fk_on_related = (
+            None if fk_on_base else find_fk_column(infos[related_table], base_table)
+        )
 
-        # Pass 2: relations + widgets + cartography (needs every layer to exist).
-        for rel in relations:
-            base_table = rel["base_table_name"]
-            related_table = rel["related_table_name"]
-            if base_table not in infos or related_table not in infos:
-                continue  # layer wasn't loaded (shouldn't happen, but don't crash)
-
-            fk_on_base = find_fk_column(infos[base_table], related_table)
-            fk_on_related = (
-                None if fk_on_base else find_fk_column(infos[related_table], base_table)
+        if fk_on_base:
+            # Lookup-shaped: base holds the FK into related. Plain pick-list,
+            # no embedded subform.
+            setup = QgsEditorWidgetSetup(
+                "ValueRelation",
+                {
+                    "Layer": layers[related_table].id(),
+                    "Key": rel["related_primary_column"],
+                    "Value": display_column(infos[related_table]),
+                    "AllowMulti": False,
+                    "AllowNull": True,
+                    "OrderByValue": True,
+                },
             )
+            idx = layers[base_table].fields().indexOf(fk_on_base)
+            if idx >= 0:
+                layers[base_table].setEditorWidgetSetup(idx, setup)
+        elif fk_on_related:
+            # Entity-shaped: related holds the FK back to base. QgsRelation's
+            # "referencing" side is whoever holds the FK column.
+            relation = QgsRelation()
+            relation.setId(rel["mapping_table_name"])
+            relation.setName(humanize(related_table))
+            relation.setReferencingLayer(layers[related_table].id())
+            relation.setReferencedLayer(layers[base_table].id())
+            relation.addFieldPair(fk_on_related, rel["base_primary_column"])
+            project.relationManager().addRelation(relation)
 
-            if fk_on_base:
-                # Lookup-shaped: base holds the FK into related. Plain pick-list,
-                # no embedded subform.
-                setup = QgsEditorWidgetSetup(
-                    "ValueRelation",
-                    {
-                        "Layer": layers[related_table].id(),
-                        "Key": rel["related_primary_column"],
-                        "Value": display_column(infos[related_table]),
-                        "AllowMulti": False,
-                        "AllowNull": True,
-                        "OrderByValue": True,
-                    },
-                )
-                idx = layers[base_table].fields().indexOf(fk_on_base)
-                if idx >= 0:
-                    layers[base_table].setEditorWidgetSetup(idx, setup)
-            elif fk_on_related:
-                # Entity-shaped: related holds the FK back to base. QgsRelation's
-                # "referencing" side is whoever holds the FK column.
-                relation = QgsRelation()
-                relation.setId(rel["mapping_table_name"])
-                relation.setName(humanize(related_table))
-                relation.setReferencingLayer(layers[related_table].id())
-                relation.setReferencedLayer(layers[base_table].id())
-                relation.addFieldPair(fk_on_related, rel["base_primary_column"])
-                project.relationManager().addRelation(relation)
+            base_layer = layers[base_table]
+            base_layer.editFormConfig().setLayout(QgsEditFormConfig.TabLayout)
+            root_container = base_layer.editFormConfig().invisibleRootContainer()
+            rel_container = QgsAttributeEditorRelation(relation, root_container)
+            root_container.addChildElement(rel_container)
 
-                base_layer = layers[base_table]
-                base_layer.editFormConfig().setLayout(QgsEditFormConfig.TabLayout)
-                root_container = base_layer.editFormConfig().invisibleRootContainer()
-                rel_container = QgsAttributeEditorRelation(relation, root_container)
-                root_container.addChildElement(rel_container)
+    # Pass 3: default drag-and-drop field layout for every layer (so the
+    # "General" tab exists alongside any relation tab added above), and a
+    # brand-driven renderer.
+    for table, layer in layers.items():
+        cfg = layer.editFormConfig()
+        if cfg.layout() != QgsEditFormConfig.TabLayout:
+            cfg.setLayout(QgsEditFormConfig.TabLayout)
+        root_container = cfg.invisibleRootContainer()
+        general = QgsAttributeEditorContainer("General", root_container)
+        for idx, field in enumerate(layer.fields()):
+            general.addChildElement(QgsAttributeEditorField(field.name(), idx, general))
+        root_container.insertChildElement(0, general)
 
-        # Pass 3: default drag-and-drop field layout for every layer (so the
-        # "General" tab exists alongside any relation tab added above), and a
-        # brand-driven renderer.
-        for table, layer in layers.items():
-            cfg = layer.editFormConfig()
-            if cfg.layout() != QgsEditFormConfig.TabLayout:
-                cfg.setLayout(QgsEditFormConfig.TabLayout)
-            root_container = cfg.invisibleRootContainer()
-            general = QgsAttributeEditorContainer("General", root_container)
-            for idx, field in enumerate(layer.fields()):
-                general.addChildElement(
-                    QgsAttributeEditorField(field.name(), idx, general)
-                )
-            root_container.insertChildElement(0, general)
+        condition_fk = None
+        condition_table = None
+        for cand in ("condition", "segment_condition"):
+            found = find_fk_column(infos[table], cand)
+            if found:
+                condition_fk, condition_table = found, cand
+                break
 
-            condition_fk = None
-            condition_table = None
-            for cand in ("condition", "segment_condition"):
-                found = find_fk_column(infos[table], cand)
-                if found:
-                    condition_fk, condition_table = found, cand
-                    break
+        _, hue_token = DOMAIN_STYLE.get(domains.get(table, ""), ("", "kartoza.grey"))
+        hue = colors.get(hue_token, colors["kartoza.grey"])
+        symbol_cls = {0: QgsMarkerSymbol, 1: QgsLineSymbol, 2: QgsFillSymbol}.get(
+            int(layer.geometryType())
+        )
+        if symbol_cls is None:
+            continue  # non-spatial table, no renderer to set
 
-            _, hue_token = DOMAIN_STYLE.get(
-                domains.get(table, ""), ("", "kartoza.grey")
-            )
-            hue = colors.get(hue_token, colors["kartoza.grey"])
-            symbol_cls = {0: QgsMarkerSymbol, 1: QgsLineSymbol, 2: QgsFillSymbol}.get(
-                int(layer.geometryType())
-            )
-            if symbol_cls is None:
-                continue  # non-spatial table, no renderer to set
+        if condition_fk:
+            status_map = {
+                "good": colors["status.success"],
+                "fair": colors["status.warn"],
+                "poor": colors["status.error"],
+                "very poor": colors["status.error"],
+                "closed": colors["status.error"],
+                "flooded": colors["status.error"],
+            }
+            categories = []
+            for name_value, uuid_value in _condition_rows(condition_table):
+                color = status_map.get(name_value.strip().lower(), hue)
+                sym = symbol_cls.createSimple({"color": color})
+                categories.append(QgsRendererCategory(uuid_value, sym, name_value))
+            default_sym = symbol_cls.createSimple({"color": hue})
+            categories.append(QgsRendererCategory(None, default_sym, "Other"))
+            layer.setRenderer(QgsCategorizedSymbolRenderer(condition_fk, categories))
+        else:
+            sym = symbol_cls.createSimple({"color": hue})
+            layer.setRenderer(QgsSingleSymbolRenderer(sym))
 
-            if condition_fk:
-                status_map = {
-                    "good": colors["status.success"],
-                    "fair": colors["status.warn"],
-                    "poor": colors["status.error"],
-                    "very poor": colors["status.error"],
-                    "closed": colors["status.error"],
-                    "flooded": colors["status.error"],
-                }
-                categories = []
-                for name_value, uuid_value in _condition_rows(condition_table):
-                    color = status_map.get(name_value.strip().lower(), hue)
-                    sym = symbol_cls.createSimple({"color": color})
-                    categories.append(QgsRendererCategory(uuid_value, sym, name_value))
-                default_sym = symbol_cls.createSimple({"color": hue})
-                categories.append(QgsRendererCategory(None, default_sym, "Other"))
-                layer.setRenderer(
-                    QgsCategorizedSymbolRenderer(condition_fk, categories)
-                )
-            else:
-                sym = symbol_cls.createSimple({"color": hue})
-                layer.setRenderer(QgsSingleSymbolRenderer(sym))
-
-        pathlib.Path(out_path).parent.mkdir(parents=True, exist_ok=True)
-        project.write(str(out_path))
-    finally:
-        qgs.exitQgis()
+    pathlib.Path(out_path).parent.mkdir(parents=True, exist_ok=True)
+    project.write(str(out_path))
 
 
 def _condition_rows(condition_table: str) -> List[Tuple[str, str]]:
@@ -448,17 +425,19 @@ def _condition_rows(condition_table: str) -> List[Tuple[str, str]]:
 def main() -> int:
     """Run the generator end-to-end.
 
-    Returns:
-        0 on success, 2 on bad arguments or missing prerequisites.
-    """
-    ap = argparse.ArgumentParser(description=__doc__.split("\n\n", maxsplit=1)[0])
-    ap.add_argument("--gpkg", type=pathlib.Path, default=DEFAULT_GPKG)
-    ap.add_argument("--out", type=pathlib.Path, default=DEFAULT_OUT)
-    args = ap.parse_args()
+    Paths come from env vars, not argv: this module is loaded via QGIS's
+    ``PYQGIS_STARTUP`` mechanism (see the module docstring), where argv is
+    whatever ``qgis`` itself was launched with, not this script's own.
 
-    if not args.gpkg.is_file():
+    Returns:
+        0 on success, 2 on missing prerequisites.
+    """
+    gpkg = pathlib.Path(os.environ.get("GENERATE_PROJECT_GPKG", str(DEFAULT_GPKG)))
+    out = pathlib.Path(os.environ.get("GENERATE_PROJECT_OUT", str(DEFAULT_OUT)))
+
+    if not gpkg.is_file():
         print(
-            f"ERROR: {args.gpkg} does not exist. Run 'nix run .#build-gpkg' first.",
+            f"ERROR: {gpkg} does not exist. Run 'nix run .#build-gpkg' first.",
             file=sys.stderr,
         )
         return 2
@@ -469,14 +448,18 @@ def main() -> int:
         # Also pick up not-yet-released tables/columns (e.g. road.gender,
         # road_segment_photo), same reasoning as build_gpkg.sh applying this.
         schema_docs.psql_file(ROOT / "sql" / "migrations" / "pg" / "UNRELEASED.sql")
-        print(f">> Generating QGIS project from {args.gpkg}...")
-        build_project(args.gpkg, args.out)
+        print(f">> Generating QGIS project from {gpkg}...")
+        build_project(gpkg, out)
     finally:
         schema_docs.drop_reference_db()
 
-    print(f">> Done: {args.out}")
+    print(f">> Done: {out}")
     return 0
 
 
-if __name__ == "__main__":
-    sys.exit(main())
+# Run immediately on load (that's what PYQGIS_STARTUP does), then force the
+# whole qgis process to quit - there's no GUI/event loop to hand control
+# back to for a one-shot generator script.
+_exit_code = main()  # pylint: disable=invalid-name
+sys.stdout.flush()
+os._exit(_exit_code)

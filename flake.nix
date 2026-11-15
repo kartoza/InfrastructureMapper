@@ -319,7 +319,7 @@
           generate-models = mkPythonApp "scripts/generate_models.py";
           apply-pg = mkScriptApp "scripts/apply_pg.sh";
           docs = mkPythonApp "scripts/generate_schema_docs.py";
-          generate-project = mkPythonApp "scripts/generate_project.py";
+          generate-project = mkScriptApp "scripts/generate_project.sh";
           release = mkScriptApp "scripts/release.sh";
           # MkDocs convenience apps.
           docs-serve = mkScriptApp "scripts/docs_serve.sh";

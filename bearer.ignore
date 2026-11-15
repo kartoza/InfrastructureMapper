@@ -70,5 +70,11 @@
     "comment": "CLI build tool: inputs originate from argparse not untrusted callers; subprocess uses argv list form and paths come from --out / --base-bundle / --head-bundle.",
     "false_positive": true,
     "ignored_at": "2026-06-14T12:51:44Z"
+  },
+  "6874951b53068795d35df7256957d8e2_0": {
+    "author": "Tim Sutton",
+    "comment": "Local generator tool run from a trusted dev shell: out_path comes from the GENERATE_PROJECT_OUT env var (set by the operator running the script, same trust level as a CLI flag) or the hardcoded qgis_projects/ default, never from an untrusted/remote caller.",
+    "false_positive": true,
+    "ignored_at": "2026-11-15T18:50:00Z"
   }
 }
