@@ -142,3 +142,6 @@ words:
   - crosshairs
   # Roads: gender field + photo attachments
   - geotagged
+  # QGIS project generator
+  - gpkgext
+  - subforms

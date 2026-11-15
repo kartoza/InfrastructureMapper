@@ -1,0 +1,482 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# SPDX-FileCopyrightText: Tim Sutton
+# SPDX-License-Identifier: MIT
+"""Generate qgis_projects/InfrastructureMapper.qgz from the built GeoPackage.
+
+Loads every real table in the target .gpkg as a layer, organised into one
+layer-tree group per sql/N-domain.sql file (with a nested "Lookup Tables"
+sub-group for that domain's non-spatial tables), defines every relation
+already registered in the GPKG's own gpkgext_relations table (see
+sql/gpkg_relations.sql) as a QgsRelation, gives lookup FK fields a
+ValueRelation pick-list widget, gives entity-relation parents a drag-and-drop
+form with an embedded panel listing their related child records, applies a
+Kartoza-brand-palette renderer per layer, and populates layer metadata from
+the schema's own COMMENT ON TABLE/COLUMN text.
+
+Requires: the target .gpkg already built (`nix run .#build-gpkg`), Postgres
+reachable (for metadata comments - reuses scripts/generate_schema_docs.py's
+reference-DB machinery), and QGIS on PATH (`nix develop`).
+
+Usage:
+    scripts/generate_project.py [--gpkg PATH] [--out PATH]
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import pathlib
+import re
+import shutil
+import sqlite3
+import sys
+from typing import Dict, List, Optional, Tuple
+
+# Must be set before qgis.core (and the Qt it pulls in) is imported.
+os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+
+ROOT = pathlib.Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "scripts"))
+
+import generate_schema_docs as schema_docs  # noqa: E402  pylint: disable=wrong-import-position
+
+DEFAULT_GPKG = ROOT / "gpkg" / "KartozaInfrastructureMapper.gpkg"
+DEFAULT_OUT = ROOT / "qgis_projects" / "InfrastructureMapper.qgz"
+BRAND_TOKENS_PATH = ROOT / "docs" / "assets" / "brand" / "tokens.json"
+
+AUDIT_COLUMNS = {"id", "uuid", "last_update", "last_update_by", "description"}
+
+# One hue + human title per sql/N-domain.sql file, keyed by filename stem.
+# Not derivable from the schema itself - this is this script's own design
+# data, unlike the table->domain mapping below (which is derived).
+DOMAIN_STYLE = {
+    "1-infrastructure": ("Infrastructure", "kartoza.grey"),
+    "2-electricity": ("Electricity", "kartoza.amber"),
+    "3-water": ("Water", "kartoza.blue"),
+    "4-vegetation": ("Vegetation", "status.success"),
+    "5-monitoring": ("Monitoring", "kartoza.grey"),
+    "6-buildings": ("Buildings", "kartoza.grey"),
+    "7-fencing": ("Fencing", "kartoza.grey"),
+    "8-poi": ("Points of Interest", "kartoza.amber"),
+    "9-landuse": ("Landuse", "kartoza.amber"),
+    "10-gates": ("Gates", "kartoza.grey"),
+    "11-poles": ("Poles", "kartoza.grey"),
+    "12-culinary": ("Culinary", "kartoza.amber"),
+    "13-roads": ("Roads", "surface.cloud"),
+}
+
+# Tables that only exist in sql/migrations/pg/UNRELEASED.sql, not yet in a
+# baseline sql/N-domain.sql file, so they can't be found by _component_files().
+EXTRA_TABLE_DOMAINS = {
+    "road_segment_photo": "13-roads",
+}
+
+FK_RE = re.compile(r"FOREIGN KEY\s*\((\w+)\)\s*REFERENCES\s+(\w+)\s*\(")
+
+
+def ensure_qgis_importable() -> None:
+    """Put QGIS's bundled Python modules on sys.path, if not already there.
+
+    Raises:
+        SystemExit: If the ``qgis`` binary isn't on PATH.
+    """
+    qgis_bin = shutil.which("qgis")
+    if not qgis_bin:
+        print("ERROR: 'qgis' not on PATH. Run inside 'nix develop'.", file=sys.stderr)
+        raise SystemExit(2)
+    prefix = pathlib.Path(qgis_bin).resolve().parent.parent
+    qgis_python = prefix / "share" / "qgis" / "python"
+    if not qgis_python.is_dir():
+        print(f"ERROR: QGIS Python path not found at {qgis_python}.", file=sys.stderr)
+        raise SystemExit(2)
+    if str(qgis_python) not in sys.path:
+        sys.path.insert(0, str(qgis_python))
+
+
+def load_brand_colors() -> Dict[str, str]:
+    """Load the Kartoza colour tokens.
+
+    Returns:
+        Mapping of token name (e.g. ``"kartoza.blue"``) to hex colour.
+    """
+    data = json.loads(BRAND_TOKENS_PATH.read_text(encoding="utf-8"))
+    return data["color"]
+
+
+def table_domains() -> Dict[str, str]:
+    """Map every baseline table name to its owning domain file stem.
+
+    Returns:
+        Mapping of table name to a key into ``DOMAIN_STYLE`` (e.g.
+        ``"13-roads"``), covering baseline tables plus the small
+        ``EXTRA_TABLE_DOMAINS`` override for not-yet-released ones.
+    """
+    mapping: Dict[str, str] = {}
+    for f in schema_docs._component_files():  # pylint: disable=protected-access
+        for t in schema_docs.extract_table_names(f):
+            mapping[t] = f.stem
+    mapping.update(EXTRA_TABLE_DOMAINS)
+    return mapping
+
+
+def real_layer_tables(gpkg_path: pathlib.Path) -> List[Tuple[str, str]]:
+    """List every real (non-GPKG-system) table to load as a layer.
+
+    Args:
+        gpkg_path: Path to the built ``.gpkg`` file.
+
+    Returns:
+        A list of ``(table_name, data_type)`` pairs, ``data_type`` being
+        ``"features"`` (has geometry) or ``"attributes"`` (doesn't), as
+        recorded in the GeoPackage's own ``gpkg_contents``.
+    """
+    conn = sqlite3.connect(str(gpkg_path))
+    try:
+        rows = conn.execute(
+            "SELECT table_name, data_type FROM gpkg_contents"
+        ).fetchall()
+    finally:
+        conn.close()
+    skip_exact = {"schema_migrations", "current_schema_version", "gpkgext_relations"}
+    skip_prefix = ("gpkg_", "rtree_", "rel_")
+    return [
+        (name, data_type)
+        for name, data_type in rows
+        if name not in skip_exact and not name.startswith(skip_prefix)
+    ]
+
+
+def read_relations(gpkg_path: pathlib.Path) -> List[Dict]:
+    """Read every relation already registered in the built GeoPackage.
+
+    Args:
+        gpkg_path: Path to the built ``.gpkg`` file.
+
+    Returns:
+        A list of dicts with keys ``base_table_name``, ``base_primary_column``,
+        ``related_table_name``, ``related_primary_column``, ``relation_name``,
+        ``mapping_table_name`` - one per row of ``gpkgext_relations``
+        (populated by ``sql/gpkg_relations.sql`` during the build).
+    """
+    conn = sqlite3.connect(str(gpkg_path))
+    conn.row_factory = sqlite3.Row
+    try:
+        rows = conn.execute(
+            "SELECT base_table_name, base_primary_column, related_table_name, "
+            "related_primary_column, relation_name, mapping_table_name "
+            "FROM gpkgext_relations"
+        ).fetchall()
+    finally:
+        conn.close()
+    return [dict(r) for r in rows]
+
+
+def find_fk_column(holder_info: Dict, target_table: str) -> Optional[str]:
+    """Find the column on an introspected table that FKs to another table.
+
+    Args:
+        holder_info: ``introspect_table()`` result for the candidate FK holder.
+        target_table: Name of the table the FK should reference.
+
+    Returns:
+        The FK column name, or ``None`` if ``holder_info`` has no foreign key
+        referencing ``target_table``.
+    """
+    for c in holder_info["constraints"]:
+        if c["type"] != "f":
+            continue
+        m = FK_RE.search(c["def"])
+        if m and m.group(2) == target_table:
+            return m.group(1)
+    return None
+
+
+def display_column(table_info: Dict) -> str:
+    """Pick the column that best represents a lookup row to a human.
+
+    Args:
+        table_info: ``introspect_table()`` result for a lookup table.
+
+    Returns:
+        The first column name that isn't an audit/PK column, falling back
+        to ``"uuid"`` if nothing else is available.
+    """
+    for c in table_info["columns"]:
+        if c["name"] not in AUDIT_COLUMNS:
+            return c["name"]
+    return "uuid"
+
+
+def humanize(name: str) -> str:
+    """Turn a snake_case identifier into a human-readable title.
+
+    Args:
+        name: A snake_case table or column name.
+
+    Returns:
+        Title-cased words separated by spaces.
+    """
+    return " ".join(w.capitalize() for w in name.split("_"))
+
+
+def build_project(  # pylint: disable=too-many-locals,too-many-branches,too-many-statements
+    gpkg_path: pathlib.Path, out_path: pathlib.Path
+) -> None:
+    """Build and save the QGIS project.
+
+    A single procedural pipeline (load layers, wire relations, style) rather
+    than many small functions - there's no meaningful sub-unit to extract
+    that wouldn't just be "this one step, called once".
+
+    Args:
+        gpkg_path: Path to the built ``.gpkg`` file to load layers from.
+        out_path: Path to save the generated ``.qgz`` project to.
+    """
+    ensure_qgis_importable()
+    # Imported here, not at module level: qgis.core isn't importable until
+    # ensure_qgis_importable() has extended sys.path.
+    # isort: off
+    # pylint: disable=import-outside-toplevel,import-error
+    from qgis.core import (
+        QgsApplication,
+        QgsAttributeEditorContainer,
+        QgsAttributeEditorField,
+        QgsAttributeEditorRelation,
+        QgsCategorizedSymbolRenderer,
+        QgsEditFormConfig,
+        QgsEditorWidgetSetup,
+        QgsFillSymbol,
+        QgsLayerMetadata,
+        QgsLineSymbol,
+        QgsMarkerSymbol,
+        QgsProject,
+        QgsRelation,
+        QgsRendererCategory,
+        QgsSingleSymbolRenderer,
+        QgsVectorLayer,
+    )
+
+    # isort: on
+
+    qgs = QgsApplication([], False)
+    qgs.initQgis()
+    try:
+        project = QgsProject.instance()
+        root = project.layerTreeRoot()
+        colors = load_brand_colors()
+        domains = table_domains()
+        tables = real_layer_tables(gpkg_path)
+        relations = read_relations(gpkg_path)
+
+        layers: Dict[str, "QgsVectorLayer"] = {}
+        infos: Dict[str, Dict] = {}
+        groups = {}
+
+        for stem, (title, _hue) in DOMAIN_STYLE.items():
+            groups[stem] = root.insertGroup(len(groups), title)
+
+        # Pass 1: create every layer, set metadata, place in its group.
+        for table, data_type in tables:
+            info = schema_docs.introspect_table(table)
+            infos[table] = info
+
+            layer = QgsVectorLayer(f"{gpkg_path}|layername={table}", table, "ogr")
+            layers[table] = layer
+
+            md = QgsLayerMetadata()
+            md.setIdentifier(table)
+            md.setTitle(humanize(table))
+            md.setAbstract(info["comment"] or f"{humanize(table)} layer.")
+            md.setLicenses(["MIT"])
+            contact = QgsLayerMetadata.Contact()
+            contact.organization = "Kartoza"
+            md.setContacts([contact])
+            layer.setMetadata(md)
+
+            for col in info["columns"]:
+                if not col["comment"]:
+                    continue
+                idx = layer.fields().indexOf(col["name"])
+                if idx >= 0:
+                    layer.setFieldAlias(idx, col["comment"][:120])
+
+            project.addMapLayer(layer, False)
+            stem = domains.get(table)
+            target = groups.get(stem, groups["1-infrastructure"])
+            if data_type != "features":
+                if target.findGroup("Lookup Tables") is None:
+                    target.addGroup("Lookup Tables")
+                target = target.findGroup("Lookup Tables")
+            target.addLayer(layer)
+
+        # Pass 2: relations + widgets + cartography (needs every layer to exist).
+        for rel in relations:
+            base_table = rel["base_table_name"]
+            related_table = rel["related_table_name"]
+            if base_table not in infos or related_table not in infos:
+                continue  # layer wasn't loaded (shouldn't happen, but don't crash)
+
+            fk_on_base = find_fk_column(infos[base_table], related_table)
+            fk_on_related = (
+                None if fk_on_base else find_fk_column(infos[related_table], base_table)
+            )
+
+            if fk_on_base:
+                # Lookup-shaped: base holds the FK into related. Plain pick-list,
+                # no embedded subform.
+                setup = QgsEditorWidgetSetup(
+                    "ValueRelation",
+                    {
+                        "Layer": layers[related_table].id(),
+                        "Key": rel["related_primary_column"],
+                        "Value": display_column(infos[related_table]),
+                        "AllowMulti": False,
+                        "AllowNull": True,
+                        "OrderByValue": True,
+                    },
+                )
+                idx = layers[base_table].fields().indexOf(fk_on_base)
+                if idx >= 0:
+                    layers[base_table].setEditorWidgetSetup(idx, setup)
+            elif fk_on_related:
+                # Entity-shaped: related holds the FK back to base. QgsRelation's
+                # "referencing" side is whoever holds the FK column.
+                relation = QgsRelation()
+                relation.setId(rel["mapping_table_name"])
+                relation.setName(humanize(related_table))
+                relation.setReferencingLayer(layers[related_table].id())
+                relation.setReferencedLayer(layers[base_table].id())
+                relation.addFieldPair(fk_on_related, rel["base_primary_column"])
+                project.relationManager().addRelation(relation)
+
+                base_layer = layers[base_table]
+                base_layer.editFormConfig().setLayout(QgsEditFormConfig.TabLayout)
+                root_container = base_layer.editFormConfig().invisibleRootContainer()
+                rel_container = QgsAttributeEditorRelation(relation, root_container)
+                root_container.addChildElement(rel_container)
+
+        # Pass 3: default drag-and-drop field layout for every layer (so the
+        # "General" tab exists alongside any relation tab added above), and a
+        # brand-driven renderer.
+        for table, layer in layers.items():
+            cfg = layer.editFormConfig()
+            if cfg.layout() != QgsEditFormConfig.TabLayout:
+                cfg.setLayout(QgsEditFormConfig.TabLayout)
+            root_container = cfg.invisibleRootContainer()
+            general = QgsAttributeEditorContainer("General", root_container)
+            for idx, field in enumerate(layer.fields()):
+                general.addChildElement(
+                    QgsAttributeEditorField(field.name(), idx, general)
+                )
+            root_container.insertChildElement(0, general)
+
+            condition_fk = None
+            condition_table = None
+            for cand in ("condition", "segment_condition"):
+                found = find_fk_column(infos[table], cand)
+                if found:
+                    condition_fk, condition_table = found, cand
+                    break
+
+            _, hue_token = DOMAIN_STYLE.get(
+                domains.get(table, ""), ("", "kartoza.grey")
+            )
+            hue = colors.get(hue_token, colors["kartoza.grey"])
+            symbol_cls = {0: QgsMarkerSymbol, 1: QgsLineSymbol, 2: QgsFillSymbol}.get(
+                int(layer.geometryType())
+            )
+            if symbol_cls is None:
+                continue  # non-spatial table, no renderer to set
+
+            if condition_fk:
+                status_map = {
+                    "good": colors["status.success"],
+                    "fair": colors["status.warn"],
+                    "poor": colors["status.error"],
+                    "very poor": colors["status.error"],
+                    "closed": colors["status.error"],
+                    "flooded": colors["status.error"],
+                }
+                categories = []
+                for name_value, uuid_value in _condition_rows(condition_table):
+                    color = status_map.get(name_value.strip().lower(), hue)
+                    sym = symbol_cls.createSimple({"color": color})
+                    categories.append(QgsRendererCategory(uuid_value, sym, name_value))
+                default_sym = symbol_cls.createSimple({"color": hue})
+                categories.append(QgsRendererCategory(None, default_sym, "Other"))
+                layer.setRenderer(
+                    QgsCategorizedSymbolRenderer(condition_fk, categories)
+                )
+            else:
+                sym = symbol_cls.createSimple({"color": hue})
+                layer.setRenderer(QgsSingleSymbolRenderer(sym))
+
+        pathlib.Path(out_path).parent.mkdir(parents=True, exist_ok=True)
+        project.write(str(out_path))
+    finally:
+        qgs.exitQgis()
+
+
+def _condition_rows(condition_table: str) -> List[Tuple[str, str]]:
+    """Fetch a condition-style lookup table's (name, uuid) rows from PG.
+
+    Args:
+        condition_table: Name of the condition lookup table (e.g.
+            ``"segment_condition"`` or ``"condition"``).
+
+    Returns:
+        A list of ``(display_name, uuid)`` pairs.
+    """
+    info = schema_docs.introspect_table(condition_table)
+    name_col = display_column(info)
+    # nosec B608: name_col/condition_table come from this script's own fixed
+    # candidate list ("condition"/"segment_condition") and introspect_table's
+    # column list, not user input.
+    raw = schema_docs.psql(
+        f'SELECT {name_col}, uuid FROM "{condition_table}";'  # nosec B608
+    )
+    rows = []
+    for line in raw.strip().split("\n"):
+        if not line:
+            continue
+        name_value, uuid_value = line.split("|", 1)
+        rows.append((name_value, uuid_value))
+    return rows
+
+
+def main() -> int:
+    """Run the generator end-to-end.
+
+    Returns:
+        0 on success, 2 on bad arguments or missing prerequisites.
+    """
+    ap = argparse.ArgumentParser(description=__doc__.split("\n\n", maxsplit=1)[0])
+    ap.add_argument("--gpkg", type=pathlib.Path, default=DEFAULT_GPKG)
+    ap.add_argument("--out", type=pathlib.Path, default=DEFAULT_OUT)
+    args = ap.parse_args()
+
+    if not args.gpkg.is_file():
+        print(
+            f"ERROR: {args.gpkg} does not exist. Run 'nix run .#build-gpkg' first.",
+            file=sys.stderr,
+        )
+        return 2
+
+    print(">> Building reference Postgres DB for layer/field metadata...")
+    schema_docs.build_reference_db()
+    try:
+        # Also pick up not-yet-released tables/columns (e.g. road.gender,
+        # road_segment_photo), same reasoning as build_gpkg.sh applying this.
+        schema_docs.psql_file(ROOT / "sql" / "migrations" / "pg" / "UNRELEASED.sql")
+        print(f">> Generating QGIS project from {args.gpkg}...")
+        build_project(args.gpkg, args.out)
+    finally:
+        schema_docs.drop_reference_db()
+
+    print(f">> Done: {args.out}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
