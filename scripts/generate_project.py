@@ -71,6 +71,7 @@ from qgis.core import (
     QgsSingleSymbolRenderer,
     QgsVectorLayer,
 )
+from qgis.PyQt.QtGui import QColor
 
 # isort: on
 
@@ -489,12 +490,20 @@ def _road_line_symbol(
     """
     symbol = QgsLineSymbol([])
     if total_width_mm < ROAD_CASING_MIN_WIDTH_MM:
-        symbol.appendSymbolLayer(QgsSimpleLineSymbolLayer(fill_color, total_width_mm))
+        symbol.appendSymbolLayer(
+            QgsSimpleLineSymbolLayer(QColor(fill_color), total_width_mm)
+        )
         return symbol
 
-    symbol.appendSymbolLayer(QgsSimpleLineSymbolLayer(casing_color, total_width_mm))
-    symbol.appendSymbolLayer(QgsSimpleLineSymbolLayer(fill_color, total_width_mm * 0.6))
-    centerline = QgsSimpleLineSymbolLayer(centerline_color, total_width_mm * 0.12)
+    symbol.appendSymbolLayer(
+        QgsSimpleLineSymbolLayer(QColor(casing_color), total_width_mm)
+    )
+    symbol.appendSymbolLayer(
+        QgsSimpleLineSymbolLayer(QColor(fill_color), total_width_mm * 0.6)
+    )
+    centerline = QgsSimpleLineSymbolLayer(
+        QColor(centerline_color), total_width_mm * 0.12
+    )
     centerline.setUseCustomDashPattern(True)
     centerline.setCustomDashVector([4, 3])
     symbol.appendSymbolLayer(centerline)
