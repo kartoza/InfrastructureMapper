@@ -67,6 +67,7 @@ from qgis.core import (
     QgsProject,
     QgsRelation,
     QgsRendererCategory,
+    QgsSimpleLineSymbolLayer,
     QgsSingleSymbolRenderer,
     QgsVectorLayer,
 )
@@ -105,6 +106,21 @@ EXTRA_TABLE_DOMAINS = {
 }
 
 FK_RE = re.compile(r"FOREIGN KEY\s*\((\w+)\)\s*REFERENCES\s+(\w+)\s*\(")
+
+# road_segment's own design data: real-world road hierarchy, widest first.
+# Not derivable from the schema - segment_type.type_name is free text.
+ROAD_TYPE_WIDTHS_MM = {
+    "National": 1.8,
+    "Main Road": 1.4,
+    "Street": 1.0,
+    "Gravel Road": 0.8,
+    "Private Road": 0.6,
+    "Footpath": 0.4,
+}
+DEFAULT_ROAD_WIDTH_MM = 0.6
+# Road types at/above this width get a casing (border) + dashed centreline;
+# narrower types render as a single plain line.
+ROAD_CASING_MIN_WIDTH_MM = 1.2
 
 
 def load_brand_colors() -> Dict[str, str]:
@@ -372,6 +388,10 @@ def build_project(  # pylint: disable=too-many-locals,too-many-branches,too-many
         # Pass 3: brand-driven renderer for every layer (the "General" form
         # tab was already built in pass 1, before pass 2's relation tabs).
         for table, layer in layers.items():
+            if table == "road_segment":
+                layer.setRenderer(_road_segment_renderer(infos[table], colors))
+                continue
+
             condition_fk = None
             condition_table = None
             for cand in ("condition", "segment_condition"):
@@ -400,7 +420,7 @@ def build_project(  # pylint: disable=too-many-locals,too-many-branches,too-many
                     "flooded": colors["status.error"],
                 }
                 categories = []
-                for name_value, uuid_value in _condition_rows(condition_table):
+                for name_value, uuid_value in _lookup_name_uuid_rows(condition_table):
                     color = status_map.get(name_value.strip().lower(), hue)
                     sym = symbol_cls.createSimple({"color": color})
                     categories.append(QgsRendererCategory(uuid_value, sym, name_value))
@@ -419,23 +439,26 @@ def build_project(  # pylint: disable=too-many-locals,too-many-branches,too-many
         qgs.exitQgis()
 
 
-def _condition_rows(condition_table: str) -> List[Tuple[str, str]]:
-    """Fetch a condition-style lookup table's (name, uuid) rows from PG.
+def _lookup_name_uuid_rows(lookup_table: str) -> List[Tuple[str, str]]:
+    """Fetch a lookup table's (display name, uuid) rows from PG.
+
+    Used to build categorized renderers keyed on a lookup table's uuid,
+    e.g. condition/status colouring or road-type widths.
 
     Args:
-        condition_table: Name of the condition lookup table (e.g.
-            ``"segment_condition"`` or ``"condition"``).
+        lookup_table: Name of the lookup table (e.g. ``"segment_condition"``
+            or ``"segment_type"``).
 
     Returns:
         A list of ``(display_name, uuid)`` pairs.
     """
-    info = schema_docs.introspect_table(condition_table)
+    info = schema_docs.introspect_table(lookup_table)
     name_col = display_column(info)
-    # nosec B608: name_col/condition_table come from this script's own fixed
-    # candidate list ("condition"/"segment_condition") and introspect_table's
-    # column list, not user input.
+    # nosec B608: name_col/lookup_table come from this script's own fixed
+    # candidate list ("condition"/"segment_condition"/"segment_type") and
+    # introspect_table's column list, not user input.
     raw = schema_docs.psql(
-        f'SELECT {name_col}, uuid FROM "{condition_table}";'  # nosec B608
+        f'SELECT {name_col}, uuid FROM "{lookup_table}";'  # nosec B608
     )
     rows = []
     for line in raw.strip().split("\n"):
@@ -444,6 +467,68 @@ def _condition_rows(condition_table: str) -> List[Tuple[str, str]]:
         name_value, uuid_value = line.split("|", 1)
         rows.append((name_value, uuid_value))
     return rows
+
+
+def _road_line_symbol(
+    total_width_mm: float, fill_color: str, casing_color: str, centerline_color: str
+) -> "QgsLineSymbol":
+    """Build a road_segment line symbol: plain, or cased with a centreline.
+
+    Standard road cartography technique: a wide casing symbol layer on
+    the bottom, a narrower fill layer on top of it, and (for wide/major
+    roads only) a thin dashed centreline on top of that.
+
+    Args:
+        total_width_mm: Overall rendered width of the road casing, in mm.
+        fill_color: Hex colour for the road surface fill.
+        casing_color: Hex colour for the outer casing/border.
+        centerline_color: Hex colour for the dashed centreline.
+
+    Returns:
+        A QgsLineSymbol with one or three symbol layers, bottom-to-top.
+    """
+    symbol = QgsLineSymbol([])
+    if total_width_mm < ROAD_CASING_MIN_WIDTH_MM:
+        symbol.appendSymbolLayer(QgsSimpleLineSymbolLayer(fill_color, total_width_mm))
+        return symbol
+
+    symbol.appendSymbolLayer(QgsSimpleLineSymbolLayer(casing_color, total_width_mm))
+    symbol.appendSymbolLayer(QgsSimpleLineSymbolLayer(fill_color, total_width_mm * 0.6))
+    centerline = QgsSimpleLineSymbolLayer(centerline_color, total_width_mm * 0.12)
+    centerline.setUseCustomDashPattern(True)
+    centerline.setCustomDashVector([4, 3])
+    symbol.appendSymbolLayer(centerline)
+    return symbol
+
+
+def _road_segment_renderer(
+    road_segment_info: Dict, colors: Dict[str, str]
+) -> QgsCategorizedSymbolRenderer:
+    """Build the road_segment renderer: width/casing/centreline by road type.
+
+    Args:
+        road_segment_info: ``introspect_table("road_segment")`` result,
+            used to find the FK column into segment_type.
+        colors: Kartoza brand hex colours, keyed by token name.
+
+    Returns:
+        A QgsCategorizedSymbolRenderer keyed on the segment_type FK column.
+    """
+    type_fk = find_fk_column(road_segment_info, "segment_type")
+    fill_color = colors["surface.cloud"]
+    casing_color = colors["text.default"]
+    centerline_color = colors["kartoza.amber"]
+
+    categories = []
+    for name_value, uuid_value in _lookup_name_uuid_rows("segment_type"):
+        width_mm = ROAD_TYPE_WIDTHS_MM.get(name_value, DEFAULT_ROAD_WIDTH_MM)
+        symbol = _road_line_symbol(width_mm, fill_color, casing_color, centerline_color)
+        categories.append(QgsRendererCategory(uuid_value, symbol, name_value))
+    default_symbol = _road_line_symbol(
+        DEFAULT_ROAD_WIDTH_MM, fill_color, casing_color, centerline_color
+    )
+    categories.append(QgsRendererCategory(None, default_symbol, "Other"))
+    return QgsCategorizedSymbolRenderer(type_fk, categories)
 
 
 def main() -> int:
