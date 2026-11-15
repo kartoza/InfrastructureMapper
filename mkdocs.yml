@@ -186,6 +186,7 @@ nav:
     - Local Build: developer-guide/local-build.md
     - Nix Flake: developer-guide/nix-flake.md
     - Scripts: developer-guide/scripts.md
+    - QGIS Form Conventions: developer-guide/qgis-forms.md
     - Project Structure: developer-guide/project-structure.md
     - Contributing: developer-guide/contributing.md
   - About:

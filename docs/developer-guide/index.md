@@ -45,6 +45,15 @@ contribution flow.
 
     [:octicons-arrow-right-24: Browse scripts](scripts.md)
 
+-   :material-form-select:{ .lg .middle } __QGIS Form Conventions__
+
+    ---
+
+    The standardised rules `scripts/generate_project.py` follows when
+    building every layer's drag-and-drop attribute form.
+
+    [:octicons-arrow-right-24: Form conventions](qgis-forms.md)
+
 -   :material-file-tree:{ .lg .middle } __Project Structure__
 
     ---

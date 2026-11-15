@@ -97,14 +97,27 @@ scripts/.test_stats.json
 PROMPT.log
 
 # Built GeoPackage artifacts — produced by scripts/build_gpkg.sh and the
-# Release workflow; not stored in git history.
-gpkg/*.gpkg
+# Release workflow; not stored in git history. Includes SQLite's own
+# -shm/-wal journal sidecar files, left behind by any open connection
+# (e.g. QGIS or scripts/generate_project.py) at the time of a crash/exit.
+gpkg/*.gpkg*
+
+# QGIS projects (.qgz) — all CRS-specific to whichever .gpkg they were
+# opened/generated against, same as the .gpkg itself (already
+# gitignored above). Never tracked, regenerate locally with `nix run
+# .#generate-project`, or just reopen your own hand-tweaked copy.
+qgis_projects/*.qgz
 
 # Remembered CRS choice (scripts/generate_models.py, scripts/lib/crs.sh) and
 # the CRS-templated model/migration SQL it generates — machine-local, never
 # committed. See docs/schema-lifecycle/crs.md.
 /.im-crs
 /build/models/
+
+# QGIS's own runtime style-library cache — created wherever QGIS happens to
+# run from in headless/no-profile-dir contexts (e.g. scripts/generate_project.sh).
+# Not project output; never committed.
+/symbology-style.db
 
 claude.sh
 claude.out

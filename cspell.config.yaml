@@ -140,3 +140,15 @@ words:
   # CRS model generation tooling
   - GEOMFROMTEXT
   - crosshairs
+  # Roads: gender field + photo attachments
+  - geotagged
+  # QGIS project generator
+  - gpkgext
+  - subforms
+  - PYQGIS
+  - nologo
+  - PYTHONPATH
+  - standardised
+  - digitised
+  - singularises
+  - humanised

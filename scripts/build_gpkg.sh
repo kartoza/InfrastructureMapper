@@ -6,12 +6,13 @@
 #
 # Workflow:
 #   1. Drop/recreate a throwaway PG database.
-#   2. Apply baseline schema + fixtures + any frozen PG migrations.
+#   2. Apply baseline schema + fixtures + frozen PG migrations + UNRELEASED.sql.
 #   3. Reproject all spatial columns to the resolved CRS.
 #   4. Stamp the result with the current VERSION.
 #   5. Export to GeoPackage via ogr2ogr.
 #   6. Post-process for GPKG-specific bits (view, etc.).
-#   7. Clean up.
+#   7. Register GeoPackage Related Tables Extension relations (sql/gpkg_relations.sql).
+#   8. Clean up.
 #
 # Run inside 'nix develop'. Postgres must be running on $PGHOST:$PGPORT.
 #
@@ -30,7 +31,7 @@ while [ $# -gt 0 ]; do
     case "$1" in
         --crs) CRS_FLAG="$2"; shift 2 ;;
         --crs=*) CRS_FLAG="${1#--crs=}"; shift ;;
-        -h|--help) sed -n '2,24p' "$0"; exit 0 ;;
+        -h|--help) sed -n '2,25p' "$0"; exit 0 ;;
         *) echo "Unknown arg: $1" >&2; exit 2 ;;
     esac
 done
@@ -110,6 +111,13 @@ if [ ${#PG_MIGS[@]} -gt 0 ]; then
     done
 fi
 
+# Also apply work-in-progress UNRELEASED.sql so a broken or incomplete migration
+# shows up here, in the fastest local dev loop, rather than only at release time.
+# Safe: build_gpkg.sh is never part of the CI/release artifact pipeline (that's
+# scripts/build_artifacts.sh, which only ever applies frozen vX.Y.Z migrations).
+echo ">> Applying UNRELEASED PG migration (work in progress)..."
+"${PSQL[@]}" -f sql/migrations/pg/UNRELEASED.sql
+
 if [ -n "$TARGET_SRID" ]; then
     echo ">> Reprojecting all spatial columns to $CRS..."
     "${PSQL[@]}" <<SQL
@@ -166,6 +174,9 @@ ORDER BY major DESC, minor DESC, patch DESC
 LIMIT 1;
 DELETE FROM gpkg_contents WHERE table_name = 'current_schema_version';
 SQL
+
+echo ">> Registering GeoPackage Related Tables Extension relations..."
+sqlite3 "$GPKG_OUTPUT" < "$ROOT/sql/gpkg_relations.sql"
 
 echo ">> Dropping throwaway database..."
 dropdb -h "$PGHOST" -p "$PGPORT" --if-exists "$BUILD_DB"

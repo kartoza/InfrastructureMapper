@@ -12,9 +12,10 @@ The **Roads** component models transportation infrastructure, including roads, t
 - `segment_status`: Road segment status (e.g. In Use, Planned).
 - `segment_surface`: Surface material (e.g. Asphalt, Dirt).
 - `segment_condition`: Physical condition (e.g. Good, Flooded).
-- `road`: Logical grouping of road segments (has a name).
+- `road`: Logical grouping of road segments (has a name and a `gender` code describing whether the name commemorates a male or female person, is of unknown gender, or has none).
 - `intersection`: Physical nodes (start/end points for road segments).
 - `road_segment`: Actual line features with geometry and references to all lookup tables, the road it belongs to, and intersections.
+- `road_segment_photo`: Zero or more geotagged field photos attached to a road segment, captured via QGIS's Attachment widget (point location, timestamp, compass bearing, phone tilt angle).
 
 ```mermaid
 erDiagram
@@ -53,6 +54,7 @@ erDiagram
   road {
     UUID uuid PK
     TEXT name
+    CHAR gender
     TIMESTAMP last_update
     TEXT last_update_by
   }
@@ -83,6 +85,18 @@ erDiagram
     TEXT last_update_by
   }
 
+  road_segment_photo {
+    UUID uuid PK
+    TEXT photo_path
+    TIMESTAMP captured_at
+    FLOAT bearing_deg
+    FLOAT tilt_deg
+    GEOMETRY geom
+    UUID road_segment_uuid FK
+    TIMESTAMP last_update
+    TEXT last_update_by
+  }
+
   segment_type ||--o{ road_segment : "classifies"
   segment_status ||--o{ road_segment : "describes status"
   segment_surface ||--o{ road_segment : "has surface"
@@ -90,6 +104,7 @@ erDiagram
   road ||--o{ road_segment : "contains"
   intersection ||--o{ road_segment : "start node"
   intersection ||--o{ road_segment : "end node"
+  road_segment ||--o{ road_segment_photo : "has photos"
 ```
 
 ---
