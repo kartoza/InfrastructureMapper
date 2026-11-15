@@ -11,7 +11,8 @@
 #   4. Stamp the result with the current VERSION.
 #   5. Export to GeoPackage via ogr2ogr.
 #   6. Post-process for GPKG-specific bits (view, etc.).
-#   7. Clean up.
+#   7. Register GeoPackage Related Tables Extension relations (sql/gpkg_relations.sql).
+#   8. Clean up.
 #
 # Run inside 'nix develop'. Postgres must be running on $PGHOST:$PGPORT.
 #
@@ -30,7 +31,7 @@ while [ $# -gt 0 ]; do
     case "$1" in
         --crs) CRS_FLAG="$2"; shift 2 ;;
         --crs=*) CRS_FLAG="${1#--crs=}"; shift ;;
-        -h|--help) sed -n '2,24p' "$0"; exit 0 ;;
+        -h|--help) sed -n '2,25p' "$0"; exit 0 ;;
         *) echo "Unknown arg: $1" >&2; exit 2 ;;
     esac
 done
@@ -166,6 +167,9 @@ ORDER BY major DESC, minor DESC, patch DESC
 LIMIT 1;
 DELETE FROM gpkg_contents WHERE table_name = 'current_schema_version';
 SQL
+
+echo ">> Registering GeoPackage Related Tables Extension relations..."
+sqlite3 "$GPKG_OUTPUT" < "$ROOT/sql/gpkg_relations.sql"
 
 echo ">> Dropping throwaway database..."
 dropdb -h "$PGHOST" -p "$PGPORT" --if-exists "$BUILD_DB"

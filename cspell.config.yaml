@@ -140,3 +140,5 @@ words:
   # CRS model generation tooling
   - GEOMFROMTEXT
   - crosshairs
+  # Roads: gender field + photo attachments
+  - geotagged
