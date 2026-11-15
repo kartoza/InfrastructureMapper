@@ -419,15 +419,26 @@ def build_project(  # pylint: disable=too-many-locals,too-many-branches,too-many
             # Project CRS follows the GPKG's own layers rather than
             # defaulting to WGS84 - take it from the first spatial layer
             # that has one (lookup tables are aspatial and skip this).
-            # Rebuilt from its authid rather than reusing the OGR
+            # Prefer rebuilding from its authid over reusing the OGR
             # provider's QgsCoordinateReferenceSystem object directly -
             # GDAL's raw WKT for some CRSs (e.g. ETRS89-based ones with a
-            # realization/epoch) doesn't match QGIS's own srs.db entry
-            # for the same EPSG code, which otherwise leaves the project
-            # CRS looking unassigned/custom when the project is opened.
-            authid = layer.crs().authid()
-            if not project_crs_set and authid:
-                project.setCrs(QgsCoordinateReferenceSystem(authid))
+            # realization/epoch) doesn't match QGIS's own srs database
+            # entry for the same EPSG code. If QGIS's own database can't
+            # resolve the authid either (e.g. it can't find qgis.db under
+            # QGIS_PREFIX_PATH), fall back to the OGR-derived CRS, which
+            # is still valid even though QGIS treats it as "custom".
+            provider_crs = layer.crs()
+            authid = provider_crs.authid()
+            candidate = QgsCoordinateReferenceSystem(authid) if authid else None
+            if not (candidate and candidate.isValid()):
+                candidate = provider_crs
+            if not project_crs_set and candidate.isValid():
+                print(
+                    f">> Project CRS: {candidate.authid()} "
+                    f"(srsid={candidate.srsid()}, "
+                    f"QGIS_PREFIX_PATH={QgsApplication.prefixPath()!r})"
+                )
+                project.setCrs(candidate)
                 project_crs_set = True
 
             md = QgsLayerMetadata()
