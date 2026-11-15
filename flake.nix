@@ -328,8 +328,18 @@
               # with its own numpy/gdal/etc, and mixing in the devShell's
               # python3.12 site-packages on PYTHONPATH makes Python pick up
               # an ABI-incompatible numpy built for the wrong interpreter.
+              #
+              # QGIS_PREFIX_PATH: QgsApplication otherwise guesses its
+              # resource prefix (srs.db, proj data, svg symbols, ...) from
+              # the running executable's own directory - fine for the real
+              # qgis binary, wrong here since we exec a bare python3, which
+              # would point it at qgis4Python's nix store path instead of
+              # qgis4's share/qgis/resources. Without this, CRS lookups by
+              # EPSG code silently fail and the project is saved with no
+              # CRS assigned.
               exec nix develop --command bash -c '
                 export PYTHONPATH="${qgis4}/share/qgis/python"
+                export QGIS_PREFIX_PATH="${qgis4}"
                 exec "${qgis4Python}/bin/python3" "$0" "$@"
               ' "$ROOT/${scriptPath}" "$@"
             ''}";

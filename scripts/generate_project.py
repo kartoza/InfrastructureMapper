@@ -504,7 +504,11 @@ def build_project(  # pylint: disable=too-many-locals,too-many-branches,too-many
                 if target.findGroup("Lookup Tables") is None:
                     target.addGroup("Lookup Tables")
                 target = target.findGroup("Lookup Tables")
-            target.addLayer(layer)
+            node = target.addLayer(layer)
+            # Legend entries show their feature count, same convention for
+            # every layer - set on the QgsLayerTreeLayer node, not the
+            # layer itself (it's a layer-tree display property).
+            node.setCustomProperty("showFeatureCount", 1)
 
         # Pass 2: relations + widgets + cartography (needs every layer to exist).
         for rel in relations:

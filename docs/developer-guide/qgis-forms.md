@@ -98,3 +98,15 @@ A layer's name (shown in the legend and everywhere else in the QGIS UI)
 is `humanize(table)` &mdash; e.g. `road_segment` &rarr; `Road Segment` &mdash;
 never the raw snake_case table name. The user should never be exposed to
 the schema's internal naming.
+
+## Every legend entry shows its feature count
+
+```python
+node = target.addLayer(layer)
+node.setCustomProperty("showFeatureCount", 1)
+```
+
+This is a layer-tree display property (the same thing QGIS's own
+"Show Feature Count" context-menu item toggles), set on the
+`QgsLayerTreeLayer` node returned by `addLayer()` &mdash; not on the
+`QgsVectorLayer` itself.
