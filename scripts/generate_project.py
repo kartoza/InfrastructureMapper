@@ -288,6 +288,22 @@ def build_project(  # pylint: disable=too-many-locals,too-many-branches,too-many
                 if idx >= 0:
                     layer.setFieldAlias(idx, col["comment"][:120])
 
+            # Drag-and-drop form, "General" tab first - built here, before
+            # pass 2 appends any relation tabs, since
+            # QgsAttributeEditorContainer only supports appending children
+            # (no insert-at-index), so creation order is the only way to
+            # control tab order.
+            cfg = layer.editFormConfig()
+            cfg.setLayout(QgsEditFormConfig.TabLayout)
+            general = QgsAttributeEditorContainer(
+                "General", cfg.invisibleRootContainer()
+            )
+            for idx, field in enumerate(layer.fields()):
+                general.addChildElement(
+                    QgsAttributeEditorField(field.name(), idx, general)
+                )
+            cfg.invisibleRootContainer().addChildElement(general)
+
             project.addMapLayer(layer, False)
             stem = domains.get(table)
             target = groups.get(stem, groups["1-infrastructure"])
@@ -343,21 +359,9 @@ def build_project(  # pylint: disable=too-many-locals,too-many-branches,too-many
                 rel_container = QgsAttributeEditorRelation(relation, root_container)
                 root_container.addChildElement(rel_container)
 
-        # Pass 3: default drag-and-drop field layout for every layer (so the
-        # "General" tab exists alongside any relation tab added above), and a
-        # brand-driven renderer.
+        # Pass 3: brand-driven renderer for every layer (the "General" form
+        # tab was already built in pass 1, before pass 2's relation tabs).
         for table, layer in layers.items():
-            cfg = layer.editFormConfig()
-            if cfg.layout() != QgsEditFormConfig.TabLayout:
-                cfg.setLayout(QgsEditFormConfig.TabLayout)
-            root_container = cfg.invisibleRootContainer()
-            general = QgsAttributeEditorContainer("General", root_container)
-            for idx, field in enumerate(layer.fields()):
-                general.addChildElement(
-                    QgsAttributeEditorField(field.name(), idx, general)
-                )
-            root_container.insertChildElement(0, general)
-
             condition_fk = None
             condition_table = None
             for cand in ("condition", "segment_condition"):
