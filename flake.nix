@@ -297,8 +297,13 @@
             program = "${pkgs.writeShellScript "${baseNameOf scriptPath}" ''
               ROOT="$(git rev-parse --show-toplevel 2> /dev/null || pwd)"
               cd "$ROOT"
-              export PYTHONPATH="${qgisLtrWithExtras}/share/qgis/python:''${PYTHONPATH:-}"
-              exec nix develop --command python "$ROOT/${scriptPath}" "$@"
+              # PYTHONPATH must be exported *inside* the nix develop shell, not
+              # before it - nix develop resets the environment on entry, so a
+              # value set in this outer wrapper never survives into --command.
+              exec nix develop --command bash -c '
+                export PYTHONPATH="${qgisLtrWithExtras}/share/qgis/python:''${PYTHONPATH:-}"
+                exec python "$0" "$@"
+              ' "$ROOT/${scriptPath}" "$@"
             ''}";
           };
         in
