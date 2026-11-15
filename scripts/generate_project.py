@@ -21,9 +21,10 @@ QApplication, no canvas/OpenGL - via `QgsApplication([], False)` (second arg
 `False` = GUI disabled), which is exactly what headless PyQGIS scripting is
 for and sidesteps needing any display/GLX at all. Needs `qgis.core`'s own
 Qt binding importable: `nix run .#generate-project` points PYTHONPATH at
-QGIS LTR's bundled Python (Qt6-based; see flake.nix's `extraPythonPackages`,
-which includes `pyqt6` for exactly this), rather than this script guessing
-or hardcoding a Qt binding path itself.
+QGIS LTR's bundled Python (still Qt5-based as of the 3.40.x LTR line; see
+flake.nix's `extraPythonPackages`, which includes `pyqt5` for exactly
+this), rather than this script guessing or hardcoding a Qt binding path
+itself.
 
 Usage:
     scripts/generate_project.py [--gpkg PATH] [--out PATH]

@@ -27,10 +27,11 @@
         ps.debugpy
         ps.future
         ps.psutil
-        # QGIS LTR is Qt6-based; scripts/generate_project.py imports qgis.core
+        # QGIS LTR (3.40.x) is still Qt5-based - Qt6 only arrives with the
+        # future QGIS 4.x line. scripts/generate_project.py imports qgis.core
         # standalone (QgsApplication([], False), no GUI) via the LTR prefix's
         # own python dir, which needs this directly importable there too.
-        ps.pyqt6
+        ps.pyqt5
       ];
       qgisWithExtras = geospatial.packages.${system}.qgis.override {
         inherit extraPythonPackages;
