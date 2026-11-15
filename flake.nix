@@ -27,6 +27,10 @@
         ps.debugpy
         ps.future
         ps.psutil
+        # QGIS LTR is Qt6-based; scripts/generate_project.py imports qgis.core
+        # standalone (QgsApplication([], False), no GUI) via the LTR prefix's
+        # own python dir, which needs this directly importable there too.
+        ps.pyqt6
       ];
       qgisWithExtras = geospatial.packages.${system}.qgis.override {
         inherit extraPythonPackages;
@@ -284,6 +288,19 @@
               exec nix develop --command python "$ROOT/${scriptPath}" "$@"
             ''}";
           };
+          # Like mkPythonApp, but also puts qgisLtrWithExtras's own bundled
+          # Python modules (qgis.core itself, plus extraPythonPackages) on
+          # PYTHONPATH first, for scripts that import qgis.core standalone
+          # (no GUI) without launching the qgis binary at all.
+          mkQgisPythonApp = scriptPath: {
+            type = "app";
+            program = "${pkgs.writeShellScript "${baseNameOf scriptPath}" ''
+              ROOT="$(git rev-parse --show-toplevel 2> /dev/null || pwd)"
+              cd "$ROOT"
+              export PYTHONPATH="${qgisLtrWithExtras}/share/qgis/python:''${PYTHONPATH:-}"
+              exec nix develop --command python "$ROOT/${scriptPath}" "$@"
+            ''}";
+          };
         in
         {
           qgis = {
@@ -319,7 +336,7 @@
           generate-models = mkPythonApp "scripts/generate_models.py";
           apply-pg = mkScriptApp "scripts/apply_pg.sh";
           docs = mkPythonApp "scripts/generate_schema_docs.py";
-          generate-project = mkScriptApp "scripts/generate_project.sh";
+          generate-project = mkQgisPythonApp "scripts/generate_project.py";
           release = mkScriptApp "scripts/release.sh";
           # MkDocs convenience apps.
           docs-serve = mkScriptApp "scripts/docs_serve.sh";

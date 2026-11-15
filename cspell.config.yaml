@@ -147,3 +147,4 @@ words:
   - subforms
   - PYQGIS
   - nologo
+  - PYTHONPATH
