@@ -259,6 +259,7 @@ def build_project(  # pylint: disable=too-many-locals,too-many-branches,too-many
         layers: Dict[str, "QgsVectorLayer"] = {}
         infos: Dict[str, Dict] = {}
         groups = {}
+        project_crs_set = False
 
         for stem, (title, _hue) in DOMAIN_STYLE.items():
             groups[stem] = root.insertGroup(len(groups), title)
@@ -268,8 +269,17 @@ def build_project(  # pylint: disable=too-many-locals,too-many-branches,too-many
             info = schema_docs.introspect_table(table)
             infos[table] = info
 
-            layer = QgsVectorLayer(f"{gpkg_path}|layername={table}", table, "ogr")
+            layer = QgsVectorLayer(
+                f"{gpkg_path}|layername={table}", humanize(table), "ogr"
+            )
             layers[table] = layer
+
+            # Project CRS follows the GPKG's own layers rather than
+            # defaulting to WGS84 - take it from the first spatial layer
+            # that has one (lookup tables are aspatial and skip this).
+            if not project_crs_set and layer.crs().isValid():
+                project.setCrs(layer.crs())
+                project_crs_set = True
 
             md = QgsLayerMetadata()
             md.setIdentifier(table)
