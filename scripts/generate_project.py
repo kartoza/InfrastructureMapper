@@ -146,6 +146,20 @@ DEFAULT_ROAD_WIDTH_MM = 0.6
 # narrower types render as a single plain line.
 ROAD_CASING_MIN_WIDTH_MM = 1.2
 
+# Symbol-level rendering passes, by semantic role rather than each
+# symbol's own layer index - a QgsSymbolLayer's rendering pass defaults
+# to 0 regardless of its position within its symbol, so without this
+# every layer (casing, fill, centreline, and a narrow type's lone fill)
+# would render in the same pass and their cross-feature draw order at
+# junctions would be arbitrary. Explicitly giving every fill layer
+# (wide or narrow) the same pass, below every centreline and above
+# every casing, guarantees a casing is never painted over a fill, and
+# a fill is never painted over a centreline, anywhere two segments of
+# different types meet.
+ROAD_PASS_CASING = 0
+ROAD_PASS_FILL = 1
+ROAD_PASS_CENTERLINE = 2
+
 
 def load_brand_colors() -> Dict[str, str]:
     """Load the Kartoza colour tokens.
@@ -676,22 +690,25 @@ def _road_line_symbol(
     """
     symbol = QgsLineSymbol([])
     if total_width_mm < ROAD_CASING_MIN_WIDTH_MM:
-        symbol.appendSymbolLayer(
-            QgsSimpleLineSymbolLayer(QColor(fill_color), total_width_mm)
-        )
+        fill = QgsSimpleLineSymbolLayer(QColor(fill_color), total_width_mm)
+        fill.setRenderingPass(ROAD_PASS_FILL)
+        symbol.appendSymbolLayer(fill)
         return symbol
 
-    symbol.appendSymbolLayer(
-        QgsSimpleLineSymbolLayer(QColor(casing_color), total_width_mm)
-    )
-    symbol.appendSymbolLayer(
-        QgsSimpleLineSymbolLayer(QColor(fill_color), total_width_mm * 0.6)
-    )
+    casing = QgsSimpleLineSymbolLayer(QColor(casing_color), total_width_mm)
+    casing.setRenderingPass(ROAD_PASS_CASING)
+    symbol.appendSymbolLayer(casing)
+
+    fill = QgsSimpleLineSymbolLayer(QColor(fill_color), total_width_mm * 0.6)
+    fill.setRenderingPass(ROAD_PASS_FILL)
+    symbol.appendSymbolLayer(fill)
+
     centerline = QgsSimpleLineSymbolLayer(
         QColor(centerline_color), total_width_mm * 0.12
     )
     centerline.setUseCustomDashPattern(True)
     centerline.setCustomDashVector([4, 3])
+    centerline.setRenderingPass(ROAD_PASS_CENTERLINE)
     symbol.appendSymbolLayer(centerline)
     return symbol
 
@@ -724,10 +741,15 @@ def _road_segment_renderer(
     )
     categories.append(QgsRendererCategory(None, default_symbol, "Other"))
     renderer = QgsCategorizedSymbolRenderer(type_fk, categories)
-    # Symbol levels: render casing layers for every feature first, then
-    # every fill layer, then every centreline layer - otherwise one
-    # segment's casing can paint over a neighbouring segment's fill at
-    # junctions, since features would render independently layer-by-layer.
+    # Without this, QGIS renders each feature's whole symbol (every
+    # layer) before moving to the next feature, so a wide segment's
+    # casing can paint over a narrower neighbouring segment's fill at a
+    # junction. This switches to rendering level-by-level across every
+    # feature instead - every casing (ROAD_PASS_CASING), then every
+    # fill (ROAD_PASS_FILL), then every centreline (ROAD_PASS_CENTERLINE)
+    # - which is what the explicit setRenderingPass() calls in
+    # _road_line_symbol() actually key off; this flag alone does nothing
+    # unless each symbol layer's rendering pass is set.
     renderer.setUsingSymbolLevels(True)
     return renderer
 
