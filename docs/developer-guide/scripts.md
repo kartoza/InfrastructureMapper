@@ -19,7 +19,7 @@ Every meaningful workflow has both a `scripts/<name>` entry point and a
 | `.#migrate-gpkg` | `scripts/migrate_gpkg.py` | Same semantics as `migrate-pg`, but for an in-place GeoPackage. Also accepts `--migrations-dir`; `--crs` always refuses &mdash; rebuild via `build-gpkg` instead. |
 | `.#release` | `scripts/release.sh` | Two-step release: `--bump patch\|minor\|major --commit` creates a `release/vX.Y.Z` branch + opens a PR (rotates `UNRELEASED.sql` → `vX.Y.Z.sql`, bumps `VERSION`, regenerates schema docs). After PR merge: `--tag` tags `main` HEAD and pushes the tag, which triggers `Release.yml`. |
 | `.#docs` | `scripts/generate_schema_docs.py` | Regenerates the per-component schema reference Markdown from a fresh reference PG database. Output goes under `docs/data-model/`. |
-| `.#generate-project` | `scripts/generate_project.py` | Generates `qgis_projects/InfrastructureMapper.qgz` from the built `.gpkg`: every table as a layer, grouped per domain, all `gpkgext_relations` wired as QGIS relations with pick-lists/embedded subforms, Kartoza-brand cartography, and metadata from the schema's own `COMMENT ON TABLE/COLUMN` text. Runs as a plain headless script (`QgsApplication([], False)`, no GUI/canvas/GLX) &mdash; the `nix run` wrapper executes it with a python built from QGIS 4.x's own python3 override plus its exact PyQt6/gdal/etc input set (Qt6, sourced from a separate `nixpkgs-unstable` input scoped to this script) rather than this script guessing a Qt binding itself. Requires `.#build-gpkg` to have run first. |
+| `.#generate-project` | `scripts/generate_project.py` | Generates `qgis_projects/InfrastructureMapper.qgz` from the built `.gpkg`: every table as a layer, grouped per domain, all `gpkgext_relations` wired as QGIS relations with pick-lists/embedded subforms, Kartoza-brand cartography, and metadata from the schema's own `COMMENT ON TABLE/COLUMN` text. Runs as a plain headless script (`QgsApplication([], False)`, no GUI/canvas/GLX) &mdash; the `nix run` wrapper executes it with a python built from QGIS 4.x's own python3 override plus its exact PyQt6/gdal/etc input set (Qt6, sourced from a separate `nixpkgs-unstable` input scoped to this script) rather than this script guessing a Qt binding itself. Requires `.#build-gpkg` to have run first. **Open the result with `nix run .#qgis4`, not `.#qgis`/`.#qgis-ltr`** &mdash; those are still QGIS 3.x and will warn ("saved in 4.2.3, loaded in 3.42.3 - problems may occur") and can fail to fully resolve newer CRS metadata the 4.x writer embeds. |
 
 ## QGIS launchers
 
@@ -27,6 +27,7 @@ Every meaningful workflow has both a `scripts/<name>` entry point and a
 |---|---|
 | `.#qgis` | Launches mainline QGIS with `--profile InfrastructureMapper` and the bundled Python extras (pyqtwebengine, jsonschema, debugpy, future, psutil). |
 | `.#qgis-ltr` | Same, but QGIS LTR. |
+| `.#qgis4` | QGIS 4.x (Qt6, from the `nixpkgs-unstable` input) &mdash; the same version `.#generate-project` writes its output with. Use this one to open a generated `.qgz`. |
 
 ## Documentation
 

@@ -8,6 +8,12 @@ other. These rules are enforced by the generator &mdash; don't hand-edit a
 form in QGIS and expect it to survive the next `nix run .#generate-project`
 regeneration; change the generator instead.
 
+The generator writes the project as QGIS 4.x. Open it with
+`nix run .#qgis4`, not `.#qgis`/`.#qgis-ltr` (both QGIS 3.x) &mdash; an
+older QGIS reading a newer-QGIS-written project can fail to fully
+resolve CRS metadata the 4.x writer embeds, among other possible
+"problems may occur" surprises.
+
 ## Timestamp fields default to a live `now()` expression
 
 Every column whose Postgres type starts with `timestamp` (found via

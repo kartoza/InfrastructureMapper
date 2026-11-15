@@ -362,6 +362,19 @@
               "${profileName}"
             ];
           };
+          # QGIS 4.x (Qt6, from nixpkgs-unstable) - same version
+          # generate-project writes its output with. Use this (not
+          # `.#qgis`/`.#qgis-ltr`, both still 3.x) to open a generated
+          # .qgz without QGIS warning about/mangling newer CRS metadata
+          # it can't fully round-trip.
+          qgis4 = {
+            type = "app";
+            program = "${qgis4}/bin/qgis";
+            args = [
+              "--profile"
+              "${profileName}"
+            ];
+          };
           # Postgres lifecycle apps (act on the project-local ./pgdata cluster).
           pg-start = mkScriptApp "scripts/start_pg.sh";
           pg-stop = mkScriptApp "scripts/stop_pg.sh";

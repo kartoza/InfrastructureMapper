@@ -28,6 +28,11 @@ scoped to just this script - see flake.nix's `qgis4Python`/
 `mkQgis4PythonApp`), rather than this script guessing or assembling a
 separate Qt binding itself.
 
+The output is therefore a QGIS 4.x project file. Open it with
+`nix run .#qgis4`, not `.#qgis`/`.#qgis-ltr` (both still QGIS 3.x) -
+an older QGIS loading a newer-QGIS-written project logs "problems may
+occur" and can fail to fully resolve CRS metadata the 4.x writer embeds.
+
 Usage:
     scripts/generate_project.py [--gpkg PATH] [--out PATH]
     (or just: nix run .#generate-project)

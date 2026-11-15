@@ -117,6 +117,7 @@ row "nix run .#docs-build"   "Strict build into ./site (CI parity)"
 section "🗺️ " "Apps"
 row "nix run .#qgis"         "QGIS with the InfrastructureMapper profile"
 row "nix run .#qgis-ltr"     "QGIS LTR with the same profile"
+row "nix run .#qgis4"        "QGIS 4.x - use this to open a generated .qgz, not .#qgis/.#qgis-ltr"
 row "./scripts/vscode.sh"    "VSCode with the project workspace"
 
 printf '\n%sMade with 💗 by Kartoza%s\n\n' "$PG_C_DIM" "$PG_C_RESET"
