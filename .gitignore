@@ -102,14 +102,11 @@ PROMPT.log
 # (e.g. QGIS or scripts/generate_project.py) at the time of a crash/exit.
 gpkg/*.gpkg*
 
-# Generated QGIS project — produced by scripts/generate_project.py from
-# whichever .gpkg is currently built, which is itself CRS-specific
-# (depends on a locally remembered CRS choice) and already gitignored.
-# Tracking the .qgz would mean committing a snapshot that's only valid
-# for one specific CRS/build; regenerate it locally with `nix run
-# .#generate-project` instead. qgis_projects/tim.qgz is a separate,
-# hand-maintained file and stays tracked.
-qgis_projects/InfrastructureMapper.qgz
+# QGIS projects (.qgz) — all CRS-specific to whichever .gpkg they were
+# opened/generated against, same as the .gpkg itself (already
+# gitignored above). Never tracked, regenerate locally with `nix run
+# .#generate-project`, or just reopen your own hand-tweaked copy.
+qgis_projects/*.qgz
 
 # Remembered CRS choice (scripts/generate_models.py, scripts/lib/crs.sh) and
 # the CRS-templated model/migration SQL it generates — machine-local, never
