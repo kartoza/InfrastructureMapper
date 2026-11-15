@@ -322,8 +322,14 @@
             program = "${pkgs.writeShellScript "${baseNameOf scriptPath}" ''
               ROOT="$(git rev-parse --show-toplevel 2> /dev/null || pwd)"
               cd "$ROOT"
+              # PYTHONPATH is set to exactly this one path, not appended to
+              # whatever the devShell's own python3.12 env already put
+              # there - qgis4Python is a self-contained python 3.14 build
+              # with its own numpy/gdal/etc, and mixing in the devShell's
+              # python3.12 site-packages on PYTHONPATH makes Python pick up
+              # an ABI-incompatible numpy built for the wrong interpreter.
               exec nix develop --command bash -c '
-                export PYTHONPATH="${qgis4}/share/qgis/python:''${PYTHONPATH:-}"
+                export PYTHONPATH="${qgis4}/share/qgis/python"
                 exec "${qgis4Python}/bin/python3" "$0" "$@"
               ' "$ROOT/${scriptPath}" "$@"
             ''}";
