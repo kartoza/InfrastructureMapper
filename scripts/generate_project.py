@@ -58,6 +58,8 @@ from qgis.core import (
     QgsAttributeEditorField,
     QgsAttributeEditorRelation,
     QgsCategorizedSymbolRenderer,
+    QgsCoordinateReferenceSystem,
+    QgsDefaultValue,
     QgsEditFormConfig,
     QgsEditorWidgetSetup,
     QgsFillSymbol,
@@ -107,6 +109,22 @@ EXTRA_TABLE_DOMAINS = {
 }
 
 FK_RE = re.compile(r"FOREIGN KEY\s*\((\w+)\)\s*REFERENCES\s+(\w+)\s*\(")
+
+# Known boilerplate wrappers used across sql/**/*.sql's FK column comments
+# (phrasing is inconsistent between domains - these cover every variant
+# currently in the schema). Tried in order; first match wins.
+FK_ALIAS_PREFIXES = [
+    re.compile(r"^the foreign key which references the uuid from the\s+", re.I),
+    re.compile(r"^foreign key referencing the uuid of the\s+", re.I),
+    re.compile(r"^(?:the\s+)?foreign key linking to(?:\s+the)?\s+", re.I),
+    re.compile(r"^foreign key for\s+", re.I),
+]
+FK_ALIAS_SUFFIXES = [
+    re.compile(r"\s+table'?s uuid\.?$", re.I),
+    re.compile(r"\s+table\.?$", re.I),
+    re.compile(r"\.$"),
+]
+LEADING_ARTICLE_RE = re.compile(r"^(?:the|an?)\s+", re.I)
 
 # road_segment's own design data: real-world road hierarchy, widest first.
 # Not derivable from the schema - segment_type.type_name is free text.
@@ -222,6 +240,113 @@ def find_fk_column(holder_info: Dict, target_table: str) -> Optional[str]:
     return None
 
 
+def fk_target_map(holder_info: Dict) -> Dict[str, str]:
+    """Map every FK column on a table to the table it references.
+
+    Unlike ``find_fk_column()`` (which looks for one specific target),
+    this returns every foreign key a table holds - used to decide which
+    columns need the FK-specific alias cleanup.
+
+    Args:
+        holder_info: ``introspect_table()`` result for the table.
+
+    Returns:
+        Mapping of FK column name to the table it references.
+    """
+    targets = {}
+    for c in holder_info["constraints"]:
+        if c["type"] != "f":
+            continue
+        m = FK_RE.search(c["def"])
+        if m:
+            targets[m.group(1)] = m.group(2)
+    return targets
+
+
+def _sentence_case(text: str) -> str:
+    """Capitalise only the first letter of a phrase.
+
+    Args:
+        text: Any phrase.
+
+    Returns:
+        ``text`` with its first character upper-cased, unchanged otherwise.
+    """
+    return text[:1].upper() + text[1:] if text else text
+
+
+def _singularize(phrase: str) -> str:
+    """Drop a trailing plural "s" from a phrase's last word.
+
+    Args:
+        phrase: A space-separated phrase, e.g. ``"road segment types"``.
+
+    Returns:
+        ``phrase`` with its last word singularised, unless that word
+        already looks singular (e.g. ends in "us"/"ss", like "status").
+    """
+    words = phrase.split()
+    if (
+        words
+        and words[-1].lower().endswith("s")
+        and not words[-1].lower().endswith(("us", "ss"))
+    ):
+        words[-1] = words[-1][:-1]
+    return " ".join(words)
+
+
+def _clean_alias(comment: str) -> str:
+    """Trim boilerplate filler from a column comment for use as a form alias.
+
+    Args:
+        comment: Raw ``COMMENT ON COLUMN`` text.
+
+    Returns:
+        ``comment`` with a trailing period and a leading "The"/"A"/"An"
+        dropped, sentence-cased - humanistic and clear without the filler.
+    """
+    text = re.sub(r"\.$", "", comment.strip())
+    text = LEADING_ARTICLE_RE.sub("", text)
+    return _sentence_case(text.strip())
+
+
+def _fk_alias(comment: str, target_table: str) -> str:
+    """Build a clean human alias for an FK field's drag-and-drop form label.
+
+    Strips the schema's often-verbose boilerplate wrapper ("The foreign
+    key which references the uuid from the X table.") down to just the
+    descriptive middle, falling back to the referenced table's own name
+    if the comment doesn't match any known boilerplate shape at all.
+
+    Args:
+        comment: The FK column's raw ``COMMENT ON COLUMN`` text.
+        target_table: Name of the table this FK references.
+
+    Returns:
+        A short, sentence-case label with no "Foreign key..."/"...table"
+        wrapper text.
+    """
+    desc = comment.strip()
+    matched = False
+    for prefix in FK_ALIAS_PREFIXES:
+        desc, count = prefix.subn("", desc, count=1)
+        if count:
+            matched = True
+            break
+
+    if matched:
+        for suffix in FK_ALIAS_SUFFIXES:
+            desc = suffix.sub("", desc, count=1)
+        desc = desc.replace("_", " ").strip()
+    else:
+        desc = ""
+
+    if not desc:
+        desc = target_table.replace("_", " ")
+
+    return _sentence_case(_singularize(desc))
+
+
 def display_column(table_info: Dict) -> str:
     """Pick the column that best represents a lookup row to a human.
 
@@ -294,8 +419,15 @@ def build_project(  # pylint: disable=too-many-locals,too-many-branches,too-many
             # Project CRS follows the GPKG's own layers rather than
             # defaulting to WGS84 - take it from the first spatial layer
             # that has one (lookup tables are aspatial and skip this).
-            if not project_crs_set and layer.crs().isValid():
-                project.setCrs(layer.crs())
+            # Rebuilt from its authid rather than reusing the OGR
+            # provider's QgsCoordinateReferenceSystem object directly -
+            # GDAL's raw WKT for some CRSs (e.g. ETRS89-based ones with a
+            # realization/epoch) doesn't match QGIS's own srs.db entry
+            # for the same EPSG code, which otherwise leaves the project
+            # CRS looking unassigned/custom when the project is opened.
+            authid = layer.crs().authid()
+            if not project_crs_set and authid:
+                project.setCrs(QgsCoordinateReferenceSystem(authid))
                 project_crs_set = True
 
             md = QgsLayerMetadata()
@@ -308,12 +440,46 @@ def build_project(  # pylint: disable=too-many-locals,too-many-branches,too-many
             md.setContacts([contact])
             layer.setMetadata(md)
 
+            fk_targets = fk_target_map(info)
             for col in info["columns"]:
-                if not col["comment"]:
-                    continue
                 idx = layer.fields().indexOf(col["name"])
-                if idx >= 0:
-                    layer.setFieldAlias(idx, col["comment"][:120])
+                if idx < 0:
+                    continue
+
+                if col["name"] in fk_targets:
+                    # Clean "Road segment type" rather than the schema's
+                    # verbose "The foreign key which references the uuid
+                    # from the road segment types table." comment text.
+                    alias = _fk_alias(col["comment"], fk_targets[col["name"]])
+                elif col["comment"]:
+                    alias = _clean_alias(col["comment"])[:120]
+                else:
+                    alias = None
+                if alias:
+                    layer.setFieldAlias(idx, alias)
+
+                if col["type"].startswith("timestamp"):
+                    # QGIS's own now() expression, not the database's
+                    # CURRENT_TIMESTAMP/now() column default - so the form
+                    # shows a live value immediately and behaves the same
+                    # on both the PG and GPKG backends (SQLite has no
+                    # equivalent live default).
+                    layer.setDefaultValueDefinition(idx, QgsDefaultValue("now()"))
+                elif col["name"] == "uuid":
+                    # SQLite/GPKG has no equivalent of Postgres'
+                    # gen_random_uuid() column default, so a new GPKG
+                    # feature would otherwise get a null uuid until the
+                    # next PG migration backfills it. "WithoutBraces"
+                    # matches Postgres' own lowercase, unbraced format.
+                    layer.setDefaultValueDefinition(
+                        idx, QgsDefaultValue("uuid('WithoutBraces')")
+                    )
+                elif col["name"] == "last_update_by":
+                    # The OS-reported full name of whoever is digitising,
+                    # not a value the user has to type in by hand.
+                    layer.setDefaultValueDefinition(
+                        idx, QgsDefaultValue("@user_full_name")
+                    )
 
             # Drag-and-drop form, "General" tab first - built here, before
             # pass 2 appends any relation tabs, since
