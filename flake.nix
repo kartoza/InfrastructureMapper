@@ -36,11 +36,16 @@
       };
       # QGIS 4.x (Qt6-based) - plain nixpkgs, not geospatial-nix (which just
       # re-exports pkgs.qgis/pkgs.qgis-ltr unchanged; no need to go through
-      # it here). qgis4.unwrapped.py is QGIS's own bundled python, already
-      # carrying whatever Qt6/PyQt6 build QGIS itself was compiled against -
-      # scripts/generate_project.py uses that interpreter directly rather
-      # than guessing/assembling a separately-built one.
+      # it here). The wrapped `qgis` package only bakes PyQt6/gdal/etc onto
+      # PYTHONPATH for its own $out/bin/qgis (via wrapProgram in its
+      # default.nix postBuild) - a standalone script needs its own python
+      # derivation built the same way nixpkgs builds that PYTHONPATH:
+      # qgis-unwrapped.py (QGIS's own python3, Qt6/PyQt6-aware override)
+      # with qgis-unwrapped.pythonBuildInputs (pyqt6, gdal, psycopg2, sip,
+      # etc - the exact set QGIS itself was built/wrapped against).
       qgis4 = pkgsUnstable.qgis;
+      qgis4Unwrapped = qgis4.unwrapped;
+      qgis4Python = qgis4Unwrapped.py.withPackages (_: qgis4Unwrapped.pythonBuildInputs);
       extraPythonPackages = ps: [
         ps.pyqtwebengine
         ps.jsonschema
@@ -305,9 +310,9 @@
             ''}";
           };
           # For scripts that import qgis.core standalone (no GUI, no
-          # launching the qgis binary) - runs them with QGIS 4.x's own
-          # bundled python interpreter directly (already has the matching
-          # PyQt6 build, no separate env to assemble/guess), with
+          # launching the qgis binary) - runs them with qgis4Python (QGIS
+          # 4.x's own python3, built with its exact pyqt6/gdal/etc input
+          # set - see the qgis4Python comment above), with
           # share/qgis/python (the qgis.core module tree) added on top.
           # Still goes through `nix develop` for psql/createdb/PGHOST etc.
           # (scripts/generate_schema_docs.py's reference-DB machinery) -
@@ -319,7 +324,7 @@
               cd "$ROOT"
               exec nix develop --command bash -c '
                 export PYTHONPATH="${qgis4}/share/qgis/python:''${PYTHONPATH:-}"
-                exec "${qgis4.unwrapped.py}/bin/python3" "$0" "$@"
+                exec "${qgis4Python}/bin/python3" "$0" "$@"
               ' "$ROOT/${scriptPath}" "$@"
             ''}";
           };
